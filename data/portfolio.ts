@@ -70,6 +70,7 @@ export const projects: Project[] = [
     category: "Open Source / Desktop",
     image: "/openaurum.png",
     technologies: ["Python", "GTK 4", "libadwaita", "USB HID"],
+    link: "https://github.com/its-danilo/openaurum",
     github: "https://github.com/its-danilo/openaurum",
     featured: true,
   },
