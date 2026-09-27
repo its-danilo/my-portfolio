@@ -82,7 +82,7 @@ export const projects: Project[] = [
     category: "Productivity / Full-Stack",
     image: "/continuum.png",
     technologies: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Playwright"],
-    link: "https://continuum-danilo.vercel.app",
+    link: "/continuum",
     github: "https://github.com/John28389/Continuum",
     featured: true,
   },
