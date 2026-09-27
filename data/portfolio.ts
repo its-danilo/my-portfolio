@@ -78,7 +78,7 @@ export const projects: Project[] = [
     id: "6",
     title: "Continuum",
     description:
-      "A personal execution system: one active mission at a time, curiosities parked instead of lost, and progress measured by evidence rather than hours. Its rules are enforced by the database itself (Postgres triggers and Row-Level Security), backed by a SQL invariant test suite.",
+      "A personal execution system built from months of notes on my own working patterns: one active mission at a time, curiosities parked instead of lost, and progress measured by evidence rather than hours. Its rules are enforced by the database itself (Postgres triggers and Row-Level Security), backed by a SQL invariant test suite.",
     category: "Productivity / Full-Stack",
     image: "/continuum.png",
     technologies: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Playwright"],

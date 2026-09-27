@@ -119,6 +119,30 @@ export default function ContinuumPage() {
           </p>
         </header>
 
+        <section className="mb-20 max-w-3xl">
+          <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-6">Why I built it</h2>
+          <div className="flex flex-col gap-5 text-foreground/60 leading-relaxed">
+            <p>
+              Continuum didn&apos;t start as an app. For months I studied how I work: I kept notes on how I plan,
+              where I lose momentum, what pulls my attention away and which conditions help me finish things. Over
+              time those notes became a map of my own patterns — what comes easily, what gets in the way, and what
+              triggers a change of course.
+            </p>
+            <p>
+              Continuum is that map turned into software. The problem it solves is a common one for curious people:
+              new interests keep opening parallel tracks, and older goals fade without anyone deciding to drop them.
+              So the app makes the right behavior the easy one — one active mission at a time, new ideas parked until
+              the end of the cycle instead of acted on right away, and missions that end on verifiable criteria rather
+              than on hours spent. The name comes from that: keep moving forward, continuously, without drifting.
+            </p>
+            <p>
+              It was designed for one person, which is why there&apos;s no sign-up: it fits people who think the way I
+              do, not everyone. That&apos;s also why the rules live in the database — a rule the interface can skip is
+              only a suggestion, and the point was to build something I can&apos;t talk myself out of.
+            </p>
+          </div>
+        </section>
+
         <div className="flex flex-col gap-20">
           {screens.map((screen) => (
             <section key={screen.image}>
