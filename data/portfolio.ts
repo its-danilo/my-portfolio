@@ -94,7 +94,7 @@ export const projects: Project[] = [
     category: "PWA / Productivity",
     image: "/agenda.png",
     technologies: ["React", "TypeScript", "Supabase", "Zustand", "PWA"],
-    link: "https://agenda-danilo.vercel.app",
+    link: "https://agenda-danilo.vercel.app/?demo",
     github: "https://github.com/its-danilo/agenda",
     featured: true,
   },
