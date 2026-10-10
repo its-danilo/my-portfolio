@@ -9,3 +9,5 @@ npm install
 npm run dev     # http://localhost:3000
 npm run build
 ```
+
+The kinetree demo at `/kinetree-demo` is a static Flutter web build in `public/kinetree-demo`. Refresh it with `scripts/update-kinetree-demo.sh` (needs podman, reads `../kinetree`).

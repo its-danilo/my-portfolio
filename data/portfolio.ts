@@ -87,6 +87,17 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    id: "7",
+    title: "kinetree",
+    description:
+      "A calisthenics app that turns training into an RPG: an onboarding interview places your level, a skill tree maps the progressions, and an RPG profile shows your attributes and an anatomical muscle-load heatmap. Work in progress. In the demo, create any account; it stays in your browser.",
+    category: "Mobile / Flutter · WIP",
+    image: "/kinetree.png",
+    technologies: ["Flutter", "Dart", "Riverpod", "go_router"],
+    link: "/kinetree-demo",
+    featured: true,
+  },
+  {
     id: "5",
     title: "Agenda",
     description:
