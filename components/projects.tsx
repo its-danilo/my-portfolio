@@ -39,7 +39,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
             />
           </motion.div>
 
-          <div className="absolute inset-0 bg-gradient-to-t from-[#3D2914]/80 via-[#3D2914]/40 to-transparent opacity-80" />
+          <div className="absolute inset-0 bg-gradient-to-t from-scrim/80 via-scrim/40 to-transparent opacity-80" />
 
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -47,7 +47,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
             transition={{ delay: 0.2 }}
             className="absolute top-4 left-4"
           >
-            <span className="px-3 py-1.5 text-xs font-medium text-white/90 bg-[#3D2914]/30 backdrop-blur-md rounded-full border border-white/[0.1]">
+            <span className="px-3 py-1.5 text-xs font-medium text-white/90 bg-scrim/30 backdrop-blur-md rounded-full border border-white/[0.1]">
               {project.category}
             </span>
           </motion.div>
@@ -63,7 +63,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
                 href={project.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 bg-[#3D2914]/30 backdrop-blur-md rounded-lg border border-white/[0.1] hover:bg-[#3D2914]/40 transition-colors"
+                className="p-2 bg-scrim/30 backdrop-blur-md rounded-lg border border-white/[0.1] hover:bg-scrim/40 transition-colors"
               >
                 <Github className="w-4 h-4 text-white" />
               </a>
@@ -73,7 +73,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 bg-[#3D2914]/30 backdrop-blur-md rounded-lg border border-white/[0.1] hover:bg-[#3D2914]/40 transition-colors"
+                className="p-2 bg-scrim/30 backdrop-blur-md rounded-lg border border-white/[0.1] hover:bg-scrim/40 transition-colors"
               >
                 <ExternalLink className="w-4 h-4 text-white" />
               </a>
@@ -82,7 +82,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
         </div>
 
         <div className="p-6">
-          <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-[#D4654A] transition-colors duration-300">
+          <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-terra transition-colors duration-300">
             {project.title}
           </h3>
 
@@ -94,7 +94,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
             {project.technologies.slice(0, 4).map((tech) => (
               <span
                 key={tech}
-                className="px-2.5 py-1 text-xs font-medium text-foreground/60 bg-[#8B7355]/[0.06] rounded-md border border-[#8B7355]/[0.1]"
+                className="px-2.5 py-1 text-xs font-medium text-foreground/60 bg-line/[0.06] rounded-md border border-line/[0.1]"
               >
                 {tech}
               </span>
@@ -105,11 +105,11 @@ function ProjectCard({ project, index }: ProjectCardProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 10 }}
             transition={{ duration: 0.3 }}
-            className="mt-6 pt-4 border-t border-[#8B7355]/[0.1]"
+            className="mt-6 pt-4 border-t border-line/[0.1]"
           >
             <a
               href={project.link || '#'}
-              className="inline-flex items-center gap-2 text-sm font-medium text-[#D4654A] hover:text-[#E07B5D] transition-colors group/link"
+              className="inline-flex items-center gap-2 text-sm font-medium text-terra hover:text-terra-2 transition-colors group/link"
             >
               View Project
               <ArrowUpRight className="w-4 h-4 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
@@ -130,7 +130,7 @@ export default function ProjectsSection() {
 
   return (
     <section id="work" className="relative py-32 overflow-hidden">
-      <div className="absolute inset-0 bg-[#FFFBF7]">
+      <div className="absolute inset-0 bg-surface">
         <div className="absolute inset-0 dot-pattern" />
       </div>
 
@@ -145,7 +145,7 @@ export default function ProjectsSection() {
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="text-sm font-medium text-[#D4654A] mb-4 block"
+            className="text-sm font-medium text-terra mb-4 block"
           >
             Selected Work
           </motion.span>
@@ -181,7 +181,7 @@ export default function ProjectsSection() {
             href="https://github.com/its-danilo"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-foreground/60 hover:text-[#D4654A] transition-colors group"
+            className="inline-flex items-center gap-2 text-foreground/60 hover:text-terra transition-colors group"
           >
             <Github className="w-5 h-5" />
             <span className="font-medium">View all projects on GitHub</span>

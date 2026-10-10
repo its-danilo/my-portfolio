@@ -20,6 +20,19 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       colors: {
+        // Portfolio palette; values per theme live in app/globals.css.
+        paper: 'rgb(var(--paper) / <alpha-value>)',
+        surface: 'rgb(var(--surface) / <alpha-value>)',
+        'surface-alt': 'rgb(var(--surface-alt) / <alpha-value>)',
+        line: 'rgb(var(--line) / <alpha-value>)',
+        ink: 'rgb(var(--ink) / <alpha-value>)',
+        'on-ink': 'rgb(var(--on-ink) / <alpha-value>)',
+        scrim: 'rgb(var(--scrim) / <alpha-value>)',
+        terra: 'rgb(var(--terra) / <alpha-value>)',
+        'terra-2': 'rgb(var(--terra-2) / <alpha-value>)',
+        amber: 'rgb(var(--amber) / <alpha-value>)',
+        gold: 'rgb(var(--gold) / <alpha-value>)',
+        leaf: 'rgb(var(--leaf) / <alpha-value>)',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

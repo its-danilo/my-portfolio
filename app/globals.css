@@ -32,6 +32,49 @@
   --input: 30 20% 85%;
   --ring: 16 70% 50%;
   --radius: 0.75rem;
+
+  /* Portfolio palette as RGB channels (see tailwind.config.ts) */
+  --paper: 250 247 242;      /* #FAF7F2 page */
+  --surface: 255 251 247;    /* #FFFBF7 cards, nav */
+  --surface-alt: 255 255 255;
+  --line: 139 115 85;        /* #8B7355 tints and borders */
+  --ink: 61 41 20;           /* #3D2914 solid button */
+  --on-ink: 255 251 247;
+  --scrim: 61 41 20;         /* overlays on images, shadows */
+  --terra: 212 101 74;       /* #D4654A */
+  --terra-2: 224 123 93;     /* #E07B5D */
+  --amber: 244 162 97;       /* #F4A261 */
+  --gold: 233 196 106;       /* #E9C46A */
+  --leaf: 74 124 89;         /* #4A7C59 */
+}
+
+.dark {
+  --background: 26 21% 6%;
+  --foreground: 34 42% 90%;
+  --card: 24 20% 10%;
+  --card-foreground: 34 42% 90%;
+  --popover: 24 20% 10%;
+  --popover-foreground: 34 42% 90%;
+  --secondary: 26 15% 16%;
+  --secondary-foreground: 34 42% 90%;
+  --muted: 26 15% 16%;
+  --muted-foreground: 32 15% 65%;
+  --border: 28 15% 20%;
+  --input: 28 15% 20%;
+  --ring: 13 75% 64%;
+
+  --paper: 20 16 13;         /* #14100D */
+  --surface: 30 24 20;       /* #1E1814 */
+  --surface-alt: 25 20 16;
+  --line: 214 190 160;       /* #D6BEA0 */
+  --ink: 243 233 220;        /* #F3E9DC */
+  --on-ink: 30 24 20;
+  --scrim: 18 12 8;
+  --terra: 232 125 96;       /* #E87D60 */
+  --terra-2: 240 145 115;
+  --amber: 246 176 118;
+  --gold: 236 204 128;
+  --leaf: 127 191 142;
 }
 
 @layer base {
@@ -40,7 +83,7 @@
   }
 
   body {
-    @apply bg-[#FAF7F2] text-foreground antialiased;
+    @apply bg-paper text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
@@ -59,19 +102,19 @@
   }
 
   .gradient-primary {
-    @apply from-[#D4654A] via-[#E07B5D] to-[#F4A261];
+    @apply from-terra via-terra-2 to-amber;
   }
 
   .gradient-premium {
-    @apply from-[#D4654A] via-[#E9C46A] to-[#F4A261];
+    @apply from-terra via-gold to-amber;
   }
 
   .glass {
-    @apply bg-[#8B7355]/[0.04] backdrop-blur-xl border border-[#8B7355]/[0.08];
+    @apply bg-line/[0.04] backdrop-blur-xl border border-line/[0.08];
   }
 
   .glass-strong {
-    @apply bg-[#8B7355]/[0.06] backdrop-blur-2xl border border-[#8B7355]/[0.12];
+    @apply bg-line/[0.06] backdrop-blur-2xl border border-line/[0.12];
   }
 
   .glow {
@@ -111,13 +154,13 @@
 
   .grid-pattern {
     background-image:
-      linear-gradient(to right, rgba(139, 115, 85, 0.03) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(139, 115, 85, 0.03) 1px, transparent 1px);
+      linear-gradient(to right, rgb(var(--line) / 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--line) / 0.03) 1px, transparent 1px);
     background-size: 64px 64px;
   }
 
   .dot-pattern {
-    background-image: radial-gradient(circle, rgba(139, 115, 85, 0.04) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgb(var(--line) / 0.04) 1px, transparent 1px);
     background-size: 24px 24px;
   }
 
@@ -128,29 +171,29 @@
 
 @layer components {
   .premium-card {
-    @apply relative glass rounded-2xl overflow-hidden bg-[#FFFBF7];
+    @apply relative glass rounded-2xl overflow-hidden bg-surface;
   }
 
   .premium-card::before {
     content: '';
-    @apply absolute inset-0 bg-gradient-to-br from-[#8B7355]/[0.02] via-transparent to-transparent pointer-events-none;
+    @apply absolute inset-0 bg-gradient-to-br from-line/[0.02] via-transparent to-transparent pointer-events-none;
   }
 
   .btn-premium {
     @apply relative inline-flex items-center justify-center gap-2 px-6 py-3
-           bg-gradient-to-r from-[#D4654A] to-[#E07B5D]
+           bg-gradient-to-r from-terra to-terra-2
            text-white font-medium rounded-xl
            transition-all duration-300
-           hover:shadow-lg hover:shadow-[#D4654A]/25
+           hover:shadow-lg hover:shadow-terra/25
            active:scale-95;
   }
 
   .btn-ghost-premium {
     @apply relative inline-flex items-center justify-center gap-2 px-6 py-3
-           bg-[#8B7355]/[0.05] border border-[#8B7355]/[0.12]
+           bg-line/[0.05] border border-line/[0.12]
            text-foreground font-medium rounded-xl
            transition-all duration-300
-           hover:bg-[#8B7355]/[0.08] hover:border-[#8B7355]/[0.18]
+           hover:bg-line/[0.08] hover:border-line/[0.18]
            active:scale-95;
   }
 }
@@ -206,14 +249,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(139, 115, 85, 0.05);
+  background: rgb(var(--line) / 0.05);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(139, 115, 85, 0.15);
+  background: rgb(var(--line) / 0.15);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 115, 85, 0.22);
+  background: rgb(var(--line) / 0.22);
 }

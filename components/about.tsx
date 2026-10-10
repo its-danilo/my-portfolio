@@ -18,7 +18,7 @@ export default function AboutSection() {
 
   return (
     <section id="about" className="relative py-32 overflow-hidden">
-      <div className="absolute inset-0 bg-white">
+      <div className="absolute inset-0 bg-surface-alt">
         <div className="absolute inset-0 ambient-glow-bottom" />
       </div>
 
@@ -33,7 +33,7 @@ export default function AboutSection() {
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="text-sm font-medium text-[#D4654A] mb-4 block"
+            className="text-sm font-medium text-terra mb-4 block"
           >
             About Me
           </motion.span>
@@ -54,26 +54,26 @@ export default function AboutSection() {
 
             <div className="space-y-4 mb-12">
               <div className="flex items-center gap-3 text-foreground/70">
-                <div className="p-2.5 bg-[#8B7355]/[0.05] rounded-lg border border-[#8B7355]/[0.1]">
-                  <MapPin className="w-4 h-4 text-[#D4654A]" />
+                <div className="p-2.5 bg-line/[0.05] rounded-lg border border-line/[0.1]">
+                  <MapPin className="w-4 h-4 text-terra" />
                 </div>
                 <span>{personalInfo.location}</span>
               </div>
 
               <div className="flex items-center gap-3 text-foreground/70">
-                <div className="p-2.5 bg-[#8B7355]/[0.05] rounded-lg border border-[#8B7355]/[0.1]">
-                  <Mail className="w-4 h-4 text-[#D4654A]" />
+                <div className="p-2.5 bg-line/[0.05] rounded-lg border border-line/[0.1]">
+                  <Mail className="w-4 h-4 text-terra" />
                 </div>
-                <a href={`mailto:${personalInfo.email}`} className="hover:text-[#D4654A] transition-colors">
+                <a href={`mailto:${personalInfo.email}`} className="hover:text-terra transition-colors">
                   {personalInfo.email}
                 </a>
               </div>
 
               <div className="flex items-center gap-3 text-foreground/70">
-                <div className="p-2.5 bg-[#8B7355]/[0.05] rounded-lg border border-[#8B7355]/[0.1]">
-                  <Briefcase className="w-4 h-4 text-[#D4654A]" />
+                <div className="p-2.5 bg-line/[0.05] rounded-lg border border-line/[0.1]">
+                  <Briefcase className="w-4 h-4 text-terra" />
                 </div>
-                <span className="text-[#4A7c59]">{personalInfo.availability}</span>
+                <span className="text-leaf">{personalInfo.availability}</span>
               </div>
             </div>
 
@@ -88,7 +88,7 @@ export default function AboutSection() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
                     transition={{ delay: 0.5 + index * 0.05, duration: 0.4 }}
-                    className="px-4 py-2 text-sm text-foreground/70 bg-[#8B7355]/[0.05] rounded-lg border border-[#8B7355]/[0.1] hover:border-[#D4654A]/30 hover:bg-[#D4654A]/5 transition-all duration-300"
+                    className="px-4 py-2 text-sm text-foreground/70 bg-line/[0.05] rounded-lg border border-line/[0.1] hover:border-terra/30 hover:bg-terra/5 transition-all duration-300"
                   >
                     {skill}
                   </motion.span>
@@ -104,11 +104,11 @@ export default function AboutSection() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
                 transition={{ delay: 0.4 + index * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                className="premium-card p-6 group hover:border-[#D4654A]/20 transition-all duration-500"
+                className="premium-card p-6 group hover:border-terra/20 transition-all duration-500"
               >
                 <div className="relative z-10">
-                  <div className="w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-[#D4654A]/10 to-[#F4A261]/10 flex items-center justify-center group-hover:from-[#D4654A]/20 group-hover:to-[#F4A261]/20 transition-all duration-300">
-                    <skill.icon className="w-6 h-6 text-[#D4654A]" />
+                  <div className="w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-terra/10 to-amber/10 flex items-center justify-center group-hover:from-terra/20 group-hover:to-amber/20 transition-all duration-300">
+                    <skill.icon className="w-6 h-6 text-terra" />
                   </div>
                   <h3 className="text-lg font-semibold text-foreground mb-1">{skill.label}</h3>
                   <p className="text-sm text-foreground/50">{skill.desc}</p>

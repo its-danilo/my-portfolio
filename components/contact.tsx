@@ -20,7 +20,7 @@ export default function ContactSection() {
 
   return (
     <section id="contact" className="relative py-32 overflow-hidden">
-      <div className="absolute inset-0 bg-[#FAF7F2]">
+      <div className="absolute inset-0 bg-paper">
         <div className="absolute inset-0 grid-pattern opacity-50" />
         <motion.div
           animate={{
@@ -32,7 +32,7 @@ export default function ContactSection() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-[#D4654A]/10 to-[#F4A261]/10 rounded-full blur-3xl"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-terra/10 to-amber/10 rounded-full blur-3xl"
         />
       </div>
 
@@ -47,9 +47,9 @@ export default function ContactSection() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full glass border border-[#8B7355]/[0.08]"
+              className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full glass border border-line/[0.08]"
             >
-              <MessageSquare className="w-4 h-4 text-[#D4654A]" />
+              <MessageSquare className="w-4 h-4 text-terra" />
               <span className="text-sm text-foreground/60 font-medium">Let's Talk</span>
             </motion.div>
 
@@ -65,12 +65,12 @@ export default function ContactSection() {
             </p>
 
             <div className="flex items-center gap-3 text-foreground/70">
-              <div className="p-3 bg-[#8B7355]/[0.05] rounded-xl border border-[#8B7355]/[0.08]">
-                <Mail className="w-5 h-5 text-[#D4654A]" />
+              <div className="p-3 bg-line/[0.05] rounded-xl border border-line/[0.08]">
+                <Mail className="w-5 h-5 text-terra" />
               </div>
               <div>
                 <p className="text-sm text-foreground/50 mb-1">Email me at</p>
-                <a href="mailto:danilodsbleal@gmail.com" className="text-foreground hover:text-[#D4654A] transition-colors">
+                <a href="mailto:danilodsbleal@gmail.com" className="text-foreground hover:text-terra transition-colors">
                   danilodsbleal@gmail.com
                 </a>
               </div>
@@ -94,7 +94,7 @@ export default function ContactSection() {
                     value={formState.name}
                     onChange={(e) => setFormState({ ...formState, name: e.target.value })}
                     required
-                    className="w-full px-4 py-3 bg-[#8B7355]/[0.03] border border-[#8B7355]/[0.1] rounded-xl text-foreground placeholder-foreground/30 focus:outline-none focus:border-[#D4654A]/40 focus:bg-[#8B7355]/[0.05] transition-all duration-300"
+                    className="w-full px-4 py-3 bg-line/[0.03] border border-line/[0.1] rounded-xl text-foreground placeholder-foreground/30 focus:outline-none focus:border-terra/40 focus:bg-line/[0.05] transition-all duration-300"
                     placeholder="John Doe"
                   />
                 </div>
@@ -109,7 +109,7 @@ export default function ContactSection() {
                     value={formState.email}
                     onChange={(e) => setFormState({ ...formState, email: e.target.value })}
                     required
-                    className="w-full px-4 py-3 bg-[#8B7355]/[0.03] border border-[#8B7355]/[0.1] rounded-xl text-foreground placeholder-foreground/30 focus:outline-none focus:border-[#D4654A]/40 focus:bg-[#8B7355]/[0.05] transition-all duration-300"
+                    className="w-full px-4 py-3 bg-line/[0.03] border border-line/[0.1] rounded-xl text-foreground placeholder-foreground/30 focus:outline-none focus:border-terra/40 focus:bg-line/[0.05] transition-all duration-300"
                     placeholder="email@example.com"
                   />
                 </div>
@@ -124,7 +124,7 @@ export default function ContactSection() {
                     onChange={(e) => setFormState({ ...formState, message: e.target.value })}
                     required
                     rows={5}
-                    className="w-full px-4 py-3 bg-[#8B7355]/[0.03] border border-[#8B7355]/[0.1] rounded-xl text-foreground placeholder-foreground/30 focus:outline-none focus:border-[#D4654A]/40 focus:bg-[#8B7355]/[0.05] transition-all duration-300 resize-none"
+                    className="w-full px-4 py-3 bg-line/[0.03] border border-line/[0.1] rounded-xl text-foreground placeholder-foreground/30 focus:outline-none focus:border-terra/40 focus:bg-line/[0.05] transition-all duration-300 resize-none"
                     placeholder="Tell me about your project..."
                   />
                 </div>

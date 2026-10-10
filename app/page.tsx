@@ -7,7 +7,7 @@ import Footer from '@/components/footer';
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-[#FAF7F2] overflow-hidden">
+    <main className="relative min-h-screen bg-paper overflow-hidden">
       <Navigation />
       <HeroSection />
       <ProjectsSection />

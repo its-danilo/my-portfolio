@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Github, Linkedin, Menu, X } from 'lucide-react';
+import ThemeToggle from '@/components/theme-toggle';
 
 const navItems = [
   { label: 'Work', href: '#work' },
@@ -36,7 +37,7 @@ export default function Navigation() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled
-            ? 'bg-[#FFFBF7]/80 backdrop-blur-2xl border-b border-[#8B7355]/[0.08]'
+            ? 'bg-surface/80 backdrop-blur-2xl border-b border-line/[0.08]'
             : 'bg-transparent'
         }`}
       >
@@ -49,8 +50,8 @@ export default function Navigation() {
                 className="flex items-center gap-2"
               >
                 <div className="relative w-8 h-8">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#D4654A] to-[#E07B5D] rounded-lg rotate-45 transform" />
-                  <div className="absolute inset-1 bg-[#FFFBF7] rounded-md rotate-45 transform" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-terra to-terra-2 rounded-lg rotate-45 transform" />
+                  <div className="absolute inset-1 bg-surface rounded-md rotate-45 transform" />
                 </div>
                 <span className="text-lg font-semibold tracking-tight text-foreground">
                   Portfolio
@@ -71,7 +72,7 @@ export default function Navigation() {
                     className="relative text-sm text-foreground/60 hover:text-foreground transition-colors duration-300 group"
                   >
                     {item.label}
-                    <span className="absolute -bottom-1 left-0 w-0 h-px bg-gradient-to-r from-[#D4654A] to-[#F4A261] group-hover:w-full transition-all duration-300" />
+                    <span className="absolute -bottom-1 left-0 w-0 h-px bg-gradient-to-r from-terra to-amber group-hover:w-full transition-all duration-300" />
                   </motion.a>
                 ))}
               </div>
@@ -99,10 +100,12 @@ export default function Navigation() {
                 href="#contact"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-5 py-2.5 bg-[#3D2914] text-[#FFFBF7] text-sm font-medium rounded-lg hover:bg-[#3D2914]/90 transition-colors"
+                className="px-5 py-2.5 bg-ink text-on-ink text-sm font-medium rounded-lg hover:bg-ink/90 transition-colors"
               >
                 Get in Touch
               </motion.a>
+
+              <ThemeToggle />
             </div>
 
             {/* Mobile Menu Button */}
@@ -146,7 +149,7 @@ export default function Navigation() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-[#FFFBF7]/95 backdrop-blur-2xl md:hidden"
+            className="fixed inset-0 z-40 bg-surface/95 backdrop-blur-2xl md:hidden"
           >
             <motion.nav
               initial="closed"
@@ -171,7 +174,7 @@ export default function Navigation() {
                     open: { opacity: 1, y: 0 },
                     closed: { opacity: 0, y: 20 },
                   }}
-                  className="text-3xl font-medium text-foreground hover:text-[#D4654A] transition-colors"
+                  className="text-3xl font-medium text-foreground hover:text-terra transition-colors"
                 >
                   {item.label}
                 </motion.a>
@@ -195,6 +198,7 @@ export default function Navigation() {
                     <social.icon className="w-6 h-6" />
                   </a>
                 ))}
+                <ThemeToggle iconClassName="w-6 h-6" />
               </motion.div>
             </motion.nav>
           </motion.div>

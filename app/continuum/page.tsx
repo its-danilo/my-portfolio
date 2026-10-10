@@ -57,20 +57,20 @@ const screens = [
 
 export default function ContinuumPage() {
   return (
-    <main className="relative min-h-screen bg-[#FAF7F2] overflow-hidden">
+    <main className="relative min-h-screen bg-paper overflow-hidden">
       <div className="absolute inset-0 dot-pattern pointer-events-none" />
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-8 pt-16 pb-24">
         <Link
           href="/#work"
-          className="inline-flex items-center gap-2 text-sm text-foreground/60 hover:text-[#D4654A] transition-colors"
+          className="inline-flex items-center gap-2 text-sm text-foreground/60 hover:text-terra transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to projects
         </Link>
 
         <header className="mt-10 mb-16">
-          <span className="text-sm font-medium text-[#D4654A] mb-4 block">Productivity / Full-Stack</span>
+          <span className="text-sm font-medium text-terra mb-4 block">Productivity / Full-Stack</span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">Continuum</h1>
           <p className="max-w-3xl text-lg text-foreground/60 leading-relaxed">
             A personal execution system: one active mission at a time, curiosities parked instead of lost, and
@@ -81,10 +81,10 @@ export default function ContinuumPage() {
           <div className="mt-8 flex flex-wrap items-center gap-2 text-sm text-foreground/60">
             {flow.map((step, i) => (
               <span key={step} className="inline-flex items-center gap-2">
-                <span className="px-3 py-1 rounded-full bg-[#8B7355]/[0.06] border border-[#8B7355]/[0.1] text-foreground/70">
+                <span className="px-3 py-1 rounded-full bg-line/[0.06] border border-line/[0.1] text-foreground/70">
                   {step}
                 </span>
-                {i < flow.length - 1 && <span className="text-[#D4654A]">→</span>}
+                {i < flow.length - 1 && <span className="text-terra">→</span>}
               </span>
             ))}
           </div>
@@ -93,7 +93,7 @@ export default function ContinuumPage() {
             {stack.map((tech) => (
               <span
                 key={tech}
-                className="px-2.5 py-1 text-xs font-medium text-foreground/60 bg-[#8B7355]/[0.06] rounded-md border border-[#8B7355]/[0.1]"
+                className="px-2.5 py-1 text-xs font-medium text-foreground/60 bg-line/[0.06] rounded-md border border-line/[0.1]"
               >
                 {tech}
               </span>
@@ -148,7 +148,7 @@ export default function ContinuumPage() {
             <section key={screen.image}>
               <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-3">{screen.title}</h2>
               <p className="max-w-3xl text-foreground/60 leading-relaxed mb-6">{screen.text}</p>
-              <div className="premium-card border border-[#8B7355]/[0.1] shadow-xl shadow-[#3D2914]/10">
+              <div className="premium-card border border-line/[0.1] shadow-xl shadow-scrim/10">
                 <img
                   src={screen.image}
                   alt={screen.title}

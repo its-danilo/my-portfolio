@@ -44,20 +44,20 @@ const screens = [
 
 export default function RodribotPage() {
   return (
-    <main className="relative min-h-screen bg-[#FAF7F2] overflow-hidden">
+    <main className="relative min-h-screen bg-paper overflow-hidden">
       <div className="absolute inset-0 dot-pattern pointer-events-none" />
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-8 pt-16 pb-24">
         <Link
           href="/#work"
-          className="inline-flex items-center gap-2 text-sm text-foreground/60 hover:text-[#D4654A] transition-colors"
+          className="inline-flex items-center gap-2 text-sm text-foreground/60 hover:text-terra transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to projects
         </Link>
 
         <header className="mt-10 mb-16">
-          <span className="text-sm font-medium text-[#D4654A] mb-4 block">Automation (RPA)</span>
+          <span className="text-sm font-medium text-terra mb-4 block">Automation (RPA)</span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">Rodribot</h1>
           <p className="max-w-3xl text-lg text-foreground/60 leading-relaxed">
             Legal-process automation I built from scratch during my internship. It takes over the repetitive
@@ -68,10 +68,10 @@ export default function RodribotPage() {
           <div className="mt-8 flex flex-wrap items-center gap-2 text-sm text-foreground/60">
             {flow.map((step, i) => (
               <span key={step} className="inline-flex items-center gap-2">
-                <span className="px-3 py-1 rounded-full bg-[#8B7355]/[0.06] border border-[#8B7355]/[0.1] text-foreground/70">
+                <span className="px-3 py-1 rounded-full bg-line/[0.06] border border-line/[0.1] text-foreground/70">
                   {step}
                 </span>
-                {i < flow.length - 1 && <span className="text-[#D4654A]">→</span>}
+                {i < flow.length - 1 && <span className="text-terra">→</span>}
               </span>
             ))}
           </div>
@@ -80,7 +80,7 @@ export default function RodribotPage() {
             {stack.map((tech) => (
               <span
                 key={tech}
-                className="px-2.5 py-1 text-xs font-medium text-foreground/60 bg-[#8B7355]/[0.06] rounded-md border border-[#8B7355]/[0.1]"
+                className="px-2.5 py-1 text-xs font-medium text-foreground/60 bg-line/[0.06] rounded-md border border-line/[0.1]"
               >
                 {tech}
               </span>
@@ -97,7 +97,7 @@ export default function RodribotPage() {
           {facts.map((fact) => (
             <div key={fact.label} className="premium-card p-6">
               <div className="relative z-10">
-                <p className="text-3xl font-bold text-[#D4654A] mb-1">{fact.value}</p>
+                <p className="text-3xl font-bold text-terra mb-1">{fact.value}</p>
                 <p className="text-sm text-foreground/60">{fact.label}</p>
               </div>
             </div>
@@ -123,7 +123,7 @@ export default function RodribotPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16">
           {screens.map((screen) => (
             <section key={screen.image}>
-              <div className="premium-card border border-[#8B7355]/[0.1] shadow-xl shadow-[#3D2914]/10 mb-6">
+              <div className="premium-card border border-line/[0.1] shadow-xl shadow-scrim/10 mb-6">
                 <img
                   src={screen.image}
                   alt={screen.title}
