@@ -63,15 +63,25 @@ export const personalInfo: PersonalInfo = {
 
 export const projects: Project[] = [
   {
-    id: "4",
-    title: "OpenAurum",
+    id: "3",
+    title: "Rodribot",
     description:
-      "An open-source Linux app to control the RGB lighting of the Pichau Aurum V60 keyboard, which only had a Windows app. I reverse-engineered the USB protocol and built a GTK 4 app plus a CLI: all 16 firmware effects, per-key painting, 40+ ready-made scenes and theme sync with the desktop.",
-    category: "Open Source / Desktop",
-    image: "/openaurum.png",
-    technologies: ["Python", "GTK 4", "libadwaita", "USB HID"],
-    link: "https://github.com/its-danilo/openaurum",
-    github: "https://github.com/its-danilo/openaurum",
+      "Legal-process automation (RPA) I built from scratch during my internship. It drives 20+ repetitive clerical workflows in Brazil's PJe judicial system, from case triage to issuing citations, with resilient browser automation and a remote kill switch, and ships as a standalone Windows app. It enabled the team's migration to the new PJe2X. Private, closed-source project.",
+    category: "Automation (RPA)",
+    image: "/rodribot.png",
+    technologies: ["Python", "Playwright", "pywebview", "PyInstaller"],
+    link: "/rodribot",
+    featured: true,
+  },
+  {
+    id: "7",
+    title: "kinetree",
+    description:
+      "A calisthenics app that turns training into an RPG: an onboarding interview places your level and builds a weekly training plan, a skill tree maps the progressions, and an RPG profile shows your attributes and an anatomical muscle-load heatmap. Work in progress.",
+    category: "Mobile / Flutter · WIP",
+    image: "/kinetree.png",
+    technologies: ["Flutter", "Dart", "Riverpod", "Supabase"],
+    link: "https://kinetree.vercel.app",
     featured: true,
   },
   {
@@ -87,14 +97,15 @@ export const projects: Project[] = [
     featured: true,
   },
   {
-    id: "7",
-    title: "kinetree",
+    id: "4",
+    title: "OpenAurum",
     description:
-      "A calisthenics app that turns training into an RPG: an onboarding interview places your level and builds a weekly training plan, a skill tree maps the progressions, and an RPG profile shows your attributes and an anatomical muscle-load heatmap. Work in progress.",
-    category: "Mobile / Flutter · WIP",
-    image: "/kinetree.png",
-    technologies: ["Flutter", "Dart", "Riverpod", "Supabase"],
-    link: "https://kinetree.vercel.app",
+      "An open-source Linux app to control the RGB lighting of the Pichau Aurum V60 keyboard, which only had a Windows app. I reverse-engineered the USB protocol and built a GTK 4 app plus a CLI: all 16 firmware effects, per-key painting, 40+ ready-made scenes and theme sync with the desktop.",
+    category: "Open Source / Desktop",
+    image: "/openaurum.png",
+    technologies: ["Python", "GTK 4", "libadwaita", "USB HID"],
+    link: "https://github.com/its-danilo/openaurum",
+    github: "https://github.com/its-danilo/openaurum",
     featured: true,
   },
   {
@@ -131,17 +142,6 @@ export const projects: Project[] = [
     technologies: ["Python", "Playwright", "Next.js", "Supabase", "GitHub Actions"],
     link: "https://pricewatch-kohl.vercel.app",
     github: "https://github.com/its-danilo/pricewatch",
-    featured: true,
-  },
-  {
-    id: "3",
-    title: "Rodribot",
-    description:
-      "Legal-process automation (RPA) I built from scratch during my internship. It drives 20+ repetitive clerical workflows in Brazil's PJe judicial system, from case triage to issuing citations, with resilient browser automation and a remote kill switch, and ships as a standalone Windows app. It enabled the team's migration to the new PJe2X. Private, closed-source project.",
-    category: "Automation (RPA)",
-    image: "/rodribot.png",
-    technologies: ["Python", "Playwright", "pywebview", "PyInstaller"],
-    link: "/rodribot",
     featured: true,
   },
 ];
