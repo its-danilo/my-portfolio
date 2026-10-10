@@ -14,6 +14,10 @@ function ProjectCard({ project, index }: ProjectCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef(null);
   const isInView = useInView(cardRef, { once: true, margin: "-100px" });
+  // Pages of this site open in place; other sites in a new tab.
+  const linkProps = project.link?.startsWith('http')
+    ? { target: '_blank', rel: 'noopener noreferrer' }
+    : {};
 
   return (
     <motion.div
@@ -27,6 +31,14 @@ function ProjectCard({ project, index }: ProjectCardProps) {
     >
       <div className="premium-card h-full">
         <div className="relative aspect-[16/10] overflow-hidden">
+          {project.link && (
+            <a
+              href={project.link}
+              {...linkProps}
+              aria-label={`View ${project.title}`}
+              className="absolute inset-0 z-[1]"
+            />
+          )}
           <motion.div
             animate={{ scale: isHovered ? 1.05 : 1 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -56,7 +68,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: isHovered ? 1 : 0 }}
             transition={{ duration: 0.3 }}
-            className="absolute top-4 right-4 flex items-center gap-2"
+            className="absolute top-4 right-4 z-[2] flex items-center gap-2"
           >
             {project.github && (
               <a
@@ -83,7 +95,13 @@ function ProjectCard({ project, index }: ProjectCardProps) {
 
         <div className="p-6">
           <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-terra transition-colors duration-300">
-            {project.title}
+            {project.link ? (
+              <a href={project.link} {...linkProps}>
+                {project.title}
+              </a>
+            ) : (
+              project.title
+            )}
           </h3>
 
           <p className="text-sm text-foreground/50 leading-relaxed mb-4">
@@ -101,20 +119,18 @@ function ProjectCard({ project, index }: ProjectCardProps) {
             ))}
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 10 }}
-            transition={{ duration: 0.3 }}
-            className="mt-6 pt-4 border-t border-line/[0.1]"
-          >
-            <a
-              href={project.link || '#'}
-              className="inline-flex items-center gap-2 text-sm font-medium text-terra hover:text-terra-2 transition-colors group/link"
-            >
-              View Project
-              <ArrowUpRight className="w-4 h-4 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
-            </a>
-          </motion.div>
+          {project.link && (
+            <div className="mt-6 pt-4 border-t border-line/[0.1]">
+              <a
+                href={project.link}
+                {...linkProps}
+                className="inline-flex items-center gap-2 text-sm font-medium text-terra hover:text-terra-2 transition-colors group/link"
+              >
+                View Project
+                <ArrowUpRight className="w-4 h-4 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </motion.div>
