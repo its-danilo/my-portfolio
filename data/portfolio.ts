@@ -141,6 +141,7 @@ export const projects: Project[] = [
     category: "Automation (RPA)",
     image: "/rodribot.png",
     technologies: ["Python", "Playwright", "pywebview", "PyInstaller"],
+    link: "/rodribot",
     featured: true,
   },
 ];
