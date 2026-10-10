@@ -126,11 +126,10 @@ export const projects: Project[] = [
     id: "3",
     title: "Rodribot",
     description:
-      "Legal-process automation (RPA) I built from scratch during my internship. It automates repetitive workflows in Brazil's PJe judicial system and enabled the team's migration to the new PJe2X. Private, closed-source project.",
+      "Legal-process automation (RPA) I built from scratch during my internship. It drives 20+ repetitive clerical workflows in Brazil's PJe judicial system, from case triage to issuing citations, with resilient browser automation and a remote kill switch, and ships as a standalone Windows app. It enabled the team's migration to the new PJe2X. Private, closed-source project.",
     category: "Automation (RPA)",
-    image:
-      "https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    technologies: ["Python", "Playwright", "WebView", "Scrum"],
+    image: "/rodribot.png",
+    technologies: ["Python", "Playwright", "pywebview", "PyInstaller"],
     featured: true,
   },
 ];
