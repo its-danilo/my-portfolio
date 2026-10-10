@@ -75,7 +75,7 @@ export const projects: Project[] = [
   },
   {
     id: "7",
-    title: "kinetree",
+    title: "Kinetree",
     description:
       "A calisthenics app that turns training into an RPG: an onboarding interview places your level and builds a weekly training plan, a skill tree maps the progressions, and an RPG profile shows your attributes and an anatomical muscle-load heatmap. Work in progress.",
     category: "Mobile / Flutter · WIP",
@@ -122,7 +122,7 @@ export const projects: Project[] = [
   },
   {
     id: "1",
-    title: "linkfolio",
+    title: "Linkfolio",
     description:
       "A link-in-bio SaaS: one shareable page for all your links, with click analytics and monthly subscriptions. Multi-tenant, with authentication and per-user data isolation using Postgres Row-Level Security.",
     category: "SaaS / Full-Stack",
@@ -134,7 +134,7 @@ export const projects: Project[] = [
   },
   {
     id: "2",
-    title: "pricewatch",
+    title: "Pricewatch",
     description:
       "A price and stock monitor: track any product page and get alerted on price drops or restocks. Backed by a scheduled Python worker with resilient scraping (JSON-LD parsing, with a Playwright fallback for JavaScript pages).",
     category: "Automation / SaaS",
