@@ -140,7 +140,7 @@ export const projects: Project[] = [
     category: "Automation / SaaS",
     image: "/pricewatch.png",
     technologies: ["Python", "Playwright", "Next.js", "Supabase", "GitHub Actions"],
-    link: "https://pricewatch-kohl.vercel.app",
+    link: "https://pricewatch-me.vercel.app",
     github: "https://github.com/its-danilo/pricewatch",
     featured: true,
   },
