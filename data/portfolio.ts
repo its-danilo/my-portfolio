@@ -66,10 +66,10 @@ export const projects: Project[] = [
     id: "3",
     title: "Rodribot",
     description:
-      "Legal-process automation (RPA) I built from scratch during my internship. It drives 20+ repetitive clerical workflows in Brazil's PJe judicial system, from case triage to issuing citations, with resilient browser automation and a remote kill switch, and ships as a standalone Windows app. It enabled the team's migration to the new PJe2X. Private, closed-source project.",
+      "Legal-process automation (RPA) I built from scratch during my internship. It drives 20+ repetitive clerical workflows in Brazil's PJe judicial system, from case triage to issuing citations, with resilient browser automation and a remote kill switch, and ships as a standalone Windows app. It enabled the team's migration to the new PJe2X, moving cases over straight from a spreadsheet. Private, closed-source project.",
     category: "Automation (RPA)",
     image: "/rodribot.png",
-    technologies: ["Python", "Playwright", "pywebview", "PyInstaller"],
+    technologies: ["Python", "Playwright", "tkinter", "PyInstaller"],
     link: "/rodribot",
     featured: true,
   },

@@ -9,9 +9,9 @@ export const metadata: Metadata = {
     'A tour of Rodribot, an RPA bot that automates repetitive clerical workflows in Brazil’s PJe judicial system.',
 };
 
-const flow = ['Pick a workflow', 'Open Chrome', 'Log in to PJe', 'Work through each case', 'Log every step'];
+const flow = ['Pick a workflow', 'Open the browser', 'Log in to PJe', 'Work through each case', 'Log every step'];
 
-const stack = ['Python', 'Playwright', 'pywebview (WebView2)', 'PyInstaller', 'python-dotenv', 'rich'];
+const stack = ['Python', 'Playwright', 'tkinter', 'PyInstaller', 'openpyxl', 'python-dotenv', 'rich'];
 
 const facts = [
   { value: '20+', label: 'court workflows automated' },
@@ -23,7 +23,7 @@ const screens = [
   {
     image: '/rodribot/main.png',
     title: 'One menu for every workflow',
-    text: 'Rodribot opens a small frameless window with the workflows it can run. Picking one starts the automation and the menu closes itself.',
+    text: 'Rodribot opens a small frameless window with the workflows it can run, including Migração, which reads a spreadsheet of case numbers and moves each case to PJe2X. Picking one starts the automation and the menu closes itself.',
   },
   {
     image: '/rodribot/folder.png',
@@ -33,7 +33,7 @@ const screens = [
   {
     image: '/rodribot/starting.png',
     title: 'Starting a run',
-    text: 'The chosen button turns green and the window fades out. Python receives the choice, opens Chrome through Playwright and runs the workflow step by step inside PJe.',
+    text: 'The chosen button turns green and the window fades out. Rodribot then opens Chrome through Playwright (Firefox for the migration) and runs the workflow step by step inside PJe.',
   },
   {
     image: '/rodribot/unavailable.png',
@@ -116,6 +116,12 @@ export default function RodribotPage() {
               Operators stay in control: a background thread checks a remote switch, and turning it off closes the
               browser right away. Every run writes a log, and the whole bot ships as a standalone Windows app built
               with PyInstaller, so court staff can run it without installing Python.
+            </p>
+            <p>
+              When Windows 11&apos;s Smart App Control started blocking the .NET library behind the old pywebview menu,
+              I rebuilt the menu in tkinter, which ships with Python. The build renders the original HTML menu in
+              Chrome and the tkinter window reuses those images, so it still looks exactly like the screens below. The
+              build also leaves out unused packages like numpy, whose unsigned DLLs would get blocked too.
             </p>
           </div>
         </section>
