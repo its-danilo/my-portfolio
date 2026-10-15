@@ -20,12 +20,11 @@ export default function Footer() {
               whileHover={{ scale: 1.02 }}
               className="flex items-center gap-2"
             >
-              <div className="relative w-6 h-6">
-                <div className="absolute inset-0 bg-gradient-to-br from-terra to-amber rounded-md rotate-45 transform" />
-                <div className="absolute inset-0.5 bg-surface rounded-sm rotate-45 transform" />
+              <div className="w-7 h-7 rounded-full overflow-hidden bg-gradient-to-br from-terra to-amber">
+                <img src="/avatar.webp" alt="" width={28} height={28} className="w-full h-full object-cover" />
               </div>
               <span className="text-base font-semibold tracking-tight text-foreground">
-                Portfolio
+                Danilo Leal
               </span>
             </motion.div>
             <p className="text-sm text-foreground/50">

@@ -49,12 +49,11 @@ export default function Navigation() {
                 whileHover={{ scale: 1.02 }}
                 className="flex items-center gap-2"
               >
-                <div className="relative w-8 h-8">
-                  <div className="absolute inset-0 bg-gradient-to-br from-terra to-terra-2 rounded-lg rotate-45 transform" />
-                  <div className="absolute inset-1 bg-surface rounded-md rotate-45 transform" />
+                <div className="w-9 h-9 rounded-full overflow-hidden bg-gradient-to-br from-terra to-amber">
+                  <img src="/avatar.webp" alt="" width={36} height={36} className="w-full h-full object-cover" />
                 </div>
                 <span className="text-lg font-semibold tracking-tight text-foreground">
-                  Portfolio
+                  Danilo Leal
                 </span>
               </motion.div>
             </a>
