@@ -2,7 +2,15 @@
 
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { Mail, Send, MessageSquare } from 'lucide-react';
+import { Mail, Send, MessageSquare, CheckCircle2, Loader2 } from 'lucide-react';
+import { personalInfo } from '@/data/portfolio';
+
+// Messages go out through FormSubmit, which emails them to this address: no
+// backend and no API key. The address has to confirm the form once, through a
+// link FormSubmit emails on the first message.
+const FORM_ENDPOINT = `https://formsubmit.co/ajax/${personalInfo.email}`;
+
+type Status = 'idle' | 'sending' | 'sent' | 'error';
 
 export default function ContactSection() {
   const sectionRef = useRef(null);
@@ -12,11 +20,46 @@ export default function ContactSection() {
     email: '',
     message: ''
   });
+  const [status, setStatus] = useState<Status>('idle');
+  // A field people never see. Bots fill every input, so a value here means
+  // the message is not from a person.
+  const [honey, setHoney] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formState);
+    if (status === 'sending') return;
+    if (honey) {
+      setStatus('sent');
+      return;
+    }
+    setStatus('sending');
+    try {
+      const response = await fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          name: formState.name,
+          email: formState.email,
+          message: formState.message,
+          _subject: `Portfolio: message from ${formState.name}`,
+          _replyto: formState.email,
+          _template: 'table',
+        }),
+      });
+      const result = await response.json().catch(() => null);
+      const ok = response.ok && (result?.success === true || result?.success === 'true');
+      if (!ok) throw new Error(result?.message ?? `HTTP ${response.status}`);
+      setStatus('sent');
+      setFormState({ name: '', email: '', message: '' });
+    } catch {
+      setStatus('error');
+    }
   };
+
+  // If sending fails, the visitor can still reach me with what they wrote.
+  const mailtoFallback = `mailto:${personalInfo.email}?subject=${encodeURIComponent(
+    `Portfolio: message from ${formState.name}`,
+  )}&body=${encodeURIComponent(formState.message)}`;
 
   return (
     <section id="contact" className="relative py-32 overflow-hidden">
@@ -70,8 +113,8 @@ export default function ContactSection() {
               </div>
               <div>
                 <p className="text-sm text-foreground/50 mb-1">Email me at</p>
-                <a href="mailto:danilodsbleal@gmail.com" className="text-foreground hover:text-terra transition-colors">
-                  danilodsbleal@gmail.com
+                <a href={`mailto:${personalInfo.email}`} className="text-foreground hover:text-terra transition-colors">
+                  {personalInfo.email}
                 </a>
               </div>
             </div>
@@ -83,62 +126,109 @@ export default function ContactSection() {
             transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <form onSubmit={handleSubmit} className="premium-card p-8">
-              <div className="relative z-10 space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-foreground/60 mb-2">
-                    Name
-                  </label>
+              {status === 'sent' ? (
+                <div className="relative z-10 flex flex-col items-center text-center py-10" role="status">
+                  <CheckCircle2 className="w-12 h-12 text-terra mb-5" />
+                  <h3 className="text-2xl font-semibold text-foreground mb-2">Message sent</h3>
+                  <p className="text-foreground/60 mb-8 max-w-sm">
+                    Thanks for reaching out. I&apos;ll get back to you by email soon.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setStatus('idle')}
+                    className="text-sm text-foreground/60 hover:text-terra transition-colors"
+                  >
+                    Send another message
+                  </button>
+                </div>
+              ) : (
+                <div className="relative z-10 space-y-6">
                   <input
                     type="text"
-                    id="name"
-                    value={formState.name}
-                    onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                    required
-                    className="w-full px-4 py-3 bg-line/[0.03] border border-line/[0.1] rounded-xl text-foreground placeholder-foreground/30 focus:outline-none focus:border-terra/40 focus:bg-line/[0.05] transition-all duration-300"
-                    placeholder="John Doe"
+                    name="_honey"
+                    value={honey}
+                    onChange={(e) => setHoney(e.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="hidden"
                   />
-                </div>
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-foreground/60 mb-2">
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      value={formState.name}
+                      onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                      required
+                      className="w-full px-4 py-3 bg-line/[0.03] border border-line/[0.1] rounded-xl text-foreground placeholder-foreground/30 focus:outline-none focus:border-terra/40 focus:bg-line/[0.05] transition-all duration-300"
+                      placeholder="John Doe"
+                    />
+                  </div>
 
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-foreground/60 mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={formState.email}
-                    onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                    required
-                    className="w-full px-4 py-3 bg-line/[0.03] border border-line/[0.1] rounded-xl text-foreground placeholder-foreground/30 focus:outline-none focus:border-terra/40 focus:bg-line/[0.05] transition-all duration-300"
-                    placeholder="email@example.com"
-                  />
-                </div>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-foreground/60 mb-2">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      value={formState.email}
+                      onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                      required
+                      className="w-full px-4 py-3 bg-line/[0.03] border border-line/[0.1] rounded-xl text-foreground placeholder-foreground/30 focus:outline-none focus:border-terra/40 focus:bg-line/[0.05] transition-all duration-300"
+                      placeholder="email@example.com"
+                    />
+                  </div>
 
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-foreground/60 mb-2">
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    value={formState.message}
-                    onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-                    required
-                    rows={5}
-                    className="w-full px-4 py-3 bg-line/[0.03] border border-line/[0.1] rounded-xl text-foreground placeholder-foreground/30 focus:outline-none focus:border-terra/40 focus:bg-line/[0.05] transition-all duration-300 resize-none"
-                    placeholder="Tell me about your project..."
-                  />
-                </div>
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-foreground/60 mb-2">
+                      Message
+                    </label>
+                    <textarea
+                      id="message"
+                      value={formState.message}
+                      onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                      required
+                      rows={5}
+                      className="w-full px-4 py-3 bg-line/[0.03] border border-line/[0.1] rounded-xl text-foreground placeholder-foreground/30 focus:outline-none focus:border-terra/40 focus:bg-line/[0.05] transition-all duration-300 resize-none"
+                      placeholder="Tell me about your project..."
+                    />
+                  </div>
 
-                <motion.button
-                  type="submit"
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full btn-premium text-base group"
-                >
-                  <span>Send Message</span>
-                  <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </motion.button>
-              </div>
+                  {status === 'error' && (
+                    <p className="text-sm text-red-500" role="alert">
+                      Sorry, the message didn&apos;t go through.{' '}
+                      <a href={mailtoFallback} className="underline hover:text-terra">
+                        Email it to me directly
+                      </a>{' '}
+                      instead.
+                    </p>
+                  )}
+
+                  <motion.button
+                    type="submit"
+                    disabled={status === 'sending'}
+                    whileHover={status === 'sending' ? undefined : { scale: 1.02, y: -2 }}
+                    whileTap={status === 'sending' ? undefined : { scale: 0.98 }}
+                    className="w-full btn-premium text-base group disabled:opacity-70 disabled:cursor-wait"
+                  >
+                    {status === 'sending' ? (
+                      <>
+                        <span>Sending...</span>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      </>
+                    ) : (
+                      <>
+                        <span>Send Message</span>
+                        <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </>
+                    )}
+                  </motion.button>
+                </div>
+              )}
             </form>
           </motion.div>
         </div>
