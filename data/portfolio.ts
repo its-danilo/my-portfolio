@@ -109,6 +109,17 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    id: "8",
+    title: "TVBox Lab",
+    description:
+      "A home server on a cheap 1 GB Android TV box running Armbian: DNS ad and tracker filtering for the whole house, a self-hosted password vault, status monitoring with phone alerts and a button that wakes my PC over Wi-Fi. Reachable only through Tailscale, with no ports open on the router.",
+    category: "Self-hosting / Linux",
+    image: "/tvbox-lab.png",
+    technologies: ["Linux", "Docker", "Tailscale", "Bash", "Python"],
+    link: "/tvbox-lab",
+    featured: true,
+  },
+  {
     id: "5",
     title: "Agenda",
     description:
