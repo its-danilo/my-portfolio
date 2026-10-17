@@ -4,12 +4,29 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Github, Linkedin, Menu, X } from 'lucide-react';
 import ThemeToggle from '@/components/theme-toggle';
+import LanguageToggle from '@/components/language-toggle';
+import { useCopy } from '@/lib/i18n';
 
-const navItems = [
-  { label: 'Work', href: '#work' },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '#contact' },
-];
+const copy = {
+  en: {
+    nav: [
+      { label: 'Work', href: '#work' },
+      { label: 'About', href: '#about' },
+      { label: 'Contact', href: '#contact' },
+    ],
+    cta: 'Get in Touch',
+    title: 'Danilo Leal | Full Stack & Automation Developer',
+  },
+  pt: {
+    nav: [
+      { label: 'Trabalhos', href: '#work' },
+      { label: 'Sobre', href: '#about' },
+      { label: 'Contato', href: '#contact' },
+    ],
+    cta: 'Fale comigo',
+    title: 'Danilo Leal | Desenvolvedor Full Stack e de Automação',
+  },
+};
 
 const socialLinks = [
   { icon: Github, href: 'https://github.com/its-danilo', label: 'GitHub' },
@@ -19,6 +36,13 @@ const socialLinks = [
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const t = useCopy(copy);
+  const navItems = t.nav;
+
+  // The tab title follows the language too; app/layout.tsx has the English one.
+  useEffect(() => {
+    document.title = t.title;
+  }, [t.title]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,7 +87,7 @@ export default function Navigation() {
               <div className="flex items-center gap-8">
                 {navItems.map((item, index) => (
                   <motion.a
-                    key={item.label}
+                    key={item.href}
                     href={item.href}
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -101,10 +125,13 @@ export default function Navigation() {
                 whileTap={{ scale: 0.98 }}
                 className="px-5 py-2.5 bg-ink text-on-ink text-sm font-medium rounded-lg hover:bg-ink/90 transition-colors"
               >
-                Get in Touch
+                {t.cta}
               </motion.a>
 
-              <ThemeToggle />
+              <div className="flex items-center gap-4">
+                <LanguageToggle />
+                <ThemeToggle />
+              </div>
             </div>
 
             {/* Mobile Menu Button */}
@@ -166,7 +193,7 @@ export default function Navigation() {
             >
               {navItems.map((item) => (
                 <motion.a
-                  key={item.label}
+                  key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   variants={{
@@ -197,6 +224,7 @@ export default function Navigation() {
                     <social.icon className="w-6 h-6" />
                   </a>
                 ))}
+                <LanguageToggle iconClassName="w-[32px] h-[28px]" />
                 <ThemeToggle iconClassName="w-6 h-6" />
               </motion.div>
             </motion.nav>

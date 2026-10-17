@@ -4,17 +4,41 @@ import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { MapPin, Mail, Briefcase, Code2, Layers, Zap, Globe } from 'lucide-react';
 import { personalInfo } from '@/data/portfolio';
+import { useLanguage, type Localized } from '@/lib/i18n';
 
-const skills = [
-  { icon: Code2, label: 'Modern Frameworks', desc: 'Next.js, React, Vue' },
-  { icon: Layers, label: 'System Architecture', desc: 'Scalable solutions' },
-  { icon: Zap, label: 'Performance', desc: 'Optimized experiences' },
-  { icon: Globe, label: 'Full-Stack', desc: 'End-to-end development' },
+const skills: { icon: typeof Code2; label: Localized; desc: Localized }[] = [
+  {
+    icon: Code2,
+    label: { en: 'Modern Frameworks', pt: 'Frameworks modernos' },
+    desc: { en: 'Next.js, React, Vue', pt: 'Next.js, React, Vue' },
+  },
+  {
+    icon: Layers,
+    label: { en: 'System Architecture', pt: 'Arquitetura de sistemas' },
+    desc: { en: 'Scalable solutions', pt: 'Soluções escaláveis' },
+  },
+  {
+    icon: Zap,
+    label: { en: 'Performance', pt: 'Performance' },
+    desc: { en: 'Optimized experiences', pt: 'Experiências otimizadas' },
+  },
+  {
+    icon: Globe,
+    label: { en: 'Full-Stack', pt: 'Full-Stack' },
+    desc: { en: 'End-to-end development', pt: 'Desenvolvimento de ponta a ponta' },
+  },
 ];
+
+const copy = {
+  en: { eyebrow: 'About Me', title: 'Building the Future', technologies: 'Technologies' },
+  pt: { eyebrow: 'Sobre mim', title: 'Construindo o futuro', technologies: 'Tecnologias' },
+};
 
 export default function AboutSection() {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const { lang } = useLanguage();
+  const t = copy[lang];
 
   return (
     <section id="about" className="relative py-32 overflow-hidden">
@@ -35,10 +59,10 @@ export default function AboutSection() {
             transition={{ delay: 0.2, duration: 0.8 }}
             className="text-sm font-medium text-terra mb-4 block"
           >
-            About Me
+            {t.eyebrow}
           </motion.span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-            Building the Future
+            {t.title}
           </h2>
         </motion.div>
 
@@ -49,7 +73,7 @@ export default function AboutSection() {
             transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <p className="text-lg text-foreground/60 leading-relaxed mb-8">
-              {personalInfo.description}
+              {personalInfo.description[lang]}
             </p>
 
             <div className="space-y-4 mb-12">
@@ -57,7 +81,7 @@ export default function AboutSection() {
                 <div className="p-2.5 bg-line/[0.05] rounded-lg border border-line/[0.1]">
                   <MapPin className="w-4 h-4 text-terra" />
                 </div>
-                <span>{personalInfo.location}</span>
+                <span>{personalInfo.location[lang]}</span>
               </div>
 
               <div className="flex items-center gap-3 text-foreground/70">
@@ -73,16 +97,16 @@ export default function AboutSection() {
                 <div className="p-2.5 bg-line/[0.05] rounded-lg border border-line/[0.1]">
                   <Briefcase className="w-4 h-4 text-terra" />
                 </div>
-                <span className="text-leaf">{personalInfo.availability}</span>
+                <span className="text-leaf">{personalInfo.availability[lang]}</span>
               </div>
             </div>
 
             <div>
               <h3 className="text-sm font-medium text-foreground/50 uppercase tracking-wider mb-4">
-                Technologies
+                {t.technologies}
               </h3>
               <div className="flex flex-wrap gap-2">
-                {personalInfo.skills.map((skill, index) => (
+                {personalInfo.skills[lang].map((skill, index) => (
                   <motion.span
                     key={skill}
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -100,7 +124,7 @@ export default function AboutSection() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {skills.map((skill, index) => (
               <motion.div
-                key={skill.label}
+                key={skill.label.en}
                 initial={{ opacity: 0, y: 40 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
                 transition={{ delay: 0.4 + index * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -110,8 +134,8 @@ export default function AboutSection() {
                   <div className="w-12 h-12 mb-4 rounded-xl bg-gradient-to-br from-terra/10 to-amber/10 flex items-center justify-center group-hover:from-terra/20 group-hover:to-amber/20 transition-all duration-300">
                     <skill.icon className="w-6 h-6 text-terra" />
                   </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-1">{skill.label}</h3>
-                  <p className="text-sm text-foreground/50">{skill.desc}</p>
+                  <h3 className="text-lg font-semibold text-foreground mb-1">{skill.label[lang]}</h3>
+                  <p className="text-sm text-foreground/50">{skill.desc[lang]}</p>
                 </div>
               </motion.div>
             ))}

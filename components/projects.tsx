@@ -4,6 +4,26 @@ import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { ExternalLink, Github, ArrowUpRight } from 'lucide-react';
 import { projects, type Project } from '@/data/portfolio';
+import { useLanguage } from '@/lib/i18n';
+
+const copy = {
+  en: {
+    eyebrow: 'Selected Work',
+    title: 'Featured Projects',
+    intro: 'A curated selection of projects that showcase my expertise in building modern, scalable, and beautiful digital products.',
+    view: 'View Project',
+    viewNamed: (title: string) => `View ${title}`,
+    github: 'View all projects on GitHub',
+  },
+  pt: {
+    eyebrow: 'Trabalhos selecionados',
+    title: 'Projetos em destaque',
+    intro: 'Uma seleção de projetos que mostram minha experiência criando produtos digitais modernos, escaláveis e bonitos.',
+    view: 'Ver projeto',
+    viewNamed: (title: string) => `Ver ${title}`,
+    github: 'Ver todos os projetos no GitHub',
+  },
+};
 
 interface ProjectCardProps {
   project: Project;
@@ -14,6 +34,8 @@ function ProjectCard({ project, index }: ProjectCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef(null);
   const isInView = useInView(cardRef, { once: true, margin: "-100px" });
+  const { lang } = useLanguage();
+  const t = copy[lang];
   // Pages of this site open in place; other sites in a new tab.
   const linkProps = project.link?.startsWith('http')
     ? { target: '_blank', rel: 'noopener noreferrer' }
@@ -35,7 +57,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
             <a
               href={project.link}
               {...linkProps}
-              aria-label={`View ${project.title}`}
+              aria-label={t.viewNamed(project.title)}
               className="absolute inset-0 z-[1]"
             />
           )}
@@ -60,7 +82,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
             className="absolute top-4 left-4"
           >
             <span className="px-3 py-1.5 text-xs font-medium text-white/90 bg-scrim/30 backdrop-blur-md rounded-full border border-white/[0.1]">
-              {project.category}
+              {project.category[lang]}
             </span>
           </motion.div>
 
@@ -105,7 +127,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
           </h3>
 
           <p className="text-sm text-foreground/50 leading-relaxed mb-4">
-            {project.description}
+            {project.description[lang]}
           </p>
 
           <div className="flex flex-wrap gap-2">
@@ -126,7 +148,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
                 {...linkProps}
                 className="inline-flex items-center gap-2 text-sm font-medium text-terra hover:text-terra-2 transition-colors group/link"
               >
-                View Project
+                {t.view}
                 <ArrowUpRight className="w-4 h-4 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
               </a>
             </div>
@@ -140,6 +162,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
 export default function ProjectsSection() {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const t = copy[useLanguage().lang];
 
   const featuredProjects = projects.filter(p => p.featured);
   const otherProjects = projects.filter(p => !p.featured);
@@ -163,14 +186,13 @@ export default function ProjectsSection() {
             transition={{ delay: 0.2, duration: 0.8 }}
             className="text-sm font-medium text-terra mb-4 block"
           >
-            Selected Work
+            {t.eyebrow}
           </motion.span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-            Featured Projects
+            {t.title}
           </h2>
           <p className="max-w-2xl text-lg text-foreground/50">
-            A curated selection of projects that showcase my expertise in building
-            modern, scalable, and beautiful digital products.
+            {t.intro}
           </p>
         </motion.div>
 
@@ -200,7 +222,7 @@ export default function ProjectsSection() {
             className="inline-flex items-center gap-2 text-foreground/60 hover:text-terra transition-colors group"
           >
             <Github className="w-5 h-5" />
-            <span className="font-medium">View all projects on GitHub</span>
+            <span className="font-medium">{t.github}</span>
             <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </a>
         </motion.div>

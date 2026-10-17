@@ -4,6 +4,7 @@ import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { Mail, Send, MessageSquare, CheckCircle2, Loader2 } from 'lucide-react';
 import { personalInfo } from '@/data/portfolio';
+import { useCopy } from '@/lib/i18n';
 
 // Messages go out through FormSubmit, which emails them to this address: no
 // backend and no API key. The address has to confirm the form once, through a
@@ -11,6 +12,53 @@ import { personalInfo } from '@/data/portfolio';
 const FORM_ENDPOINT = `https://formsubmit.co/ajax/${personalInfo.email}`;
 
 type Status = 'idle' | 'sending' | 'sent' | 'error';
+
+const copy = {
+  en: {
+    badge: "Let's Talk",
+    titleTop: 'Have a project',
+    titleAccent: 'in mind?',
+    intro: "I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.",
+    emailMe: 'Email me at',
+    sentTitle: 'Message sent',
+    sentText: "Thanks for reaching out. I'll get back to you by email soon.",
+    sendAnother: 'Send another message',
+    name: 'Name',
+    namePlaceholder: 'John Doe',
+    email: 'Email',
+    emailPlaceholder: 'email@example.com',
+    message: 'Message',
+    messagePlaceholder: 'Tell me about your project...',
+    errorBefore: "Sorry, the message didn't go through. ",
+    errorLink: 'Email it to me directly',
+    errorAfter: ' instead.',
+    sending: 'Sending...',
+    send: 'Send Message',
+    subject: (name: string) => `Portfolio: message from ${name}`,
+  },
+  pt: {
+    badge: 'Vamos conversar',
+    titleTop: 'Tem um projeto',
+    titleAccent: 'em mente?',
+    intro: 'Estou sempre aberto a conversar sobre novos projetos, ideias criativas ou oportunidades de fazer parte da sua visão.',
+    emailMe: 'Mande um e-mail para',
+    sentTitle: 'Mensagem enviada',
+    sentText: 'Obrigado pelo contato. Respondo por e-mail em breve.',
+    sendAnother: 'Enviar outra mensagem',
+    name: 'Nome',
+    namePlaceholder: 'João Silva',
+    email: 'E-mail',
+    emailPlaceholder: 'email@exemplo.com',
+    message: 'Mensagem',
+    messagePlaceholder: 'Conte sobre o seu projeto...',
+    errorBefore: 'Desculpe, a mensagem não foi enviada. ',
+    errorLink: 'Mande direto para o meu e-mail',
+    errorAfter: '.',
+    sending: 'Enviando...',
+    send: 'Enviar mensagem',
+    subject: (name: string) => `Portfólio: mensagem de ${name}`,
+  },
+};
 
 export default function ContactSection() {
   const sectionRef = useRef(null);
@@ -24,6 +72,7 @@ export default function ContactSection() {
   // A field people never see. Bots fill every input, so a value here means
   // the message is not from a person.
   const [honey, setHoney] = useState('');
+  const t = useCopy(copy);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +90,7 @@ export default function ContactSection() {
           name: formState.name,
           email: formState.email,
           message: formState.message,
-          _subject: `Portfolio: message from ${formState.name}`,
+          _subject: t.subject(formState.name),
           _replyto: formState.email,
           _template: 'table',
         }),
@@ -58,7 +107,7 @@ export default function ContactSection() {
 
   // If sending fails, the visitor can still reach me with what they wrote.
   const mailtoFallback = `mailto:${personalInfo.email}?subject=${encodeURIComponent(
-    `Portfolio: message from ${formState.name}`,
+    t.subject(formState.name),
   )}&body=${encodeURIComponent(formState.message)}`;
 
   return (
@@ -93,18 +142,17 @@ export default function ContactSection() {
               className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full glass border border-line/[0.08]"
             >
               <MessageSquare className="w-4 h-4 text-terra" />
-              <span className="text-sm text-foreground/60 font-medium">Let's Talk</span>
+              <span className="text-sm text-foreground/60 font-medium">{t.badge}</span>
             </motion.div>
 
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-              Have a project
+              {t.titleTop}
               <br />
-              <span className="text-gradient gradient-primary">in mind?</span>
+              <span className="text-gradient gradient-primary">{t.titleAccent}</span>
             </h2>
 
             <p className="text-lg text-foreground/50 mb-8 max-w-md">
-              I'm always open to discussing new projects, creative ideas,
-              or opportunities to be part of your vision.
+              {t.intro}
             </p>
 
             <div className="flex items-center gap-3 text-foreground/70">
@@ -112,7 +160,7 @@ export default function ContactSection() {
                 <Mail className="w-5 h-5 text-terra" />
               </div>
               <div>
-                <p className="text-sm text-foreground/50 mb-1">Email me at</p>
+                <p className="text-sm text-foreground/50 mb-1">{t.emailMe}</p>
                 <a href={`mailto:${personalInfo.email}`} className="text-foreground hover:text-terra transition-colors">
                   {personalInfo.email}
                 </a>
@@ -129,16 +177,16 @@ export default function ContactSection() {
               {status === 'sent' ? (
                 <div className="relative z-10 flex flex-col items-center text-center py-10" role="status">
                   <CheckCircle2 className="w-12 h-12 text-terra mb-5" />
-                  <h3 className="text-2xl font-semibold text-foreground mb-2">Message sent</h3>
+                  <h3 className="text-2xl font-semibold text-foreground mb-2">{t.sentTitle}</h3>
                   <p className="text-foreground/60 mb-8 max-w-sm">
-                    Thanks for reaching out. I&apos;ll get back to you by email soon.
+                    {t.sentText}
                   </p>
                   <button
                     type="button"
                     onClick={() => setStatus('idle')}
                     className="text-sm text-foreground/60 hover:text-terra transition-colors"
                   >
-                    Send another message
+                    {t.sendAnother}
                   </button>
                 </div>
               ) : (
@@ -155,7 +203,7 @@ export default function ContactSection() {
                   />
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-foreground/60 mb-2">
-                      Name
+                      {t.name}
                     </label>
                     <input
                       type="text"
@@ -164,13 +212,13 @@ export default function ContactSection() {
                       onChange={(e) => setFormState({ ...formState, name: e.target.value })}
                       required
                       className="w-full px-4 py-3 bg-line/[0.03] border border-line/[0.1] rounded-xl text-foreground placeholder-foreground/30 focus:outline-none focus:border-terra/40 focus:bg-line/[0.05] transition-all duration-300"
-                      placeholder="John Doe"
+                      placeholder={t.namePlaceholder}
                     />
                   </div>
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-foreground/60 mb-2">
-                      Email
+                      {t.email}
                     </label>
                     <input
                       type="email"
@@ -179,13 +227,13 @@ export default function ContactSection() {
                       onChange={(e) => setFormState({ ...formState, email: e.target.value })}
                       required
                       className="w-full px-4 py-3 bg-line/[0.03] border border-line/[0.1] rounded-xl text-foreground placeholder-foreground/30 focus:outline-none focus:border-terra/40 focus:bg-line/[0.05] transition-all duration-300"
-                      placeholder="email@example.com"
+                      placeholder={t.emailPlaceholder}
                     />
                   </div>
 
                   <div>
                     <label htmlFor="message" className="block text-sm font-medium text-foreground/60 mb-2">
-                      Message
+                      {t.message}
                     </label>
                     <textarea
                       id="message"
@@ -194,17 +242,17 @@ export default function ContactSection() {
                       required
                       rows={5}
                       className="w-full px-4 py-3 bg-line/[0.03] border border-line/[0.1] rounded-xl text-foreground placeholder-foreground/30 focus:outline-none focus:border-terra/40 focus:bg-line/[0.05] transition-all duration-300 resize-none"
-                      placeholder="Tell me about your project..."
+                      placeholder={t.messagePlaceholder}
                     />
                   </div>
 
                   {status === 'error' && (
                     <p className="text-sm text-red-500" role="alert">
-                      Sorry, the message didn&apos;t go through.{' '}
+                      {t.errorBefore}
                       <a href={mailtoFallback} className="underline hover:text-terra">
-                        Email it to me directly
-                      </a>{' '}
-                      instead.
+                        {t.errorLink}
+                      </a>
+                      {t.errorAfter}
                     </p>
                   )}
 
@@ -217,12 +265,12 @@ export default function ContactSection() {
                   >
                     {status === 'sending' ? (
                       <>
-                        <span>Sending...</span>
+                        <span>{t.sending}</span>
                         <Loader2 className="w-4 h-4 animate-spin" />
                       </>
                     ) : (
                       <>
-                        <span>Send Message</span>
+                        <span>{t.send}</span>
                         <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </>
                     )}

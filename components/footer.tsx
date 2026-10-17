@@ -2,14 +2,21 @@
 
 import { motion } from 'framer-motion';
 import { Github, Linkedin } from 'lucide-react';
+import { useCopy } from '@/lib/i18n';
 
 const socialLinks = [
   { icon: Github, href: 'https://github.com/its-danilo', label: 'GitHub' },
   { icon: Linkedin, href: 'https://www.linkedin.com/in/danilo-lnkd/', label: 'LinkedIn' },
 ];
 
+const copy = {
+  en: { rights: 'All rights reserved.', top: 'Back to top ↑' },
+  pt: { rights: 'Todos os direitos reservados.', top: 'Voltar ao topo ↑' },
+};
+
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const t = useCopy(copy);
 
   return (
     <footer className="relative py-16 border-t border-line/[0.08]">
@@ -28,7 +35,7 @@ export default function Footer() {
               </span>
             </motion.div>
             <p className="text-sm text-foreground/50">
-              © {currentYear} All rights reserved.
+              © {currentYear} {t.rights}
             </p>
           </div>
 
@@ -59,7 +66,7 @@ export default function Footer() {
             href="#"
             className="text-xs text-foreground/40 hover:text-foreground/70 transition-colors"
           >
-            Back to top ↑
+            {t.top}
           </a>
         </motion.div>
       </div>

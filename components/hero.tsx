@@ -2,8 +2,30 @@
 
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
+import { useCopy } from '@/lib/i18n';
+
+const copy = {
+  en: {
+    badge: 'Available for new projects',
+    titleTop: 'Full-stack apps &',
+    titleAccent: 'automation',
+    intro: 'I build web systems, automations and bots that solve real problems, shipping fast with modern tools and AI.',
+    work: 'View My Work',
+    contact: 'Get in Touch',
+  },
+  pt: {
+    badge: 'Disponível para novos projetos',
+    titleTop: 'Apps full-stack e',
+    titleAccent: 'automação',
+    intro: 'Crio sistemas web, automações e bots que resolvem problemas reais, com entregas rápidas usando ferramentas modernas e IA.',
+    work: 'Ver meus trabalhos',
+    contact: 'Fale comigo',
+  },
+};
 
 export default function HeroSection() {
+  const t = useCopy(copy);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-paper">
@@ -54,7 +76,7 @@ export default function HeroSection() {
           className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full glass border border-line/[0.08]"
         >
           <Sparkles className="w-4 h-4 text-terra" />
-          <span className="text-sm text-foreground/70 font-medium">Available for new projects</span>
+          <span className="text-sm text-foreground/70 font-medium">{t.badge}</span>
         </motion.div>
 
         <motion.h1
@@ -63,7 +85,7 @@ export default function HeroSection() {
           transition={{ delay: 0.3, duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[0.95] tracking-tight mb-6"
         >
-          <span className="text-foreground">Full-stack apps &amp;</span>
+          <span className="text-foreground">{t.titleTop}</span>
           <br />
           <motion.span
             initial={{ opacity: 0, x: -20 }}
@@ -71,7 +93,7 @@ export default function HeroSection() {
             transition={{ delay: 0.6, duration: 1 }}
             className="text-gradient gradient-primary"
           >
-            automation
+            {t.titleAccent}
           </motion.span>
         </motion.h1>
 
@@ -81,8 +103,7 @@ export default function HeroSection() {
           transition={{ delay: 0.7, duration: 0.8 }}
           className="max-w-2xl mx-auto text-lg md:text-xl text-foreground/50 leading-relaxed mb-12"
         >
-          I build web systems, automations and bots that solve real
-          problems, shipping fast with modern tools and AI.
+          {t.intro}
         </motion.p>
 
         <motion.div
@@ -97,7 +118,7 @@ export default function HeroSection() {
             whileTap={{ scale: 0.98 }}
             className="btn-premium text-base"
           >
-            View My Work
+            {t.work}
           </motion.a>
           <motion.a
             href="#contact"
@@ -105,7 +126,7 @@ export default function HeroSection() {
             whileTap={{ scale: 0.98 }}
             className="btn-ghost-premium text-base"
           >
-            Get in Touch
+            {t.contact}
           </motion.a>
         </motion.div>
 

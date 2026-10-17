@@ -96,6 +96,17 @@
   }
 }
 
+/* Hidden until the Portuguese text is in (see lib/language.ts). Outside the
+   layers so Tailwind keeps it: the class is only set from lib/, which it does
+   not scan. */
+html.lang-pending {
+  background-color: rgb(var(--paper));
+}
+
+html.lang-pending body {
+  visibility: hidden;
+}
+
 @layer utilities {
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r;
