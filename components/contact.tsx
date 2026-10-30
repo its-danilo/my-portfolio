@@ -2,14 +2,15 @@
 
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { Mail, Send, MessageSquare, CheckCircle2, Loader2 } from 'lucide-react';
+import { Mail, Phone, Send, MessageSquare, CheckCircle2, Loader2 } from 'lucide-react';
 import { personalInfo } from '@/data/portfolio';
 import { useCopy } from '@/lib/i18n';
 
-// Messages go out through FormSubmit, which emails them to this address: no
-// backend and no API key. The address has to confirm the form once, through a
-// link FormSubmit emails on the first message.
-const FORM_ENDPOINT = `https://formsubmit.co/ajax/${personalInfo.email}`;
+// Messages go out through Web3Forms, which emails them to the address the
+// access key was created with: no backend needed. The key is meant to be
+// public, so it can live in the page.
+const FORM_ENDPOINT = 'https://api.web3forms.com/submit';
+const WEB3FORMS_ACCESS_KEY = '824fc08e-930f-4c4c-aba9-d9b804f817e4';
 
 type Status = 'idle' | 'sending' | 'sent' | 'error';
 
@@ -20,6 +21,7 @@ const copy = {
     titleAccent: 'in mind?',
     intro: "I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.",
     emailMe: 'Email me at',
+    callMe: 'Call or message me at',
     sentTitle: 'Message sent',
     sentText: "Thanks for reaching out. I'll get back to you by email soon.",
     sendAnother: 'Send another message',
@@ -42,6 +44,7 @@ const copy = {
     titleAccent: 'em mente?',
     intro: 'Estou sempre aberto a conversar sobre novos projetos, ideias criativas ou oportunidades de fazer parte da sua visão.',
     emailMe: 'Mande um e-mail para',
+    callMe: 'Ligue ou chame em',
     sentTitle: 'Mensagem enviada',
     sentText: 'Obrigado pelo contato. Respondo por e-mail em breve.',
     sendAnother: 'Enviar outra mensagem',
@@ -87,16 +90,16 @@ export default function ContactSection() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
           name: formState.name,
           email: formState.email,
           message: formState.message,
-          _subject: t.subject(formState.name),
-          _replyto: formState.email,
-          _template: 'table',
+          subject: t.subject(formState.name),
+          from_name: personalInfo.name,
         }),
       });
       const result = await response.json().catch(() => null);
-      const ok = response.ok && (result?.success === true || result?.success === 'true');
+      const ok = response.ok && result?.success === true;
       if (!ok) throw new Error(result?.message ?? `HTTP ${response.status}`);
       setStatus('sent');
       setFormState({ name: '', email: '', message: '' });
@@ -163,6 +166,21 @@ export default function ContactSection() {
                 <p className="text-sm text-foreground/50 mb-1">{t.emailMe}</p>
                 <a href={`mailto:${personalInfo.email}`} className="text-foreground hover:text-terra transition-colors">
                   {personalInfo.email}
+                </a>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 text-foreground/70 mt-4">
+              <div className="p-3 bg-line/[0.05] rounded-xl border border-line/[0.08]">
+                <Phone className="w-5 h-5 text-terra" />
+              </div>
+              <div>
+                <p className="text-sm text-foreground/50 mb-1">{t.callMe}</p>
+                <a
+                  href={`tel:${personalInfo.phone.replace(/[^\d+]/g, '')}`}
+                  className="text-foreground hover:text-terra transition-colors"
+                >
+                  <span aria-hidden="true">🇧🇷</span> {personalInfo.phone.replace(/^\+55\s*/, '')}
                 </a>
               </div>
             </div>

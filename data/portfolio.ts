@@ -24,6 +24,7 @@ export interface PersonalInfo {
   tagline: string;
   description: Localized;
   email: string;
+  phone: string;
   location: Localized;
   availability: Localized;
   skills: Localized<string[]>;
@@ -38,7 +39,8 @@ export const personalInfo: PersonalInfo = {
     en: "I build web systems, automations and bots that solve real problems. I work across front-end and back-end, with a strong focus on process automation (RPA) and fast, tested delivery using modern tools and AI. Based in Brazil, available for freelance work worldwide.",
     pt: "Crio sistemas web, automações e bots que resolvem problemas reais. Trabalho no front-end e no back-end, com foco forte em automação de processos (RPA) e entregas rápidas e testadas, usando ferramentas modernas e IA. Moro no Brasil e atendo como freelancer no mundo todo.",
   },
-  email: "danilodsbleal@gmail.com",
+  email: "ads.danilosbleal@gmail.com",
+  phone: "+55 (84) 99681-4463",
   location: { en: "Natal, RN, Brazil", pt: "Natal, RN, Brasil" },
   availability: { en: "Open to freelance work", pt: "Aberto a trabalhos freelance" },
   skills: {
@@ -82,8 +84,8 @@ export const projects: Project[] = [
     id: "3",
     title: "Rodribot",
     description: {
-      en: "Legal-process automation (RPA) I built from scratch during my internship. It drives 20+ repetitive clerical workflows in Brazil's PJe judicial system, from case triage to issuing citations, with resilient browser automation and a remote kill switch, and ships as a standalone Windows app. It enabled the team's migration to the new PJe2X, moving cases over straight from a spreadsheet. Private, closed-source project.",
-      pt: "Automação de processos judiciais (RPA) que criei do zero durante meu estágio. Ela executa mais de 20 fluxos repetitivos de secretaria no PJe, o sistema judicial eletrônico do Brasil, da triagem de processos à expedição de citações, com automação de navegador resiliente e um botão de desligamento remoto, e roda como um app de Windows independente. Foi ela que viabilizou a migração da equipe para o novo PJe2X, movendo os processos direto de uma planilha. Projeto privado, de código fechado.",
+      en: "Legal-process automation (RPA) I built from scratch during my internship at the Federal Justice of Rio Grande do Norte (JFRN). It drives 20+ repetitive clerical workflows in Brazil's PJe judicial system, from case triage to issuing citations, with resilient browser automation and a remote kill switch, and ships as a standalone Windows app. It enabled the team's migration to the new PJe2X, moving cases over straight from a spreadsheet. Private, closed-source project.",
+      pt: "Automação de processos judiciais (RPA) que criei do zero durante meu estágio na Justiça Federal do Rio Grande do Norte (JFRN). Ela executa mais de 20 fluxos repetitivos de secretaria no PJe, o sistema judicial eletrônico do Brasil, da triagem de processos à expedição de citações, com automação de navegador resiliente e um botão de desligamento remoto, e roda como um app de Windows independente. Foi ela que viabilizou a migração da equipe para o novo PJe2X, movendo os processos direto de uma planilha. Projeto privado, de código fechado.",
     },
     category: { en: "Automation (RPA)", pt: "Automação (RPA)" },
     image: "/rodribot.png",
