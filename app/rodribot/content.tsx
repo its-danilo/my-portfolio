@@ -9,9 +9,9 @@ const stack = ['Python', 'Playwright', 'tkinter', 'PyInstaller', 'openpyxl', 'py
 const en = {
   category: 'Automation (RPA)',
   intro:
-    "Legal-process automation I built from scratch during my internship. It takes over the repetitive clerical work court staff do every day in PJe, Brazil's electronic judicial system: triaging cases, issuing citations and notices, filling in forms and moving each case to its next step.",
+    "Legal-process automation I built from scratch during my internship at the Federal Justice of Rio Grande do Norte (JFRN). It takes over the repetitive clerical work court staff do every day in PJe, Brazil's electronic judicial system: triaging cases, issuing citations and notices, filling in forms and moving each case to its next step.",
   flow: ['Pick a workflow', 'Open the browser', 'Log in to PJe', 'Work through each case', 'Log every step'],
-  note: 'Rodribot is a private, closed-source tool that runs against a real court system, so there is no public demo. Instead, here is its flow-selector menu, in Brazilian Portuguese like the app itself.',
+  note: 'Rodribot is a private, closed-source tool that runs against a real court system at the JFRN, so there is no public demo. Instead, here is its flow-selector menu, in Brazilian Portuguese like the app itself.',
   facts: [
     { value: '20+', label: 'court workflows automated' },
     { value: '1', label: 'standalone Windows app, no Python needed' },
@@ -30,9 +30,9 @@ const copy: Localized<typeof en> = {
   pt: {
     category: 'Automação (RPA)',
     intro:
-      'Automação de processos judiciais que criei do zero durante meu estágio. Ela assume o trabalho repetitivo de secretaria que os servidores fazem todo dia no PJe, o sistema judicial eletrônico do Brasil: triar processos, expedir citações e intimações, preencher formulários e levar cada processo para a próxima etapa.',
+      'Automação de processos judiciais que criei do zero durante meu estágio na Justiça Federal do Rio Grande do Norte (JFRN). Ela assume o trabalho repetitivo de secretaria que os servidores fazem todo dia no PJe, o sistema judicial eletrônico do Brasil: triar processos, expedir citações e intimações, preencher formulários e levar cada processo para a próxima etapa.',
     flow: ['Escolher um fluxo', 'Abrir o navegador', 'Entrar no PJe', 'Percorrer cada processo', 'Registrar cada passo'],
-    note: 'O Rodribot é uma ferramenta privada, de código fechado, que roda num sistema judicial real, então não há demo pública. Em vez disso, aqui está o menu de seleção de fluxos, em português como o próprio app.',
+    note: 'O Rodribot é uma ferramenta privada, de código fechado, que roda num sistema judicial real da JFRN, então não há demo pública. Em vez disso, aqui está o menu de seleção de fluxos, em português como o próprio app.',
     facts: [
       { value: '20+', label: 'fluxos judiciais automatizados' },
       { value: '1', label: 'app de Windows independente, sem precisar de Python' },
