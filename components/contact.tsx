@@ -4,7 +4,7 @@ import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { Mail, Phone, Send, MessageSquare, CheckCircle2, Loader2 } from 'lucide-react';
 import { personalInfo } from '@/data/portfolio';
-import { useCopy } from '@/lib/i18n';
+import { useCopy, useLanguage } from '@/lib/i18n';
 
 // Messages go out through Web3Forms, which emails them to the address the
 // access key was created with: no backend needed. The key is meant to be
@@ -76,6 +76,7 @@ export default function ContactSection() {
   // the message is not from a person.
   const [honey, setHoney] = useState('');
   const t = useCopy(copy);
+  const { lang } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -180,7 +181,9 @@ export default function ContactSection() {
                   href={`tel:${personalInfo.phone.replace(/[^\d+]/g, '')}`}
                   className="text-foreground hover:text-terra transition-colors"
                 >
-                  <span aria-hidden="true">🇧🇷</span> {personalInfo.phone.replace(/^\+55\s*/, '')}
+                  {/* Brazilians know the number is Brazilian; the flag is for everyone else. */}
+                  {lang === 'en' && <span aria-hidden="true">🇧🇷 </span>}
+                  {personalInfo.phone.replace(/^\+55\s*/, '')}
                 </a>
               </div>
             </div>
