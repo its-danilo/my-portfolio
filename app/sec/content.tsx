@@ -21,10 +21,10 @@ const FORM_ENDPOINT = 'https://api.web3forms.com/submit';
 const WEB3FORMS_ACCESS_KEY = '824fc08e-930f-4c4c-aba9-d9b804f817e4';
 
 // Where each card leads. An empty link shows the card as "coming soon".
-type LinkKey = 'eear' | 'amc' | 'labs' | 'osint';
+type LinkKey = 'exam-portal' | 'reg-platform' | 'labs' | 'osint';
 const LINKS: Record<LinkKey, string> = {
-  eear: '',
-  amc: '',
+  'exam-portal': 'https://github.com/its-danilo/disclosures/tree/main/recuperacao-de-conta-com-dados-nao-secretos',
+  'reg-platform': '',
   labs: 'https://github.com/its-danilo/portswigger-labs/tree/main/IDOR/insecure-direct-object-references',
   osint: '',
 };
@@ -101,7 +101,7 @@ const en = {
   casos: [
     {
       tags: ['Responsible disclosure'],
-      link: 'eear', cta: 'Read the write-up',
+      link: 'exam-portal', cta: 'Read the write-up',
       title: 'Public-exam portal',
       summary:
         'An enrollment portal let anyone tell which accounts existed, reset a password from public data, and on top of that stored passwords in plain text. Together these opened the door to the personal data of every applicant.',
@@ -110,7 +110,7 @@ const en = {
     },
     {
       tags: ['Responsible disclosure'],
-      link: 'amc', cta: 'Read the write-up',
+      link: 'reg-platform', cta: 'Read the write-up',
       title: 'Web registration platform',
       summary:
         'Each user’s default password was a piece of public information, sent by email. Since the login also used a public identifier, you could reach any account that never changed its first password.',
@@ -198,7 +198,7 @@ const copy: Localized<typeof en> = {
     casos: [
       {
         tags: ['Divulgação responsável'],
-        link: 'eear', cta: 'Ler o writeup',
+        link: 'exam-portal', cta: 'Ler o writeup',
         title: 'Portal de concurso público',
         summary:
           'Um portal de inscrições deixava qualquer pessoa saber quais contas existiam, redefinir a senha a partir de dados públicos e ainda guardava as senhas em texto puro. Juntas, essas falhas abriam caminho para os dados pessoais de todos os candidatos.',
@@ -207,7 +207,7 @@ const copy: Localized<typeof en> = {
       },
       {
         tags: ['Divulgação responsável'],
-        link: 'amc', cta: 'Ler o writeup',
+        link: 'reg-platform', cta: 'Ler o writeup',
         title: 'Plataforma de cadastro web',
         summary:
           'A senha padrão de cada usuário era uma informação pública, enviada por e-mail. Como o login também usava um identificador público, dava para entrar em qualquer conta que nunca trocou a primeira senha.',
