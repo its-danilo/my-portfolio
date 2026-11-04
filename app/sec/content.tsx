@@ -25,7 +25,7 @@ type LinkKey = 'eear' | 'amc' | 'labs' | 'osint';
 const LINKS: Record<LinkKey, string> = {
   eear: '',
   amc: '',
-  labs: 'https://github.com/its-danilo/writeups/tree/main/IDOR/insecure-direct-object-references',
+  labs: 'https://github.com/its-danilo/portswigger-labs/tree/main/IDOR/insecure-direct-object-references',
   osint: '',
 };
 
