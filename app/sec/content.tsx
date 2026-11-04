@@ -25,7 +25,7 @@ type LinkKey = 'exam-portal' | 'reg-platform' | 'labs' | 'osint';
 const LINKS: Record<LinkKey, string> = {
   'exam-portal': 'https://github.com/its-danilo/disclosures/tree/main/recuperacao-de-conta-com-dados-nao-secretos',
   'reg-platform': 'https://github.com/its-danilo/disclosures/tree/main/senha-padrao-previsivel',
-  labs: 'https://github.com/its-danilo/portswigger-labs/tree/main/IDOR/insecure-direct-object-references',
+  labs: 'https://github.com/its-danilo/portswigger-labs/tree/main/IDOR',
   osint: '',
 };
 
@@ -153,9 +153,9 @@ const en = {
   ] as Tile[],
 
   contactBadge: 'Let’s talk',
-  contactTop: 'Looking for an internship',
-  contactAccent: 'in digital forensics',
-  contactIntro: 'If the profile fits your team, I would be glad to talk. Send a message here or reach me directly.',
+  contactTop: 'Open to',
+  contactAccent: 'new opportunities',
+  contactIntro: 'I am available to talk about work in security and digital forensics, be it an internship, a project or a collaboration. Send a message here or reach me directly.',
   emailLabel: 'Email me at',
   phoneLabel: 'Call or message me at',
   name: 'Name',
@@ -250,9 +250,9 @@ const copy: Localized<typeof en> = {
     ],
 
     contactBadge: 'Vamos conversar',
-    contactTop: 'Procuro estágio',
-    contactAccent: 'em perícia digital',
-    contactIntro: 'Se o perfil faz sentido para a sua equipe, fico à disposição. Mande uma mensagem aqui ou fale comigo direto.',
+    contactTop: 'Aberto a',
+    contactAccent: 'novas oportunidades',
+    contactIntro: 'Estou à disposição para conversar sobre segurança e perícia digital, seja um estágio, um projeto ou uma colaboração. Mande uma mensagem aqui ou fale comigo direto.',
     emailLabel: 'Mande um e-mail para',
     phoneLabel: 'Ligue ou chame em',
     name: 'Nome',
