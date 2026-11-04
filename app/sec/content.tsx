@@ -1,11 +1,11 @@
 "use client";
 
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 import {
-  Shield, Github, Linkedin, Mail, Phone, ArrowUpRight,
-  Search, Crosshair, Bug, FlaskConical, Scale, Megaphone, Copy, Check,
+  Shield, Github, Linkedin, Search, KeyRound, FlaskConical, ShieldCheck,
+  Mail, Phone, MapPin, GraduationCap, ArrowUpRight, Sparkles,
 } from 'lucide-react';
-import { useState } from 'react';
 import LanguageToggle from '@/components/language-toggle';
 import ThemeToggle from '@/components/theme-toggle';
 import { useCopy, type Localized } from '@/lib/i18n';
@@ -15,375 +15,395 @@ const LINKEDIN = 'https://www.linkedin.com/in/danilo-lnkd/';
 const EMAIL = 'danilo.leal.117@ufrn.edu.br';
 const PHONE = '(84) 99681-4463';
 
-// Scoped security identity (teal on near-black / soft paper). Driven by the
-// site's `.dark` class so the theme toggle keeps working on this page too.
+// A security identity in the teal palette, kept on its own tokens so the warm
+// colors of the main site never bleed in. Light and dark follow the site's
+// .dark class, so the theme toggle keeps working here.
 const css = `
 .sec{
   --sx-bg:#f6f7f6; --sx-panel:#ffffff; --sx-panel2:#eef2f1;
-  --sx-fg:#161b1a; --sx-muted:#5a6563; --sx-faint:#8a9492;
-  --sx-line:#dde3e1; --sx-accent:#0f766e; --sx-accent2:#14b8a6; --sx-crit:#b4321f;
+  --sx-fg:#141a19; --sx-muted:#5d6865; --sx-faint:#8b9592;
+  --sx-line:rgba(15,118,110,.14); --sx-accent:#0f766e; --sx-accent2:#0d9488;
 }
 .dark .sec{
-  --sx-bg:#0c100f; --sx-panel:#141a18; --sx-panel2:#1b2320;
-  --sx-fg:#e6ece9; --sx-muted:#9aa6a2; --sx-faint:#6b7572;
-  --sx-line:#242e2b; --sx-accent:#2dd4bf; --sx-accent2:#14b8a6; --sx-crit:#f0795f;
+  --sx-bg:#0b0f0e; --sx-panel:#121816; --sx-panel2:#172019;
+  --sx-fg:#e8efec; --sx-muted:#9aa6a2; --sx-faint:#657370;
+  --sx-line:rgba(45,212,191,.14); --sx-accent:#2dd4bf; --sx-accent2:#5eead4;
 }
-.sec ::selection{background:var(--sx-accent2);color:#06100e;}
+.sec ::selection{background:var(--sx-accent);color:#04120f;}
+.sec .sx-grad{background:linear-gradient(104deg,var(--sx-accent),var(--sx-accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.sec .sx-grid{background-image:linear-gradient(var(--sx-line) 1px,transparent 1px),linear-gradient(90deg,var(--sx-line) 1px,transparent 1px);background-size:68px 68px;-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000,transparent);mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000,transparent);}
+.sec .sx-card{background:var(--sx-panel);border:1px solid var(--sx-line);border-radius:18px;transition:border-color .35s ease,transform .35s ease;}
+.sec .sx-card:hover{border-color:var(--sx-accent);}
+.sec .sx-pill{border:1px solid var(--sx-line);background:color-mix(in srgb,var(--sx-accent) 7%,transparent);}
+.sec .sx-ibox{border:1px solid var(--sx-line);background:color-mix(in srgb,var(--sx-accent) 6%,transparent);}
+.sec .sx-btn{background:var(--sx-accent);color:#04120f;transition:transform .25s ease,opacity .25s ease;}
+.sec .sx-btn:hover{opacity:.9;transform:translateY(-2px);}
+.sec .sx-btn-ghost{border:1px solid var(--sx-line);color:var(--sx-fg);transition:border-color .25s ease,transform .25s ease;}
+.sec .sx-btn-ghost:hover{border-color:var(--sx-accent);transform:translateY(-2px);}
 `;
 
-type Card = {
-  title: string; impact?: string; impactCrit?: boolean; cls: string; year: string;
-  summary: string; rows?: { k: string; v: string }[]; note: string;
-};
+type Caso = { tag: string; title: string; summary: string; fix?: string; meta: string };
+type Tile = { label: string; desc: string };
 
 const en = {
-  badge: 'Security Portfolio',
-  role: 'Vulnerability research · OSINT · Digital forensics',
-  lead:
-    "Security specialist focused on access-control flaws, open-source investigation and responsible disclosure. Investigative mindset, evidence-driven method and respect for legal limits.",
-  github: 'GitHub', linkedin: 'LinkedIn', contact: 'Contact',
-  researchTitle: 'Research & Projects',
-  researchIntro:
-    'Each item is described by the class of flaw, its impact and the fix — never by victim data or a ready-made recipe. Real cases appear anonymized; full details went only to the parties responsible.',
-  cards: [
+  badge: 'Open to an internship',
+  heroTop: 'Offensive security and',
+  heroAccent: 'digital investigation',
+  heroIntro:
+    'I look for access-control flaws, follow trails across open sources, and report everything responsibly. My focus is digital forensics.',
+  heroWork: 'See my research',
+  heroContact: 'Get in touch',
+
+  researchEyebrow: 'Research',
+  researchTitle: 'What I work on',
+  researchIntro: 'A few real cases and studies that show how I think. Each one covers the class of flaw, its impact, and the fix.',
+  casos: [
     {
-      title: 'Responsible disclosure — public-exam portal',
-      impact: 'High impact', impactCrit: true, cls: 'Broken Access Control / Account Takeover', year: '2024',
-      summary: 'A chain of flaws in an enrollment portal that would allow account takeover and exposure of personal data at scale.',
-      rows: [
-        { k: 'Flaw', v: 'User enumeration, account recovery from publicly derivable factors, cleartext password storage and no password policy.' },
-        { k: 'Impact', v: 'Unauthorized access to applicants’ sensitive registration data.' },
-        { k: 'Fix', v: 'Generic login responses, recovery token over a non-public channel, password hashing, minimum policy and MFA.' },
-      ],
-      note: 'Reported to the owner — no reply. Published anonymized, with no third-party data and no reproducible proof-of-concept against the target.',
+      tag: 'Responsible disclosure',
+      title: 'Public-exam portal',
+      summary:
+        'An enrollment portal let anyone tell which accounts existed, reset a password from public data, and on top of that stored passwords in plain text. Together these opened the door to the personal data of every applicant.',
+      fix: 'Fix: generic login responses, recovery over a private channel, hashed passwords, and two-step sign-in.',
+      meta: '2024 · reported to the owner',
     },
     {
-      title: 'Responsible disclosure — web registration platform',
-      impact: 'High impact', impactCrit: true, cls: 'Predictable credential / Access Control', year: '2024',
-      summary: 'A default password derivable from public information and sent by email, combined with a public user identifier.',
-      rows: [
-        { k: 'Flaw', v: 'Predictable initial credential never forced to change; secret sent over an insecure channel.' },
-        { k: 'Impact', v: 'Access to accounts of users who kept the default credential.' },
-        { k: 'Fix', v: 'Mandatory change on first login, random initial secret, no passwords by email, and rate limiting.' },
-      ],
-      note: 'Reported to the owner — no reply. Kept at the vulnerability-class level, with no exploitation recipe.',
+      tag: 'Responsible disclosure',
+      title: 'Web registration platform',
+      summary:
+        'Each user’s default password was a piece of public information, sent by email. Since the login also used a public identifier, you could reach any account that never changed its first password.',
+      fix: 'Fix: a forced change on first login, a random initial password, and no passwords sent by email.',
+      meta: '2024 · reported to the owner',
     },
     {
-      title: 'Web Security Academy — Broken Access Control / IDOR',
-      cls: 'PortSwigger · Burp Suite', year: 'Completed track',
-      summary: 'Completed the IDOR and access-control track with reproducible write-ups (interception, Repeater, Intruder) — the technical base behind the cases above.',
-      note: 'Write-ups published on GitHub → github.com/its-danilo',
+      tag: 'PortSwigger',
+      title: 'Access-control labs',
+      summary:
+        'I finished the IDOR and access-control track on the Web Security Academy with Burp Suite. It is the technical base behind the cases above, and the write-ups live on my GitHub.',
+      meta: 'Track completed',
     },
     {
-      title: 'OSINT — exposure-surface footprinting',
-      cls: 'Target: the author (consented)', year: 'Demonstration',
-      summary: 'A demonstration of how much personal information is reconstructable from a first name and a photo, using open-source reconnaissance and identity correlation. Educational goal: show the risk and guide exposure reduction.',
-      note: 'Not published, as it contains the author’s sensitive data; methodology available on request.',
+      tag: 'OSINT',
+      title: 'Personal-exposure mapping',
+      summary:
+        'I tested on myself how much you can rebuild from a first name and a photo, using open-source search and reverse face matching. It is meant to show the risk and guide people on cutting their own exposure.',
+      meta: 'Personal study',
     },
-  ] as Card[],
-  methodTitle: 'How I work',
-  methodIntro: 'The same flow on every finding — from collection to delivery, with proof-of-concept always kept to the legal minimum.',
-  steps: [
-    { t: 'Reconnaissance (OSINT)', d: 'Mapping open sources, identifiers and the target’s public surface.' },
-    { t: 'Surface mapping', d: 'Authentication flows, access control and the application’s entry points.' },
-    { t: 'Flaw identification', d: 'Hypothesis, verification and isolation of the root cause.' },
-    { t: 'Minimal, ethical PoC', d: 'Proof limited to my own account or a controlled environment — no third-party data retained.' },
-    { t: 'Impact rating', d: 'Severity by impact × ease, framed against LGPD and best practice.' },
-    { t: 'Responsible disclosure', d: 'Notify the owner before any publication, with remediation advice.' },
+  ] as Caso[],
+
+  approachEyebrow: 'Approach',
+  approachTitle: 'How I work',
+  approachText:
+    'I follow the same path on every finding. I start from what is exposed, map how the app handles access and authentication, confirm the flaw with the least possible, and take the problem to whoever owns it, always with a fix to go with it.',
+  facts: [
+    { icon: 'cert', text: 'Specialist in Information Security, UNINASSAU, 2025' },
+    { icon: 'grad', text: 'Studying Science and Technology at UFRN' },
+    { icon: 'pin', text: 'Natal, Rio Grande do Norte' },
   ],
-  stackTitle: 'Stack & background',
-  toolsLabel: 'Tools', skillsLabel: 'Skills', eduLabel: 'Education & certs', devLabel: 'Development', inProgLabel: 'In progress',
-  skills: ['IDOR / Access Control', 'OSINT', 'Enumeration', 'Cryptography', 'Responsible disclosure', 'LGPD'],
-  edu: [
-    'Specialist in Information Security — UNINASSAU · 2025 (completed)',
-    'Science & Technology — UFRN · 2025–2027',
-    'Technologist in Systems Analysis — UNINASSAU · 2023–2024',
-    'Embedded Systems (FIC+) — IFRN · 160h',
-    'PCI DSS · NIST CSF — introduction',
-    'English C1 (EFSET) · French B1 (DELF)',
-  ],
-  inProg: ['Forensics (Autopsy/Volatility)', 'CTF', 'eJPT'],
-  contactTitle: 'Contact',
-  contactLead: 'Available for an internship in digital forensics and offensive security.',
-  copied: 'copied',
-  location: 'Natal, RN · Brazil',
+  toolsLabel: 'Tools',
+  tiles: [
+    { label: 'Reconnaissance', desc: 'Open sources and public surface' },
+    { label: 'Access control', desc: 'IDOR and authentication' },
+    { label: 'Proof of concept', desc: 'The least it takes to confirm' },
+    { label: 'Disclosure', desc: 'A report with the fix' },
+  ] as Tile[],
+
+  contactBadge: 'Let’s talk',
+  contactTop: 'Looking for an internship',
+  contactAccent: 'in digital forensics',
+  contactIntro: 'If the profile fits your team, I would be glad to talk.',
+  emailLabel: 'Email me at',
+  phoneLabel: 'Call or message at',
+  top: 'Back to top',
 };
 
 const copy: Localized<typeof en> = {
   en,
   pt: {
-    badge: 'Portfólio de Segurança',
-    role: 'Análise de vulnerabilidades · OSINT · Forense digital',
-    lead:
-      'Especialista em Segurança da Informação com foco em falhas de controle de acesso, investigação de fonte aberta e divulgação responsável. Mentalidade investigativa, método orientado a evidências e respeito a limites legais.',
-    github: 'GitHub', linkedin: 'LinkedIn', contact: 'Contato',
-    researchTitle: 'Pesquisa & Projetos',
-    researchIntro:
-      'Cada item é descrito pela classe da falha, pelo impacto e pela correção — nunca por dados de vítimas ou passo-a-passo pronto. Casos reais aparecem anonimizados; os detalhes completos foram comunicados apenas aos responsáveis.',
-    cards: [
+    badge: 'Em busca de estágio',
+    heroTop: 'Segurança ofensiva e',
+    heroAccent: 'investigação digital',
+    heroIntro:
+      'Procuro falhas de controle de acesso, sigo rastros em fontes abertas e reporto tudo de forma responsável. Meu foco é perícia e forense digital.',
+    heroWork: 'Ver minha pesquisa',
+    heroContact: 'Falar comigo',
+
+    researchEyebrow: 'Pesquisa',
+    researchTitle: 'No que eu trabalho',
+    researchIntro: 'Alguns casos reais e estudos que mostram como eu penso. Cada um traz a classe da falha, o impacto e a correção.',
+    casos: [
       {
-        title: 'Divulgação responsável — portal de concurso público',
-        impact: 'Impacto alto', impactCrit: true, cls: 'Broken Access Control / Account Takeover', year: '2024',
-        summary: 'Cadeia de falhas em portal de inscrições que permitiria tomada de conta e exposição de dados pessoais em escala.',
-        rows: [
-          { k: 'Falha', v: 'Enumeração de usuário, recuperação de conta por fatores publicamente deriváveis, senha em texto claro e política de senha inexistente.' },
-          { k: 'Impacto', v: 'Acesso não autorizado a dados cadastrais sensíveis de participantes.' },
-          { k: 'Correção', v: 'Respostas genéricas de login, token de recuperação por canal não público, hashing de senhas, política mínima e MFA.' },
-        ],
-        note: 'Reportado ao responsável — sem retorno. Publicado de forma anonimizada, sem dados de terceiros e sem prova de conceito reproduzível contra o alvo.',
+        tag: 'Divulgação responsável',
+        title: 'Portal de concurso público',
+        summary:
+          'Um portal de inscrições deixava qualquer pessoa saber quais contas existiam, redefinir a senha a partir de dados públicos e ainda guardava as senhas em texto puro. Juntas, essas falhas abriam caminho para os dados pessoais de todos os candidatos.',
+        fix: 'Correção: respostas de login genéricas, recuperação por canal privado, senhas com hash e login em duas etapas.',
+        meta: '2024 · reportado ao responsável',
       },
       {
-        title: 'Divulgação responsável — plataforma de cadastro web',
-        impact: 'Impacto alto', impactCrit: true, cls: 'Credencial previsível / Access Control', year: '2024',
-        summary: 'Senha padrão derivável de informação pública e enviada por e-mail, combinada a identificador de usuário público.',
-        rows: [
-          { k: 'Falha', v: 'Credencial inicial previsível e nunca forçada a troca; segredo trafegado por canal inseguro.' },
-          { k: 'Impacto', v: 'Acesso a contas de usuários que mantinham a credencial padrão.' },
-          { k: 'Correção', v: 'Troca obrigatória no primeiro acesso, segredo inicial aleatório, fim do envio de senha por e-mail e limitação de tentativas.' },
-        ],
-        note: 'Reportado ao responsável — sem retorno. Mantido em nível de classe de vulnerabilidade, sem receita de exploração.',
+        tag: 'Divulgação responsável',
+        title: 'Plataforma de cadastro web',
+        summary:
+          'A senha padrão de cada usuário era uma informação pública, enviada por e-mail. Como o login também usava um identificador público, dava para entrar em qualquer conta que nunca trocou a primeira senha.',
+        fix: 'Correção: troca obrigatória no primeiro acesso, senha inicial aleatória e fim do envio por e-mail.',
+        meta: '2024 · reportado ao responsável',
       },
       {
-        title: 'Web Security Academy — Broken Access Control / IDOR',
-        cls: 'PortSwigger · Burp Suite', year: 'Trilha concluída',
-        summary: 'Conclusão da trilha de IDOR e controle de acesso, com writeups reproduzíveis (interceptação, Repeater, Intruder) — a base técnica por trás dos casos acima.',
-        note: 'Writeups publicados no GitHub → github.com/its-danilo',
+        tag: 'PortSwigger',
+        title: 'Laboratórios de controle de acesso',
+        summary:
+          'Terminei a trilha de IDOR e controle de acesso da Web Security Academy usando o Burp Suite. É a base técnica por trás dos casos acima, e os writeups ficam no meu GitHub.',
+        meta: 'Trilha concluída',
       },
       {
-        title: 'OSINT — footprinting de superfície de exposição',
-        cls: 'Alvo: o próprio autor (consentido)', year: 'Demonstração',
-        summary: 'Demonstração de quanta informação pessoal é reconstruível a partir de um primeiro nome e uma fotografia, usando reconhecimento de fonte aberta e correlação de identidades. Objetivo educativo: evidenciar risco e orientar redução de exposição.',
-        note: 'Não publicado por conter dados sensíveis do autor; metodologia disponível sob solicitação.',
+        tag: 'OSINT',
+        title: 'Mapeamento de exposição pessoal',
+        summary:
+          'Testei em mim mesmo quanta coisa dá para reconstruir a partir de um primeiro nome e uma foto, com busca em fontes abertas e reconhecimento facial reverso. Serve para mostrar o risco e orientar como reduzir a própria exposição.',
+        meta: 'Estudo próprio',
       },
     ],
-    methodTitle: 'Método de trabalho',
-    methodIntro: 'O mesmo fluxo em todo achado — da coleta à entrega, com a prova de conceito sempre no mínimo legal necessário.',
-    steps: [
-      { t: 'Reconhecimento (OSINT)', d: 'Mapeamento de fontes abertas, identificadores e superfície pública do alvo.' },
-      { t: 'Mapeamento de superfície', d: 'Fluxos de autenticação, controle de acesso e pontos de entrada da aplicação.' },
-      { t: 'Identificação da falha', d: 'Hipótese, verificação e isolamento da causa-raiz.' },
-      { t: 'PoC mínima e ética', d: 'Prova limitada a conta própria ou ambiente controlado — sem reter dados de terceiros.' },
-      { t: 'Classificação de impacto', d: 'Severidade por impacto × facilidade, com enquadramento em LGPD e boas práticas.' },
-      { t: 'Divulgação responsável', d: 'Comunicação ao responsável antes de qualquer publicação, com recomendações de mitigação.' },
+
+    approachEyebrow: 'Abordagem',
+    approachTitle: 'Como eu trabalho',
+    approachText:
+      'Sigo o mesmo caminho em todo achado. Começo pelo que está exposto, mapeio como a aplicação trata acesso e autenticação, confirmo a falha com o mínimo possível e levo o problema para quem é responsável, sempre com uma recomendação de correção junto.',
+    facts: [
+      { icon: 'cert', text: 'Especialista em Segurança da Informação, UNINASSAU, 2025' },
+      { icon: 'grad', text: 'Graduando em Ciência e Tecnologia na UFRN' },
+      { icon: 'pin', text: 'Natal, Rio Grande do Norte' },
     ],
-    stackTitle: 'Stack & formação',
-    toolsLabel: 'Ferramentas', skillsLabel: 'Competências', eduLabel: 'Formação & certs', devLabel: 'Desenvolvimento', inProgLabel: 'Em desenvolvimento',
-    skills: ['IDOR / Access Control', 'OSINT', 'Enumeração', 'Criptografia', 'Divulgação responsável', 'LGPD'],
-    edu: [
-      'Especialista em Segurança da Informação — UNINASSAU · 2025 (concluída)',
-      'Ciências e Tecnologia — UFRN · 2025–2027',
-      'Tecnólogo em Análise e Desenvolvimento de Sistemas — UNINASSAU · 2023–2024',
-      'Sistemas Embarcados (FIC+) — IFRN · 160h',
-      'PCI DSS · NIST CSF — introdução',
-      'Inglês C1 (EFSET) · Francês B1 (DELF)',
+    toolsLabel: 'Ferramentas',
+    tiles: [
+      { label: 'Reconhecimento', desc: 'Fontes abertas e superfície pública' },
+      { label: 'Controle de acesso', desc: 'IDOR e autenticação' },
+      { label: 'Prova de conceito', desc: 'O mínimo para confirmar' },
+      { label: 'Divulgação', desc: 'Um report com a correção' },
     ],
-    inProg: ['Forense (Autopsy/Volatility)', 'CTF', 'eJPT'],
-    contactTitle: 'Contato',
-    contactLead: 'Disponível para estágio em perícia / forense digital e segurança ofensiva.',
-    copied: 'copiado',
-    location: 'Natal, RN · Brasil',
+
+    contactBadge: 'Vamos conversar',
+    contactTop: 'Procuro estágio',
+    contactAccent: 'em perícia digital',
+    contactIntro: 'Se o perfil faz sentido para a sua equipe, fico à disposição para conversar.',
+    emailLabel: 'Meu e-mail',
+    phoneLabel: 'Telefone ou mensagem',
+    top: 'Voltar ao topo',
   },
 };
 
-const TOOLS = ['Burp Suite', 'hashcat', 'John the Ripper', 'Sherlock', 'HaveIBeenPwned', 'Google Dorking', 'Linux', 'Git', 'Python', 'C / C++'];
-const STEP_ICONS = [Search, Crosshair, Bug, FlaskConical, Scale, Megaphone];
+const TOOLS = ['Burp Suite', 'hashcat', 'John the Ripper', 'Sherlock', 'HaveIBeenPwned', 'Google Dorking', 'Linux', 'Python'];
+const TILE_ICONS = [Search, KeyRound, FlaskConical, ShieldCheck];
+const FACT_ICONS: Record<string, typeof MapPin> = { cert: ShieldCheck, grad: GraduationCap, pin: MapPin };
 
-function CopyButton({ value, label, copiedLabel, icon: Icon }: { value: string; label: string; copiedLabel: string; icon: typeof Mail }) {
-  const [done, setDone] = useState(false);
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+function Reveal({ children, delay = 0, y = 32, className = '' }: { children: React.ReactNode; delay?: number; y?: number; className?: string }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
   return (
-    <button
-      type="button"
-      onClick={() => {
-        const finish = () => { setDone(true); setTimeout(() => setDone(false), 1400); };
-        if (navigator.clipboard?.writeText) navigator.clipboard.writeText(value).then(finish).catch(finish);
-        else finish();
-      }}
-      className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-mono transition-colors border-[color:var(--sx-line)] bg-[var(--sx-panel)] text-[color:var(--sx-fg)] hover:border-[color:var(--sx-accent)]"
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y }}
+      transition={{ duration: 0.7, delay, ease: EASE }}
+      className={className}
     >
-      {done ? <Check className="h-4 w-4 text-[color:var(--sx-accent)]" /> : <Icon className="h-4 w-4 text-[color:var(--sx-faint)]" />}
-      <span className="text-[color:var(--sx-faint)]">{label}</span>
-      <span>{done ? copiedLabel : value}</span>
-    </button>
+      {children}
+    </motion.div>
   );
 }
 
 export default function SecContent() {
   const t = useCopy(copy);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const nav = [
+    { label: t.researchEyebrow, href: '#pesquisa' },
+    { label: t.approachEyebrow, href: '#abordagem' },
+    { label: t.contactBadge, href: '#contato' },
+  ];
 
   return (
-    <div className="sec min-h-screen bg-[var(--sx-bg)] text-[color:var(--sx-fg)]">
+    <div className="sec min-h-screen bg-[var(--sx-bg)] text-[color:var(--sx-fg)] antialiased">
       <style dangerouslySetInnerHTML={{ __html: css }} />
 
-      {/* top bar */}
-      <div className="sticky top-0 z-20 border-b border-[color:var(--sx-line)] bg-[var(--sx-bg)]/85 backdrop-blur">
-        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-5 py-3">
-          <span className="flex items-center gap-2 font-mono text-sm font-bold">
-            <Shield className="h-4 w-4 text-[color:var(--sx-accent)]" />
-            danilo<span className="text-[color:var(--sx-accent)]">.</span>leal
-            <span className="text-[color:var(--sx-faint)]">/ sec</span>
-          </span>
+      {/* header */}
+      <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? 'border-b border-[color:var(--sx-line)] bg-[var(--sx-bg)]/80 backdrop-blur-xl' : 'bg-transparent'}`}>
+        <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+          <a href="#top" className="flex items-center gap-2">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg sx-ibox">
+              <Shield className="h-4 w-4 text-[color:var(--sx-accent)]" />
+            </span>
+            <span className="text-[15px] font-semibold tracking-tight">Danilo Leal</span>
+          </a>
+          <div className="hidden items-center gap-8 md:flex">
+            {nav.map((n) => (
+              <a key={n.href} href={n.href} className="text-sm text-[color:var(--sx-muted)] transition-colors hover:text-[color:var(--sx-fg)]">{n.label}</a>
+            ))}
+          </div>
           <div className="flex items-center gap-4">
+            <a href={GITHUB} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-[color:var(--sx-muted)] transition-colors hover:text-[color:var(--sx-fg)]"><Github className="h-[18px] w-[18px]" /></a>
+            <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-[color:var(--sx-muted)] transition-colors hover:text-[color:var(--sx-fg)]"><Linkedin className="h-[18px] w-[18px]" /></a>
             <LanguageToggle />
             <ThemeToggle />
           </div>
+        </nav>
+      </header>
+
+      {/* hero */}
+      <section id="top" className="relative flex min-h-screen items-center justify-center overflow-hidden px-6">
+        <div className="absolute inset-0 sx-grid opacity-70" />
+        <motion.div
+          animate={{ y: [0, -28, 0], x: [0, 16, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute left-[18%] top-[22%] h-80 w-80 rounded-full bg-[color:var(--sx-accent)] opacity-[0.10] blur-3xl"
+        />
+        <motion.div
+          animate={{ y: [0, 26, 0], x: [0, -18, 0] }} transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute bottom-[20%] right-[16%] h-72 w-72 rounded-full bg-[color:var(--sx-accent2)] opacity-[0.10] blur-3xl"
+        />
+        <div className="relative z-10 mx-auto max-w-3xl text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE }}
+            className="mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2 sx-pill"
+          >
+            <Sparkles className="h-4 w-4 text-[color:var(--sx-accent)]" />
+            <span className="text-sm font-medium text-[color:var(--sx-muted)]">{t.badge}</span>
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
+            className="text-balance text-5xl font-bold leading-[1.02] tracking-tight sm:text-6xl md:text-7xl"
+          >
+            {t.heroTop}<br /><span className="sx-grad">{t.heroAccent}</span>
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
+            className="mx-auto mt-7 max-w-xl text-lg leading-relaxed text-[color:var(--sx-muted)]"
+          >
+            {t.heroIntro}
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.45, ease: EASE }}
+            className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"
+          >
+            <a href="#pesquisa" className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-base font-semibold sx-btn">{t.heroWork}</a>
+            <a href="#contato" className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-base font-medium sx-btn-ghost">{t.heroContact}</a>
+          </motion.div>
         </div>
-      </div>
+      </section>
 
-      <div className="mx-auto max-w-3xl px-5">
-
-        {/* hero */}
-        <motion.header
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-          className="border-b border-[color:var(--sx-line)] py-14"
-        >
-          <div className="mb-4 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[color:var(--sx-accent)]">
-            <span className="h-px w-6 bg-[color:var(--sx-accent)]" />{t.badge}
-          </div>
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Danilo Leal</h1>
-          <p className="mt-2 font-mono text-[color:var(--sx-accent)] sm:text-lg">{t.role}</p>
-          <p className="mt-5 max-w-xl text-[color:var(--sx-muted)]">{t.lead}</p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <a href={GITHUB} target="_blank" rel="noopener noreferrer"
-               className="inline-flex items-center gap-2 rounded-lg px-4 py-2 font-mono text-sm font-semibold text-[#06100e] bg-[color:var(--sx-accent)] hover:bg-[color:var(--sx-accent2)] transition-colors">
-              <Github className="h-4 w-4" />{t.github}
-            </a>
-            <a href={LINKEDIN} target="_blank" rel="noopener noreferrer"
-               className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--sx-line)] px-4 py-2 font-mono text-sm hover:border-[color:var(--sx-accent)] transition-colors">
-              <Linkedin className="h-4 w-4" />{t.linkedin}
-            </a>
-            <a href="#contato"
-               className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--sx-line)] px-4 py-2 font-mono text-sm hover:border-[color:var(--sx-accent)] transition-colors">
-              {t.contact}
-            </a>
-          </div>
-        </motion.header>
-
-        {/* research */}
-        <section className="border-b border-[color:var(--sx-line)] py-12">
-          <SecHead n="01" title={t.researchTitle} />
-          <p className="mb-6 max-w-2xl text-[color:var(--sx-muted)]">{t.researchIntro}</p>
-          <div className="grid gap-4">
-            {t.cards.map((c, i) => (
-              <article key={i} className="rounded-xl border border-[color:var(--sx-line)] bg-[var(--sx-panel)] p-5">
-                <h3 className="text-lg font-semibold">{c.title}</h3>
-                <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] text-[color:var(--sx-faint)]">
-                  {c.impact && (
-                    <span className="rounded-full border px-2 py-0.5"
-                          style={{ color: c.impactCrit ? 'var(--sx-crit)' : 'var(--sx-faint)', borderColor: 'var(--sx-line)' }}>
-                      {c.impact}
-                    </span>
+      {/* research */}
+      <section id="pesquisa" className="scroll-mt-24 px-6 py-28">
+        <div className="mx-auto max-w-6xl">
+          <Reveal className="mb-16 max-w-2xl">
+            <span className="mb-4 block text-sm font-semibold text-[color:var(--sx-accent)]">{t.researchEyebrow}</span>
+            <h2 className="text-4xl font-bold tracking-tight md:text-5xl">{t.researchTitle}</h2>
+            <p className="mt-5 text-lg text-[color:var(--sx-muted)]">{t.researchIntro}</p>
+          </Reveal>
+          <div className="grid gap-6 lg:grid-cols-2">
+            {t.casos.map((c, i) => (
+              <Reveal key={i} delay={(i % 2) * 0.12}>
+                <article className="flex h-full flex-col p-7 sx-card">
+                  <span className="mb-4 inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-medium text-[color:var(--sx-accent)] sx-pill">{c.tag}</span>
+                  <h3 className="text-xl font-semibold">{c.title}</h3>
+                  <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--sx-muted)]">{c.summary}</p>
+                  {c.fix && (
+                    <p className="mt-4 rounded-xl border border-[color:var(--sx-line)] bg-[var(--sx-panel2)] px-4 py-3 text-sm text-[color:var(--sx-fg)]">{c.fix}</p>
                   )}
-                  <span>{c.cls}</span><span>{c.year}</span>
-                </div>
-                <p className="mt-3 text-sm text-[color:var(--sx-muted)]">{c.summary}</p>
-                {c.rows && (
-                  <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
-                    {c.rows.map((r, j) => (
-                      <div key={j} className="contents">
-                        <dt className="pt-0.5 font-mono text-[11px] uppercase tracking-wide text-[color:var(--sx-accent)]">{r.k}</dt>
-                        <dd className="text-[color:var(--sx-muted)]">{r.v}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                )}
-                <p className="mt-3 border-t border-dashed border-[color:var(--sx-line)] pt-2.5 text-xs italic text-[color:var(--sx-faint)]">{c.note}</p>
-              </article>
+                  <p className="mt-5 pt-4 text-xs text-[color:var(--sx-faint)] border-t border-[color:var(--sx-line)]">{c.meta}</p>
+                </article>
+              </Reveal>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* method */}
-        <section className="border-b border-[color:var(--sx-line)] py-12">
-          <SecHead n="02" title={t.methodTitle} />
-          <p className="mb-6 max-w-2xl text-[color:var(--sx-muted)]">{t.methodIntro}</p>
-          <div className="grid gap-2.5">
-            {t.steps.map((s, i) => {
-              const Icon = STEP_ICONS[i];
+      {/* approach */}
+      <section id="abordagem" className="scroll-mt-24 bg-[var(--sx-panel)]/40 px-6 py-28">
+        <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-2 lg:items-center">
+          <Reveal>
+            <span className="mb-4 block text-sm font-semibold text-[color:var(--sx-accent)]">{t.approachEyebrow}</span>
+            <h2 className="text-4xl font-bold tracking-tight md:text-5xl">{t.approachTitle}</h2>
+            <p className="mt-6 text-lg leading-relaxed text-[color:var(--sx-muted)]">{t.approachText}</p>
+            <div className="mt-8 space-y-3">
+              {t.facts.map((f, i) => {
+                const Icon = FACT_ICONS[f.icon] ?? MapPin;
+                return (
+                  <div key={i} className="flex items-center gap-3 text-[color:var(--sx-muted)]">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg sx-ibox"><Icon className="h-4 w-4 text-[color:var(--sx-accent)]" /></span>
+                    <span className="text-[15px]">{f.text}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-8">
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-[color:var(--sx-faint)]">{t.toolsLabel}</h3>
+              <div className="flex flex-wrap gap-2">
+                {TOOLS.map((tool) => (
+                  <span key={tool} className="rounded-lg px-3 py-1.5 text-sm text-[color:var(--sx-muted)] sx-card">{tool}</span>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {t.tiles.map((tile, i) => {
+              const Icon = TILE_ICONS[i];
               return (
-                <div key={i} className="flex items-start gap-3 rounded-lg border border-[color:var(--sx-line)] bg-[var(--sx-panel)] p-4">
-                  <div className="mt-0.5 flex items-center gap-2 font-mono text-xs font-bold text-[color:var(--sx-accent)]">
-                    <span>0{i + 1}</span><Icon className="h-4 w-4" />
+                <Reveal key={i} delay={0.1 + i * 0.08}>
+                  <div className="h-full p-6 sx-card">
+                    <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl sx-ibox"><Icon className="h-5 w-5 text-[color:var(--sx-accent)]" /></span>
+                    <h4 className="text-base font-semibold">{tile.label}</h4>
+                    <p className="mt-1 text-sm text-[color:var(--sx-muted)]">{tile.desc}</p>
                   </div>
-                  <div>
-                    <h4 className="text-sm font-semibold">{s.t}</h4>
-                    <p className="text-sm text-[color:var(--sx-muted)]">{s.d}</p>
-                  </div>
-                </div>
+                </Reveal>
               );
             })}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* stack */}
-        <section className="border-b border-[color:var(--sx-line)] py-12">
-          <SecHead n="03" title={t.stackTitle} />
-          <div className="grid gap-8 sm:grid-cols-2">
-            <div>
-              <ColLabel>{t.toolsLabel}</ColLabel>
-              <Chips items={TOOLS} />
-              <div className="mt-5"><ColLabel>{t.skillsLabel}</ColLabel><Chips items={t.skills} /></div>
+      {/* contact */}
+      <section id="contato" className="scroll-mt-24 px-6 py-28">
+        <div className="mx-auto max-w-6xl">
+          <Reveal className="max-w-xl">
+            <span className="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-[color:var(--sx-muted)] sx-pill">
+              <Mail className="h-4 w-4 text-[color:var(--sx-accent)]" />{t.contactBadge}
+            </span>
+            <h2 className="text-4xl font-bold leading-tight tracking-tight md:text-5xl">
+              {t.contactTop}<br /><span className="sx-grad">{t.contactAccent}</span>
+            </h2>
+            <p className="mt-6 text-lg text-[color:var(--sx-muted)]">{t.contactIntro}</p>
+            <div className="mt-10 space-y-5">
+              <div className="flex items-center gap-4">
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl sx-ibox"><Mail className="h-5 w-5 text-[color:var(--sx-accent)]" /></span>
+                <div>
+                  <p className="text-sm text-[color:var(--sx-faint)]">{t.emailLabel}</p>
+                  <a href={`mailto:${EMAIL}`} className="text-[color:var(--sx-fg)] transition-colors hover:text-[color:var(--sx-accent)]">{EMAIL}</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl sx-ibox"><Phone className="h-5 w-5 text-[color:var(--sx-accent)]" /></span>
+                <div>
+                  <p className="text-sm text-[color:var(--sx-faint)]">{t.phoneLabel}</p>
+                  <a href={`tel:+55${PHONE.replace(/\D/g, '')}`} className="text-[color:var(--sx-fg)] transition-colors hover:text-[color:var(--sx-accent)]">{PHONE}</a>
+                </div>
+              </div>
             </div>
-            <div>
-              <ColLabel>{t.eduLabel}</ColLabel>
-              <ul className="grid gap-2">
-                {t.edu.map((e, i) => (
-                  <li key={i} className="flex gap-2 text-sm text-[color:var(--sx-muted)]">
-                    <span className="font-mono text-[color:var(--sx-accent)]">›</span><span>{e}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-5"><ColLabel>{t.inProgLabel}</ColLabel><Chips items={t.inProg} /></div>
-            </div>
-          </div>
-        </section>
+          </Reveal>
+        </div>
+      </section>
 
-        {/* contact */}
-        <section id="contato" className="py-12">
-          <SecHead n="04" title={t.contactTitle} />
-          <p className="mb-4 max-w-2xl text-[color:var(--sx-muted)]">{t.contactLead}</p>
-          <div className="flex flex-wrap items-center gap-2.5">
-            <CopyButton value={EMAIL} label="e-mail" copiedLabel={t.copied} icon={Mail} />
-            <CopyButton value={PHONE} label="tel" copiedLabel={t.copied} icon={Phone} />
-            <a href={GITHUB} target="_blank" rel="noopener noreferrer"
-               className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--sx-line)] px-3 py-2 font-mono text-sm hover:border-[color:var(--sx-accent)] transition-colors">
-              <Github className="h-4 w-4" />GitHub<ArrowUpRight className="h-3 w-3" />
-            </a>
-            <a href={LINKEDIN} target="_blank" rel="noopener noreferrer"
-               className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--sx-line)] px-3 py-2 font-mono text-sm hover:border-[color:var(--sx-accent)] transition-colors">
-              <Linkedin className="h-4 w-4" />LinkedIn<ArrowUpRight className="h-3 w-3" />
-            </a>
-          </div>
-          <p className="mt-4 font-mono text-xs text-[color:var(--sx-faint)]">{t.location}</p>
-        </section>
-
-        <footer className="flex flex-wrap justify-between gap-2 border-t border-[color:var(--sx-line)] py-7 font-mono text-xs text-[color:var(--sx-faint)]">
-          <span>© {new Date().getFullYear()} Danilo Leal</span>
-          <span>Ética · Evidência · Divulgação responsável</span>
-        </footer>
-      </div>
-    </div>
-  );
-}
-
-function SecHead({ n, title }: { n: string; title: string }) {
-  return (
-    <div className="mb-5 flex items-baseline gap-3">
-      <span className="font-mono text-xs text-[color:var(--sx-faint)]">{n}</span>
-      <h2 className="text-2xl font-semibold">{title}</h2>
-    </div>
-  );
-}
-
-function ColLabel({ children }: { children: React.ReactNode }) {
-  return <h3 className="mb-3 font-mono text-xs uppercase tracking-widest text-[color:var(--sx-accent)]">{children}</h3>;
-}
-
-function Chips({ items }: { items: string[] }) {
-  return (
-    <div className="flex flex-wrap gap-2">
-      {items.map((it) => (
-        <span key={it} className="rounded-md border border-[color:var(--sx-line)] bg-[var(--sx-panel2)] px-2.5 py-1 font-mono text-xs">{it}</span>
-      ))}
+      <footer className="border-t border-[color:var(--sx-line)] px-6 py-10">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4">
+          <span className="text-sm text-[color:var(--sx-faint)]">© {new Date().getFullYear()} Danilo Leal</span>
+          <a href="#top" className="text-sm text-[color:var(--sx-muted)] transition-colors hover:text-[color:var(--sx-accent)]">{t.top}</a>
+        </div>
+      </footer>
     </div>
   );
 }
