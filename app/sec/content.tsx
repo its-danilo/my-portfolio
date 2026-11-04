@@ -25,7 +25,7 @@ type LinkKey = 'eear' | 'amc' | 'labs' | 'osint';
 const LINKS: Record<LinkKey, string> = {
   eear: '',
   amc: '',
-  labs: 'https://github.com/its-danilo?tab=repositories',
+  labs: 'https://github.com/its-danilo/writeups/tree/main/IDOR/insecure-direct-object-references',
   osint: '',
 };
 
@@ -119,7 +119,7 @@ const en = {
     },
     {
       tags: ['PortSwigger'],
-      link: 'labs', cta: 'See the repositories',
+      link: 'labs', cta: 'Read the write-up',
       title: 'Access-control labs',
       summary:
         'I finished the IDOR and access-control track on the Web Security Academy with Burp Suite. It is the technical base behind the cases above, and the write-ups live on my GitHub.',
@@ -216,7 +216,7 @@ const copy: Localized<typeof en> = {
       },
       {
         tags: ['PortSwigger'],
-        link: 'labs', cta: 'Ver os repositórios',
+        link: 'labs', cta: 'Ler o writeup',
         title: 'Laboratórios de controle de acesso',
         summary:
           'Terminei a trilha de IDOR e controle de acesso da Web Security Academy usando o Burp Suite. É a base técnica por trás dos casos acima, e os writeups ficam no meu GitHub.',
