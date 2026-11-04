@@ -3,7 +3,7 @@
 import { motion, useInView } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import {
-  Shield, Github, Linkedin, Search, KeyRound, FlaskConical, ShieldCheck,
+  Github, Linkedin, Search, KeyRound, FlaskConical, ShieldCheck,
   Mail, Phone, MapPin, GraduationCap, Send, CheckCircle2, Loader2, MessageSquare,
 } from 'lucide-react';
 import LanguageToggle from '@/components/language-toggle';
@@ -72,7 +72,7 @@ const en = {
       summary:
         'An enrollment portal let anyone tell which accounts existed, reset a password from public data, and on top of that stored passwords in plain text. Together these opened the door to the personal data of every applicant.',
       fix: 'Fix: generic login responses, recovery over a private channel, hashed passwords, and two-step sign-in.',
-      meta: '2024 · reported to the owner',
+      meta: '2026 · reported to the owner',
     },
     {
       tag: 'Responsible disclosure',
@@ -160,7 +160,7 @@ const copy: Localized<typeof en> = {
         summary:
           'Um portal de inscrições deixava qualquer pessoa saber quais contas existiam, redefinir a senha a partir de dados públicos e ainda guardava as senhas em texto puro. Juntas, essas falhas abriam caminho para os dados pessoais de todos os candidatos.',
         fix: 'Correção: respostas de login genéricas, recuperação por canal privado, senhas com hash e login em duas etapas.',
-        meta: '2024 · reportado ao responsável',
+        meta: '2026 · reportado ao responsável',
       },
       {
         tag: 'Divulgação responsável',
@@ -348,8 +348,8 @@ export default function SecContent() {
       <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? 'border-b border-[color:var(--sx-line)] bg-[var(--sx-bg)]/80 backdrop-blur-xl' : 'bg-transparent'}`}>
         <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <a href="#top" className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg sx-ibox">
-              <Shield className="h-4 w-4 text-[color:var(--sx-accent)]" />
+            <span className="h-9 w-9 overflow-hidden rounded-full bg-gradient-to-br from-[color:var(--sx-accent)] to-[color:var(--sx-accent2)]">
+              <img src="/avatar-sec.webp" alt="Danilo Leal" width={36} height={36} className="h-full w-full object-cover" />
             </span>
             <span className="text-[15px] font-semibold tracking-tight">Danilo Leal</span>
           </a>
@@ -511,8 +511,8 @@ export default function SecContent() {
           <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
             <div className="flex flex-col items-center gap-3 md:items-start">
               <div className="flex items-center gap-2">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[color:var(--sx-accent)] to-[color:var(--sx-accent2)]">
-                  <Shield className="h-4 w-4 text-[#04120f]" />
+                <span className="h-7 w-7 overflow-hidden rounded-full bg-gradient-to-br from-[color:var(--sx-accent)] to-[color:var(--sx-accent2)]">
+                  <img src="/avatar-sec.webp" alt="Danilo Leal" width={28} height={28} className="h-full w-full object-cover" />
                 </span>
                 <span className="text-base font-semibold tracking-tight">Danilo Leal</span>
               </div>
