@@ -24,7 +24,7 @@ const WEB3FORMS_ACCESS_KEY = '824fc08e-930f-4c4c-aba9-d9b804f817e4';
 type LinkKey = 'exam-portal' | 'reg-platform' | 'labs' | 'osint';
 const LINKS: Record<LinkKey, string> = {
   'exam-portal': 'https://github.com/its-danilo/disclosures/tree/main/recuperacao-de-conta-com-dados-nao-secretos',
-  'reg-platform': '',
+  'reg-platform': 'https://github.com/its-danilo/disclosures/tree/main/senha-padrao-previsivel',
   labs: 'https://github.com/its-danilo/portswigger-labs/tree/main/IDOR/insecure-direct-object-references',
   osint: '',
 };
