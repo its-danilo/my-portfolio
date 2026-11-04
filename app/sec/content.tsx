@@ -1,14 +1,14 @@
 "use client";
 
-import { motion, useInView } from 'framer-motion';
+import { AnimatePresence, motion, useInView } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import {
-  Github, Linkedin, Search, KeyRound, FlaskConical, ShieldCheck,
-  Mail, Phone, MapPin, GraduationCap, Send, CheckCircle2, Loader2, MessageSquare,
+  Github, Linkedin, Search, KeyRound, FlaskConical, ShieldCheck, Menu, X,
+  Mail, Phone, MapPin, GraduationCap, Send, CheckCircle2, Loader2, MessageSquare, ArrowUpRight,
 } from 'lucide-react';
 import LanguageToggle from '@/components/language-toggle';
 import ThemeToggle from '@/components/theme-toggle';
-import { useCopy, type Localized } from '@/lib/i18n';
+import { useCopy, useLanguage, type Localized } from '@/lib/i18n';
 
 const GITHUB = 'https://github.com/its-danilo';
 const LINKEDIN = 'https://www.linkedin.com/in/danilo-lnkd/';
@@ -20,54 +20,88 @@ const PHONE = '(84) 99681-4463';
 const FORM_ENDPOINT = 'https://api.web3forms.com/submit';
 const WEB3FORMS_ACCESS_KEY = '824fc08e-930f-4c4c-aba9-d9b804f817e4';
 
-// A security identity in the teal palette, kept on its own tokens so the warm
-// colors of the main site never bleed in. Light and dark follow the site's
-// .dark class, so the theme toggle keeps working here.
+// Where each card leads. An empty link shows the card as "coming soon".
+type LinkKey = 'eear' | 'amc' | 'labs' | 'osint';
+const LINKS: Record<LinkKey, string> = {
+  eear: '',
+  amc: '',
+  labs: 'https://github.com/its-danilo?tab=repositories',
+  osint: '',
+};
+
+// The page keeps its own teal tokens. While it is mounted, :has(.sec) also
+// points the main site's tokens (body, scrollbar, theme and language toggles)
+// at the same palette, so nothing warm shows through. Alpha colors are written
+// out here because Tailwind 3.3 cannot add opacity to a CSS variable.
 const css = `
-.sec{
-  --sx-bg:#f6f7f6; --sx-panel:#ffffff; --sx-panel2:#eef2f1;
+.sec,:root:has(.sec){
+  --sx-bg:#f6f7f6; --sx-surface:#eef3f1; --sx-alt:#ffffff; --sx-panel:#ffffff; --sx-panel2:#f1f5f4;
   --sx-fg:#141a19; --sx-muted:#5d6865; --sx-faint:#8b9592;
-  --sx-line:rgba(15,118,110,.14); --sx-accent:#0f766e; --sx-accent2:#0d9488;
+  --sx-line:rgba(15,118,110,.14); --sx-grid:rgba(15,118,110,.06); --sx-glow:rgba(15,118,110,.10);
+  --sx-header:rgba(246,247,246,.82); --sx-overlay:rgba(246,247,246,.96);
+  --sx-accent:#0f766e; --sx-accent2:#0d9488; --sx-on-accent:#ffffff;
 }
-.dark .sec{
-  --sx-bg:#0b0f0e; --sx-panel:#121816; --sx-panel2:#172019;
-  --sx-fg:#e8efec; --sx-muted:#9aa6a2; --sx-faint:#657370;
-  --sx-line:rgba(45,212,191,.14); --sx-accent:#2dd4bf; --sx-accent2:#5eead4;
+.dark .sec,:root.dark:has(.sec){
+  --sx-bg:#0b0f0e; --sx-surface:#0f1513; --sx-alt:#0d1311; --sx-panel:#131a18; --sx-panel2:#18211e;
+  --sx-fg:#e8efec; --sx-muted:#9aa6a2; --sx-faint:#677572;
+  --sx-line:rgba(45,212,191,.14); --sx-grid:rgba(45,212,191,.05); --sx-glow:rgba(45,212,191,.08);
+  --sx-header:rgba(11,15,14,.82); --sx-overlay:rgba(11,15,14,.96);
+  --sx-accent:#2dd4bf; --sx-accent2:#5eead4; --sx-on-accent:#04120f;
 }
-.sec ::selection{background:var(--sx-accent);color:#04120f;}
+:root:has(.sec){ --paper:246 247 246; --foreground:170 13% 9%; --line:15 118 110; }
+:root.dark:has(.sec){ --paper:11 15 14; --foreground:153 17% 92%; --line:94 234 212; }
+.sec ::selection{background:color-mix(in srgb,var(--sx-accent) 25%,transparent);color:var(--sx-fg);}
+.sec .sx-balance{text-wrap:balance;}
 .sec .sx-grad{background:linear-gradient(104deg,var(--sx-accent),var(--sx-accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
-.sec .sx-grid{background-image:linear-gradient(var(--sx-line) 1px,transparent 1px),linear-gradient(90deg,var(--sx-line) 1px,transparent 1px);background-size:68px 68px;-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000,transparent);mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000,transparent);}
-.sec .sx-card{background:var(--sx-panel);border:1px solid var(--sx-line);border-radius:18px;transition:border-color .35s ease,transform .35s ease;}
-.sec .sx-card:hover{border-color:var(--sx-accent);}
-.sec .sx-pill{border:1px solid var(--sx-line);background:color-mix(in srgb,var(--sx-accent) 7%,transparent);}
-.sec .sx-ibox{border:1px solid var(--sx-line);background:color-mix(in srgb,var(--sx-accent) 6%,transparent);}
-.sec .sx-btn{background:var(--sx-accent);color:#04120f;transition:transform .25s ease,opacity .25s ease;}
-.sec .sx-btn:hover{opacity:.9;transform:translateY(-2px);}
-.sec .sx-btn-ghost{border:1px solid var(--sx-line);color:var(--sx-fg);transition:border-color .25s ease,transform .25s ease;}
-.sec .sx-btn-ghost:hover{border-color:var(--sx-accent);transform:translateY(-2px);}
-.sec .sx-input{width:100%;border-radius:12px;padding:12px 16px;background:var(--sx-panel2);border:1px solid var(--sx-line);color:var(--sx-fg);transition:border-color .25s ease;}
+.sec .sx-grid{background-image:linear-gradient(to right,var(--sx-grid) 1px,transparent 1px),linear-gradient(to bottom,var(--sx-grid) 1px,transparent 1px);background-size:64px 64px;}
+.sec .sx-dots{background-image:radial-gradient(circle,var(--sx-grid) 1px,transparent 1px);background-size:24px 24px;}
+.sec .sx-glow-top{background:radial-gradient(ellipse 80% 50% at 50% -20%,var(--sx-glow),transparent);}
+.sec .sx-glow-bottom{background:radial-gradient(ellipse 80% 50% at 50% 120%,var(--sx-glow),transparent);}
+.sec .sx-blob{background:linear-gradient(to right,color-mix(in srgb,var(--sx-accent) 10%,transparent),color-mix(in srgb,var(--sx-accent2) 10%,transparent));}
+.sec .sx-fade{background:linear-gradient(to top,var(--sx-bg),transparent);}
+.sec .sx-header{background:var(--sx-header);border-bottom:1px solid var(--sx-line);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);}
+.sec .sx-overlay{background:var(--sx-overlay);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);}
+.sec .sx-underline{background:linear-gradient(to right,var(--sx-accent),var(--sx-accent2));}
+.sec .sx-card{position:relative;overflow:hidden;background:var(--sx-panel);border:1px solid var(--sx-line);border-radius:1rem;transition:border-color .5s ease;}
+.sec .sx-card::before{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,color-mix(in srgb,var(--sx-accent) 4%,transparent),transparent 60%);}
+.sec .sx-card:hover{border-color:color-mix(in srgb,var(--sx-accent) 40%,transparent);}
+.sec .sx-chip{border:1px solid var(--sx-line);background:color-mix(in srgb,var(--sx-accent) 4%,transparent);transition:border-color .3s ease,background-color .3s ease;}
+.sec .sx-chip:hover{border-color:color-mix(in srgb,var(--sx-accent) 35%,transparent);background:color-mix(in srgb,var(--sx-accent) 7%,transparent);}
+.sec .sx-pill{border:1px solid var(--sx-line);background:color-mix(in srgb,var(--sx-accent) 7%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);}
+.sec .sx-box{border:1px solid var(--sx-line);background:color-mix(in srgb,var(--sx-accent) 5%,transparent);}
+.sec .sx-box-grad{background:linear-gradient(135deg,color-mix(in srgb,var(--sx-accent) 12%,transparent),color-mix(in srgb,var(--sx-accent2) 12%,transparent));transition:background .3s ease;}
+.sec .group:hover .sx-box-grad{background:linear-gradient(135deg,color-mix(in srgb,var(--sx-accent) 22%,transparent),color-mix(in srgb,var(--sx-accent2) 22%,transparent));}
+.sec .sx-btn{background:linear-gradient(to right,var(--sx-accent),var(--sx-accent2));color:var(--sx-on-accent);transition:box-shadow .3s ease;}
+.sec .sx-btn:hover{box-shadow:0 10px 25px -5px color-mix(in srgb,var(--sx-accent) 35%,transparent);}
+.sec .sx-btn-ghost{border:1px solid var(--sx-line);background:color-mix(in srgb,var(--sx-accent) 4%,transparent);color:var(--sx-fg);transition:border-color .3s ease,background-color .3s ease;}
+.sec .sx-btn-ghost:hover{border-color:color-mix(in srgb,var(--sx-accent) 35%,transparent);background:color-mix(in srgb,var(--sx-accent) 7%,transparent);}
+.sec .sx-input{width:100%;border-radius:.75rem;padding:.75rem 1rem;background:color-mix(in srgb,var(--sx-accent) 3%,transparent);border:1px solid var(--sx-line);color:var(--sx-fg);transition:border-color .3s ease,background-color .3s ease;}
 .sec .sx-input::placeholder{color:var(--sx-faint);}
-.sec .sx-input:focus{outline:none;border-color:var(--sx-accent);}
+.sec .sx-input:focus{outline:none;border-color:color-mix(in srgb,var(--sx-accent) 50%,transparent);background:color-mix(in srgb,var(--sx-accent) 5%,transparent);}
 `;
 
-type Caso = { tag: string; title: string; summary: string; fix?: string; meta: string };
+type Caso = { tags: string[]; link: LinkKey; cta: string; title: string; summary: string; fix?: string; meta: string };
 type Tile = { label: string; desc: string };
 type Status = 'idle' | 'sending' | 'sent' | 'error';
 
 const en = {
+  navContact: 'Contact',
   heroTop: 'Offensive security and',
   heroAccent: 'digital investigation',
   heroIntro:
     'I look for access-control flaws, follow trails across open sources, and report everything responsibly. My focus is digital forensics.',
-  heroWork: 'See my research',
+  heroWork: 'See write-ups',
   heroContact: 'Get in touch',
 
-  researchEyebrow: 'Research',
-  researchTitle: 'What I work on',
-  researchIntro: 'A few real cases and studies that show how I think. Each one covers the class of flaw, its impact, and the fix.',
+  researchEyebrow: 'Write-ups',
+  researchTitle: 'Write-ups and demos',
+  researchIntro: 'Each card opens the full material, with sensitive data blurred out.',
+  soon: 'Coming soon',
+  githubAll: 'View all projects on GitHub',
   casos: [
     {
-      tag: 'Responsible disclosure',
+      tags: ['Responsible disclosure'],
+      link: 'eear', cta: 'Read the write-up',
       title: 'Public-exam portal',
       summary:
         'An enrollment portal let anyone tell which accounts existed, reset a password from public data, and on top of that stored passwords in plain text. Together these opened the door to the personal data of every applicant.',
@@ -75,7 +109,8 @@ const en = {
       meta: '2026 · reported to the owner',
     },
     {
-      tag: 'Responsible disclosure',
+      tags: ['Responsible disclosure'],
+      link: 'amc', cta: 'Read the write-up',
       title: 'Web registration platform',
       summary:
         'Each user’s default password was a piece of public information, sent by email. Since the login also used a public identifier, you could reach any account that never changed its first password.',
@@ -83,14 +118,16 @@ const en = {
       meta: '2024 · reported to the owner',
     },
     {
-      tag: 'PortSwigger',
+      tags: ['PortSwigger'],
+      link: 'labs', cta: 'See the repositories',
       title: 'Access-control labs',
       summary:
         'I finished the IDOR and access-control track on the Web Security Academy with Burp Suite. It is the technical base behind the cases above, and the write-ups live on my GitHub.',
       meta: 'Track completed',
     },
     {
-      tag: 'OSINT',
+      tags: ['OSINT', 'OpSec'],
+      link: 'osint', cta: 'Watch the video',
       title: 'Personal-exposure mapping',
       summary:
         'I tested on myself how much you can rebuild from a first name and a photo, using open-source search and reverse face matching. It is meant to show the risk and guide people on cutting their own exposure.',
@@ -120,7 +157,7 @@ const en = {
   contactAccent: 'in digital forensics',
   contactIntro: 'If the profile fits your team, I would be glad to talk. Send a message here or reach me directly.',
   emailLabel: 'Email me at',
-  phoneLabel: 'Call or message at',
+  phoneLabel: 'Call or message me at',
   name: 'Name',
   namePlaceholder: 'Your name',
   email: 'Email',
@@ -134,28 +171,34 @@ const en = {
   sendAnother: 'Send another message',
   errorBefore: 'The message did not go through. ',
   errorLink: 'Email it to me directly',
-  errorAfter: '.',
+  errorAfter: ' instead.',
   subject: (name: string) => `Security portfolio: message from ${name}`,
   rights: 'All rights reserved.',
-  top: 'Back to top',
+  top: 'Back to top ↑',
+  openMenu: 'Open menu',
+  closeMenu: 'Close menu',
 };
 
 const copy: Localized<typeof en> = {
   en,
   pt: {
+    navContact: 'Contato',
     heroTop: 'Segurança ofensiva e',
     heroAccent: 'investigação digital',
     heroIntro:
       'Procuro falhas de controle de acesso, sigo rastros em fontes abertas e reporto tudo de forma responsável. Meu foco é perícia e forense digital.',
-    heroWork: 'Ver minha pesquisa',
+    heroWork: 'Ver writeups',
     heroContact: 'Falar comigo',
 
-    researchEyebrow: 'Pesquisa',
-    researchTitle: 'No que eu trabalho',
-    researchIntro: 'Alguns casos reais e estudos que mostram como eu penso. Cada um traz a classe da falha, o impacto e a correção.',
+    researchEyebrow: 'Writeups',
+    researchTitle: 'Writeups e demonstrações',
+    researchIntro: 'Cada card abre o material completo, com os dados sensíveis censurados.',
+    soon: 'Em breve',
+    githubAll: 'Ver todos os projetos no GitHub',
     casos: [
       {
-        tag: 'Divulgação responsável',
+        tags: ['Divulgação responsável'],
+        link: 'eear', cta: 'Ler o writeup',
         title: 'Portal de concurso público',
         summary:
           'Um portal de inscrições deixava qualquer pessoa saber quais contas existiam, redefinir a senha a partir de dados públicos e ainda guardava as senhas em texto puro. Juntas, essas falhas abriam caminho para os dados pessoais de todos os candidatos.',
@@ -163,7 +206,8 @@ const copy: Localized<typeof en> = {
         meta: '2026 · reportado ao responsável',
       },
       {
-        tag: 'Divulgação responsável',
+        tags: ['Divulgação responsável'],
+        link: 'amc', cta: 'Ler o writeup',
         title: 'Plataforma de cadastro web',
         summary:
           'A senha padrão de cada usuário era uma informação pública, enviada por e-mail. Como o login também usava um identificador público, dava para entrar em qualquer conta que nunca trocou a primeira senha.',
@@ -171,14 +215,16 @@ const copy: Localized<typeof en> = {
         meta: '2024 · reportado ao responsável',
       },
       {
-        tag: 'PortSwigger',
+        tags: ['PortSwigger'],
+        link: 'labs', cta: 'Ver os repositórios',
         title: 'Laboratórios de controle de acesso',
         summary:
           'Terminei a trilha de IDOR e controle de acesso da Web Security Academy usando o Burp Suite. É a base técnica por trás dos casos acima, e os writeups ficam no meu GitHub.',
         meta: 'Trilha concluída',
       },
       {
-        tag: 'OSINT',
+        tags: ['OSINT', 'OpSec'],
+        link: 'osint', cta: 'Assistir ao vídeo',
         title: 'Mapeamento de exposição pessoal',
         summary:
           'Testei em mim mesmo quanta coisa dá para reconstruir a partir de um primeiro nome e uma foto, com busca em fontes abertas e reconhecimento facial reverso. Serve para mostrar o risco e orientar como reduzir a própria exposição.',
@@ -207,8 +253,8 @@ const copy: Localized<typeof en> = {
     contactTop: 'Procuro estágio',
     contactAccent: 'em perícia digital',
     contactIntro: 'Se o perfil faz sentido para a sua equipe, fico à disposição. Mande uma mensagem aqui ou fale comigo direto.',
-    emailLabel: 'Meu e-mail',
-    phoneLabel: 'Telefone ou mensagem',
+    emailLabel: 'Mande um e-mail para',
+    phoneLabel: 'Ligue ou chame em',
     name: 'Nome',
     namePlaceholder: 'Seu nome',
     email: 'E-mail',
@@ -225,25 +271,32 @@ const copy: Localized<typeof en> = {
     errorAfter: '.',
     subject: (name: string) => `Portfólio de segurança: mensagem de ${name}`,
     rights: 'Todos os direitos reservados.',
-    top: 'Voltar ao topo',
+    top: 'Voltar ao topo ↑',
+    openMenu: 'Abrir menu',
+    closeMenu: 'Fechar menu',
   },
 };
 
-const TOOLS = ['Burp Suite', 'hashcat', 'John the Ripper', 'Sherlock', 'HaveIBeenPwned', 'Google Dorking', 'Linux', 'Python'];
+const TOOLS = ['Burp Suite', 'hashcat', 'John the Ripper', 'Sherlock', 'Maigret', 'TwitchTracker', 'HaveIBeenPwned', 'Google Dorking', 'Linux', 'Python'];
 const TILE_ICONS = [Search, KeyRound, FlaskConical, ShieldCheck];
 const FACT_ICONS: Record<string, typeof MapPin> = { cert: ShieldCheck, grad: GraduationCap, pin: MapPin };
+const SOCIAL = [
+  { icon: Github, href: GITHUB, label: 'GitHub' },
+  { icon: Linkedin, href: LINKEDIN, label: 'LinkedIn' },
+];
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-function Reveal({ children, delay = 0, y = 32, className = '' }: { children: React.ReactNode; delay?: number; y?: number; className?: string }) {
+// Fades a block in once it scrolls into view, like the main site's sections.
+function Reveal({ children, delay = 0, y = 40, className = '' }: { children: React.ReactNode; delay?: number; y?: number; className?: string }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { once: true, margin: '-100px' });
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y }}
-      transition={{ duration: 0.7, delay, ease: EASE }}
+      transition={{ duration: 0.8, delay, ease: EASE }}
       className={className}
     >
       {children}
@@ -251,9 +304,55 @@ function Reveal({ children, delay = 0, y = 32, className = '' }: { children: Rea
   );
 }
 
+function SectionHead({ eyebrow, title, intro }: { eyebrow: string; title: string; intro?: string }) {
+  return (
+    <Reveal className="mb-20">
+      <span className="mb-4 block text-sm font-medium text-[color:var(--sx-accent)]">{eyebrow}</span>
+      <h2 className="sx-balance mb-6 text-4xl font-bold md:text-5xl lg:text-6xl">{title}</h2>
+      {intro && <p className="max-w-2xl text-lg text-[color:var(--sx-muted)]">{intro}</p>}
+    </Reveal>
+  );
+}
+
+function CaseCard({ c, soon }: { c: Caso; soon: string }) {
+  const href = LINKS[c.link];
+  const body = (
+    <div className="relative z-10 flex h-full flex-col p-7">
+      <div className="mb-5 flex flex-wrap gap-2">
+        {c.tags.map((tag) => (
+          <span key={tag} className="rounded-full px-3 py-1 text-xs font-medium text-[color:var(--sx-accent)] sx-pill">{tag}</span>
+        ))}
+      </div>
+      <h3 className="mb-2 text-xl font-semibold transition-colors duration-300 group-hover:text-[color:var(--sx-accent)]">{c.title}</h3>
+      <p className="text-sm leading-relaxed text-[color:var(--sx-muted)]">{c.summary}</p>
+      {c.fix && <p className="mt-4 rounded-xl px-4 py-3 text-sm sx-box">{c.fix}</p>}
+      <div className="mt-auto pt-6">
+        <div className="flex items-center justify-between gap-4 border-t border-[color:var(--sx-line)] pt-4">
+          <span className="text-xs text-[color:var(--sx-faint)]">{c.meta}</span>
+          {href ? (
+            <span className="inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-[color:var(--sx-accent)]">
+              {c.cta}
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </span>
+          ) : (
+            <span className="shrink-0 text-sm text-[color:var(--sx-faint)]">{soon}</span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+  return href ? (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="group block h-full sx-card">{body}</a>
+  ) : (
+    <article className="h-full sx-card">{body}</article>
+  );
+}
+
 function ContactForm({ t }: { t: typeof en }) {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<Status>('idle');
+  // A field people never see. Bots fill every input, so a value here means
+  // the message is not from a person.
   const [honey, setHoney] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -283,49 +382,64 @@ function ContactForm({ t }: { t: typeof en }) {
     }
   };
 
+  // If sending fails, the visitor can still reach me with what they wrote.
   const mailtoFallback = `mailto:${EMAIL}?subject=${encodeURIComponent(t.subject(form.name))}&body=${encodeURIComponent(form.message)}`;
 
   if (status === 'sent') {
     return (
-      <div className="flex flex-col items-center p-8 text-center sx-card" role="status">
-        <CheckCircle2 className="mb-5 h-12 w-12 text-[color:var(--sx-accent)]" />
-        <h3 className="text-2xl font-semibold">{t.sentTitle}</h3>
-        <p className="mt-2 max-w-sm text-[color:var(--sx-muted)]">{t.sentText}</p>
-        <button type="button" onClick={() => setStatus('idle')} className="mt-7 text-sm text-[color:var(--sx-muted)] transition-colors hover:text-[color:var(--sx-accent)]">{t.sendAnother}</button>
+      <div className="sx-card">
+        <div className="relative z-10 flex flex-col items-center px-8 py-16 text-center" role="status">
+          <CheckCircle2 className="mb-5 h-12 w-12 text-[color:var(--sx-accent)]" />
+          <h3 className="mb-2 text-2xl font-semibold">{t.sentTitle}</h3>
+          <p className="mb-8 max-w-sm text-[color:var(--sx-muted)]">{t.sentText}</p>
+          <button type="button" onClick={() => setStatus('idle')} className="text-sm text-[color:var(--sx-muted)] transition-colors hover:text-[color:var(--sx-accent)]">{t.sendAnother}</button>
+        </div>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5 p-8 sx-card">
-      <input type="text" name="_honey" value={honey} onChange={(e) => setHoney(e.target.value)} tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
-      <div>
-        <label htmlFor="sec-name" className="mb-2 block text-sm font-medium text-[color:var(--sx-muted)]">{t.name}</label>
-        <input id="sec-name" type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={t.namePlaceholder} className="sx-input" />
+    <form onSubmit={handleSubmit} className="sx-card">
+      <div className="relative z-10 space-y-6 p-8">
+        <input type="text" name="_honey" value={honey} onChange={(e) => setHoney(e.target.value)} tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
+        <div>
+          <label htmlFor="sec-name" className="mb-2 block text-sm font-medium text-[color:var(--sx-muted)]">{t.name}</label>
+          <input id="sec-name" type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={t.namePlaceholder} className="sx-input" />
+        </div>
+        <div>
+          <label htmlFor="sec-email" className="mb-2 block text-sm font-medium text-[color:var(--sx-muted)]">{t.email}</label>
+          <input id="sec-email" type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder={t.emailPlaceholder} className="sx-input" />
+        </div>
+        <div>
+          <label htmlFor="sec-message" className="mb-2 block text-sm font-medium text-[color:var(--sx-muted)]">{t.message}</label>
+          <textarea id="sec-message" required rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder={t.messagePlaceholder} className="sx-input resize-none" />
+        </div>
+        {status === 'error' && (
+          <p className="text-sm text-red-500" role="alert">
+            {t.errorBefore}<a href={mailtoFallback} className="underline hover:text-[color:var(--sx-accent)]">{t.errorLink}</a>{t.errorAfter}
+          </p>
+        )}
+        <motion.button
+          type="submit"
+          disabled={status === 'sending'}
+          whileHover={status === 'sending' ? undefined : { scale: 1.02, y: -2 }}
+          whileTap={status === 'sending' ? undefined : { scale: 0.98 }}
+          className="group inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-medium sx-btn disabled:cursor-wait disabled:opacity-70"
+        >
+          {status === 'sending'
+            ? (<><span>{t.sending}</span><Loader2 className="h-4 w-4 animate-spin" /></>)
+            : (<><span>{t.send}</span><Send className="h-4 w-4 transition-transform group-hover:translate-x-1" /></>)}
+        </motion.button>
       </div>
-      <div>
-        <label htmlFor="sec-email" className="mb-2 block text-sm font-medium text-[color:var(--sx-muted)]">{t.email}</label>
-        <input id="sec-email" type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder={t.emailPlaceholder} className="sx-input" />
-      </div>
-      <div>
-        <label htmlFor="sec-message" className="mb-2 block text-sm font-medium text-[color:var(--sx-muted)]">{t.message}</label>
-        <textarea id="sec-message" required rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder={t.messagePlaceholder} className="sx-input resize-none" />
-      </div>
-      {status === 'error' && (
-        <p className="text-sm text-red-500" role="alert">
-          {t.errorBefore}<a href={mailtoFallback} className="underline hover:text-[color:var(--sx-accent)]">{t.errorLink}</a>{t.errorAfter}
-        </p>
-      )}
-      <button type="submit" disabled={status === 'sending'} className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-semibold sx-btn disabled:cursor-wait disabled:opacity-70">
-        {status === 'sending' ? (<><span>{t.sending}</span><Loader2 className="h-4 w-4 animate-spin" /></>) : (<><span>{t.send}</span><Send className="h-4 w-4" /></>)}
-      </button>
     </form>
   );
 }
 
 export default function SecContent() {
   const t = useCopy(copy);
+  const { lang } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -335,196 +449,324 @@ export default function SecContent() {
   }, []);
 
   const nav = [
-    { label: t.researchEyebrow, href: '#pesquisa' },
+    { label: t.researchEyebrow, href: '#writeups' },
     { label: t.approachEyebrow, href: '#abordagem' },
-    { label: t.contactBadge, href: '#contato' },
+    { label: t.navContact, href: '#contato' },
   ];
 
   return (
-    <div className="sec min-h-screen bg-[var(--sx-bg)] text-[color:var(--sx-fg)] antialiased">
+    <div className="sec min-h-screen bg-[color:var(--sx-bg)] text-[color:var(--sx-fg)]">
       <style dangerouslySetInnerHTML={{ __html: css }} />
 
       {/* header */}
-      <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? 'border-b border-[color:var(--sx-line)] bg-[var(--sx-bg)]/80 backdrop-blur-xl' : 'bg-transparent'}`}>
-        <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-          <a href="#top" className="flex items-center gap-2">
-            <span className="h-9 w-9 overflow-hidden rounded-full bg-gradient-to-br from-[color:var(--sx-accent)] to-[color:var(--sx-accent2)]">
-              <img src="/avatar-sec.webp" alt="Danilo Leal" width={36} height={36} className="h-full w-full object-cover" />
-            </span>
-            <span className="text-[15px] font-semibold tracking-tight">Danilo Leal</span>
-          </a>
-          <div className="hidden items-center gap-8 md:flex">
-            {nav.map((n) => (
-              <a key={n.href} href={n.href} className="text-sm text-[color:var(--sx-muted)] transition-colors hover:text-[color:var(--sx-fg)]">{n.label}</a>
-            ))}
-          </div>
-          <div className="flex items-center gap-4">
-            <a href={GITHUB} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-[color:var(--sx-muted)] transition-colors hover:text-[color:var(--sx-fg)]"><Github className="h-[18px] w-[18px]" /></a>
-            <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-[color:var(--sx-muted)] transition-colors hover:text-[color:var(--sx-fg)]"><Linkedin className="h-[18px] w-[18px]" /></a>
-            <LanguageToggle />
-            <ThemeToggle />
+      <motion.header
+        initial={{ y: -100 }} animate={{ y: 0 }} transition={{ duration: 0.8, ease: EASE }}
+        className={`fixed inset-x-0 top-0 z-50 border-b border-transparent transition-all duration-500 ${scrolled ? 'sx-header' : ''}`}
+      >
+        <nav className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="flex h-20 items-center justify-between">
+            <a href="#top" className="relative z-10">
+              <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-2">
+                <div className="h-9 w-9 overflow-hidden rounded-full bg-gradient-to-br from-[color:var(--sx-accent)] to-[color:var(--sx-accent2)]">
+                  <img src="/avatar-sec.webp" alt="" width={36} height={36} className="h-full w-full object-cover" />
+                </div>
+                <span className="text-lg font-semibold tracking-tight">Danilo Leal</span>
+              </motion.div>
+            </a>
+
+            <div className="hidden flex-1 items-center justify-center md:flex">
+              <div className="flex items-center gap-8">
+                {nav.map((item, index) => (
+                  <motion.a
+                    key={item.href}
+                    href={item.href}
+                    initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * index, duration: 0.5 }}
+                    className="group relative text-sm text-[color:var(--sx-muted)] transition-colors duration-300 hover:text-[color:var(--sx-fg)]"
+                  >
+                    {item.label}
+                    <span className="absolute -bottom-1 left-0 h-px w-0 transition-all duration-300 group-hover:w-full sx-underline" />
+                  </motion.a>
+                ))}
+              </div>
+            </div>
+
+            <div className="hidden items-center gap-6 md:flex">
+              <div className="flex items-center gap-4">
+                {SOCIAL.map((s) => (
+                  <motion.a
+                    key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}
+                    whileHover={{ scale: 1.1, y: -2 }} whileTap={{ scale: 0.95 }}
+                    className="text-[color:var(--sx-muted)] transition-colors hover:text-[color:var(--sx-fg)]"
+                  >
+                    <s.icon className="h-5 w-5" />
+                  </motion.a>
+                ))}
+              </div>
+              <div className="flex items-center gap-4">
+                <LanguageToggle />
+                <ThemeToggle />
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label={menuOpen ? t.closeMenu : t.openMenu}
+              aria-expanded={menuOpen}
+              className="relative z-10 md:hidden"
+            >
+              <AnimatePresence mode="wait">
+                {menuOpen ? (
+                  <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
+                    <X className="h-6 w-6" />
+                  </motion.div>
+                ) : (
+                  <motion.div key="menu" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
+                    <Menu className="h-6 w-6" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </button>
           </div>
         </nav>
-      </header>
+      </motion.header>
+
+      {/* mobile menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-40 md:hidden sx-overlay"
+          >
+            <motion.nav
+              initial="closed" animate="open" exit="closed"
+              variants={{ open: { transition: { staggerChildren: 0.1 } }, closed: { transition: { staggerChildren: 0.05, staggerDirection: -1 } } }}
+              className="flex h-full flex-col items-center justify-center gap-8"
+            >
+              {nav.map((item) => (
+                <motion.a
+                  key={item.href} href={item.href} onClick={() => setMenuOpen(false)}
+                  variants={{ open: { opacity: 1, y: 0 }, closed: { opacity: 0, y: 20 } }}
+                  className="text-3xl font-medium transition-colors hover:text-[color:var(--sx-accent)]"
+                >
+                  {item.label}
+                </motion.a>
+              ))}
+              <motion.div variants={{ open: { opacity: 1, y: 0 }, closed: { opacity: 0, y: 20 } }} className="mt-8 flex items-center gap-6">
+                {SOCIAL.map((s) => (
+                  <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} className="text-[color:var(--sx-muted)] transition-colors hover:text-[color:var(--sx-fg)]">
+                    <s.icon className="h-6 w-6" />
+                  </a>
+                ))}
+                <LanguageToggle iconClassName="w-[32px] h-[28px]" />
+                <ThemeToggle iconClassName="w-6 h-6" />
+              </motion.div>
+            </motion.nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* hero */}
-      <section id="top" className="relative flex min-h-screen items-center justify-center overflow-hidden px-6">
-        <div className="absolute inset-0 sx-grid opacity-70" />
-        <motion.div
-          animate={{ y: [0, -28, 0], x: [0, 16, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute left-[18%] top-[22%] h-80 w-80 rounded-full bg-[color:var(--sx-accent)] opacity-[0.10] blur-3xl"
-        />
-        <motion.div
-          animate={{ y: [0, 26, 0], x: [0, -18, 0] }} transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-[20%] right-[16%] h-72 w-72 rounded-full bg-[color:var(--sx-accent2)] opacity-[0.10] blur-3xl"
-        />
-        <div className="relative z-10 mx-auto max-w-3xl text-center">
+      <section id="top" className="relative flex min-h-screen items-center justify-center overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 sx-glow-top" />
+          <div className="absolute inset-0 sx-grid" />
+          <motion.div
+            animate={{ y: [0, -30, 0], x: [0, 15, 0] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-[color:var(--sx-accent)] opacity-[0.08] blur-3xl"
+          />
+          <motion.div
+            animate={{ y: [0, 30, 0], x: [0, -20, 0] }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute bottom-1/4 right-1/4 h-80 w-80 rounded-full bg-[color:var(--sx-accent2)] opacity-[0.08] blur-3xl"
+          />
+          <motion.div
+            animate={{ y: [0, -20, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute right-1/3 top-1/3 h-64 w-64 rounded-full bg-[color:var(--sx-accent2)] opacity-[0.06] blur-3xl"
+          />
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-7xl px-6 text-center lg:px-8">
           <motion.h1
-            initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: EASE }}
-            className="text-balance text-5xl font-bold leading-[1.02] tracking-tight sm:text-6xl md:text-7xl"
+            initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 1, ease: EASE }}
+            className="mb-6 text-5xl font-bold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl"
           >
-            {t.heroTop}<br /><span className="sx-grad">{t.heroAccent}</span>
+            <span>{t.heroTop}</span>
+            <br />
+            <motion.span initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6, duration: 1 }} className="sx-grad">
+              {t.heroAccent}
+            </motion.span>
           </motion.h1>
           <motion.p
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
-            className="mx-auto mt-7 max-w-xl text-lg leading-relaxed text-[color:var(--sx-muted)]"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.8 }}
+            className="mx-auto mb-12 max-w-2xl text-lg leading-relaxed text-[color:var(--sx-muted)] md:text-xl"
           >
             {t.heroIntro}
           </motion.p>
           <motion.div
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.35, ease: EASE }}
-            className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9, duration: 0.8 }}
+            className="flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
-            <a href="#pesquisa" className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-base font-semibold sx-btn">{t.heroWork}</a>
-            <a href="#contato" className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-base font-medium sx-btn-ghost">{t.heroContact}</a>
+            <motion.a href="#writeups" whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }} className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-medium sx-btn">
+              {t.heroWork}
+            </motion.a>
+            <motion.a href="#contato" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-medium sx-btn-ghost">
+              {t.heroContact}
+            </motion.a>
           </motion.div>
         </div>
+
+        <div className="absolute inset-x-0 bottom-0 h-32 sx-fade" />
       </section>
 
-      {/* research */}
-      <section id="pesquisa" className="scroll-mt-24 px-6 py-28">
-        <div className="mx-auto max-w-6xl">
-          <Reveal className="mb-16 max-w-2xl">
-            <span className="mb-4 block text-sm font-semibold text-[color:var(--sx-accent)]">{t.researchEyebrow}</span>
-            <h2 className="text-4xl font-bold tracking-tight md:text-5xl">{t.researchTitle}</h2>
-            <p className="mt-5 text-lg text-[color:var(--sx-muted)]">{t.researchIntro}</p>
-          </Reveal>
-          <div className="grid gap-6 lg:grid-cols-2">
+      {/* write-ups */}
+      <section id="writeups" className="relative scroll-mt-20 overflow-hidden py-32">
+        <div className="absolute inset-0 bg-[color:var(--sx-surface)]">
+          <div className="absolute inset-0 sx-dots" />
+        </div>
+        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+          <SectionHead eyebrow={t.researchEyebrow} title={t.researchTitle} intro={t.researchIntro} />
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {t.casos.map((c, i) => (
-              <Reveal key={i} delay={(i % 2) * 0.12}>
-                <article className="flex h-full flex-col p-7 sx-card">
-                  <span className="mb-4 inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-medium text-[color:var(--sx-accent)] sx-pill">{c.tag}</span>
-                  <h3 className="text-xl font-semibold">{c.title}</h3>
-                  <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--sx-muted)]">{c.summary}</p>
-                  {c.fix && (
-                    <p className="mt-4 rounded-xl border border-[color:var(--sx-line)] bg-[var(--sx-panel2)] px-4 py-3 text-sm text-[color:var(--sx-fg)]">{c.fix}</p>
-                  )}
-                  <p className="mt-5 border-t border-[color:var(--sx-line)] pt-4 text-xs text-[color:var(--sx-faint)]">{c.meta}</p>
-                </article>
+              <Reveal key={c.link} delay={i * 0.15} y={60}>
+                <CaseCard c={c} soon={t.soon} />
               </Reveal>
             ))}
           </div>
+          <Reveal delay={0.3} y={20} className="mt-16 text-center">
+            <a href={GITHUB} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-2 text-[color:var(--sx-muted)] transition-colors hover:text-[color:var(--sx-accent)]">
+              <Github className="h-5 w-5" />
+              <span className="font-medium">{t.githubAll}</span>
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </a>
+          </Reveal>
         </div>
       </section>
 
       {/* approach */}
-      <section id="abordagem" className="scroll-mt-24 bg-[var(--sx-panel)]/40 px-6 py-28">
-        <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-2 lg:items-center">
-          <Reveal>
-            <span className="mb-4 block text-sm font-semibold text-[color:var(--sx-accent)]">{t.approachEyebrow}</span>
-            <h2 className="text-4xl font-bold tracking-tight md:text-5xl">{t.approachTitle}</h2>
-            <p className="mt-6 text-lg leading-relaxed text-[color:var(--sx-muted)]">{t.approachText}</p>
-            <div className="mt-8 space-y-3">
-              {t.facts.map((f, i) => {
-                const Icon = FACT_ICONS[f.icon] ?? MapPin;
+      <section id="abordagem" className="relative scroll-mt-20 overflow-hidden py-32">
+        <div className="absolute inset-0 bg-[color:var(--sx-alt)]">
+          <div className="absolute inset-0 sx-glow-bottom" />
+        </div>
+        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+          <SectionHead eyebrow={t.approachEyebrow} title={t.approachTitle} />
+          <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
+            <Reveal delay={0.1} y={0}>
+              <p className="mb-8 text-lg leading-relaxed text-[color:var(--sx-muted)]">{t.approachText}</p>
+              <div className="mb-12 space-y-4">
+                {t.facts.map((f) => {
+                  const Icon = FACT_ICONS[f.icon] ?? MapPin;
+                  return (
+                    <div key={f.icon} className="flex items-center gap-3 text-[color:var(--sx-muted)]">
+                      <div className="rounded-lg p-2.5 sx-box"><Icon className="h-4 w-4 text-[color:var(--sx-accent)]" /></div>
+                      <span>{f.text}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              <h3 className="mb-4 text-sm font-medium uppercase tracking-wider text-[color:var(--sx-faint)]">{t.toolsLabel}</h3>
+              <div className="flex flex-wrap gap-2">
+                {TOOLS.map((tool) => (
+                  <span key={tool} className="rounded-lg px-4 py-2 text-sm text-[color:var(--sx-muted)] sx-chip">{tool}</span>
+                ))}
+              </div>
+            </Reveal>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {t.tiles.map((tile, i) => {
+                const Icon = TILE_ICONS[i];
                 return (
-                  <div key={i} className="flex items-center gap-3 text-[color:var(--sx-muted)]">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-lg sx-ibox"><Icon className="h-4 w-4 text-[color:var(--sx-accent)]" /></span>
-                    <span className="text-[15px]">{f.text}</span>
-                  </div>
+                  <Reveal key={tile.label} delay={0.4 + i * 0.1}>
+                    <div className="group h-full sx-card">
+                      <div className="relative z-10 p-6">
+                        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl sx-box-grad">
+                          <Icon className="h-6 w-6 text-[color:var(--sx-accent)]" />
+                        </div>
+                        <h3 className="mb-1 text-lg font-semibold">{tile.label}</h3>
+                        <p className="text-sm text-[color:var(--sx-muted)]">{tile.desc}</p>
+                      </div>
+                    </div>
+                  </Reveal>
                 );
               })}
             </div>
-            <div className="mt-8">
-              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-[color:var(--sx-faint)]">{t.toolsLabel}</h3>
-              <div className="flex flex-wrap gap-2">
-                {TOOLS.map((tool) => (
-                  <span key={tool} className="rounded-lg px-3 py-1.5 text-sm text-[color:var(--sx-muted)] sx-card">{tool}</span>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {t.tiles.map((tile, i) => {
-              const Icon = TILE_ICONS[i];
-              return (
-                <Reveal key={i} delay={0.1 + i * 0.08}>
-                  <div className="h-full p-6 sx-card">
-                    <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl sx-ibox"><Icon className="h-5 w-5 text-[color:var(--sx-accent)]" /></span>
-                    <h4 className="text-base font-semibold">{tile.label}</h4>
-                    <p className="mt-1 text-sm text-[color:var(--sx-muted)]">{tile.desc}</p>
-                  </div>
-                </Reveal>
-              );
-            })}
           </div>
         </div>
       </section>
 
       {/* contact */}
-      <section id="contato" className="scroll-mt-24 px-6 py-28">
-        <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-2 lg:items-center">
-          <Reveal>
-            <span className="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-[color:var(--sx-muted)] sx-pill">
-              <MessageSquare className="h-4 w-4 text-[color:var(--sx-accent)]" />{t.contactBadge}
-            </span>
-            <h2 className="text-4xl font-bold leading-tight tracking-tight md:text-5xl">
-              {t.contactTop}<br /><span className="sx-grad">{t.contactAccent}</span>
-            </h2>
-            <p className="mt-6 max-w-md text-lg text-[color:var(--sx-muted)]">{t.contactIntro}</p>
-            <div className="mt-9 space-y-5">
-              <div className="flex items-center gap-4">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl sx-ibox"><Mail className="h-5 w-5 text-[color:var(--sx-accent)]" /></span>
+      <section id="contato" className="relative scroll-mt-20 overflow-hidden py-32">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 opacity-50 sx-grid" />
+          <motion.div
+            animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.4, 0.3] }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl sx-blob"
+          />
+        </div>
+        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+            <Reveal y={0}>
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-2 sx-pill">
+                <MessageSquare className="h-4 w-4 text-[color:var(--sx-accent)]" />
+                <span className="text-sm font-medium text-[color:var(--sx-muted)]">{t.contactBadge}</span>
+              </div>
+              <h2 className="mb-6 text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">
+                {t.contactTop}
+                <br />
+                <span className="sx-grad">{t.contactAccent}</span>
+              </h2>
+              <p className="mb-8 max-w-md text-lg text-[color:var(--sx-muted)]">{t.contactIntro}</p>
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl p-3 sx-box"><Mail className="h-5 w-5 text-[color:var(--sx-accent)]" /></div>
                 <div>
-                  <p className="text-sm text-[color:var(--sx-faint)]">{t.emailLabel}</p>
-                  <a href={`mailto:${EMAIL}`} className="text-[color:var(--sx-fg)] transition-colors hover:text-[color:var(--sx-accent)]">{EMAIL}</a>
+                  <p className="mb-1 text-sm text-[color:var(--sx-faint)]">{t.emailLabel}</p>
+                  <a href={`mailto:${EMAIL}`} className="transition-colors hover:text-[color:var(--sx-accent)]">{EMAIL}</a>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl sx-ibox"><Phone className="h-5 w-5 text-[color:var(--sx-accent)]" /></span>
+              <div className="mt-4 flex items-center gap-3">
+                <div className="rounded-xl p-3 sx-box"><Phone className="h-5 w-5 text-[color:var(--sx-accent)]" /></div>
                 <div>
-                  <p className="text-sm text-[color:var(--sx-faint)]">{t.phoneLabel}</p>
-                  <a href={`tel:+55${PHONE.replace(/\D/g, '')}`} className="text-[color:var(--sx-fg)] transition-colors hover:text-[color:var(--sx-accent)]">{PHONE}</a>
+                  <p className="mb-1 text-sm text-[color:var(--sx-faint)]">{t.phoneLabel}</p>
+                  <a href={`tel:+55${PHONE.replace(/\D/g, '')}`} className="transition-colors hover:text-[color:var(--sx-accent)]">
+                    {/* Brazilians know the number is Brazilian; the flag is for everyone else. */}
+                    {lang === 'en' && <span aria-hidden="true">🇧🇷 </span>}
+                    {PHONE}
+                  </a>
                 </div>
               </div>
-            </div>
-          </Reveal>
-          <Reveal delay={0.15}>
-            <ContactForm t={t} />
-          </Reveal>
+            </Reveal>
+            <Reveal delay={0.3} y={0}>
+              <ContactForm t={t} />
+            </Reveal>
+          </div>
         </div>
       </section>
 
       {/* footer */}
-      <footer className="border-t border-[color:var(--sx-line)] px-6 py-14">
-        <div className="mx-auto max-w-6xl">
+      <footer className="relative border-t border-[color:var(--sx-line)] py-16">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
-            <div className="flex flex-col items-center gap-3 md:items-start">
-              <div className="flex items-center gap-2">
-                <span className="h-7 w-7 overflow-hidden rounded-full bg-gradient-to-br from-[color:var(--sx-accent)] to-[color:var(--sx-accent2)]">
-                  <img src="/avatar-sec.webp" alt="Danilo Leal" width={28} height={28} className="h-full w-full object-cover" />
-                </span>
+            <div className="flex flex-col items-center gap-4 md:items-start">
+              <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-2">
+                <div className="h-7 w-7 overflow-hidden rounded-full bg-gradient-to-br from-[color:var(--sx-accent)] to-[color:var(--sx-accent2)]">
+                  <img src="/avatar-sec.webp" alt="" width={28} height={28} className="h-full w-full object-cover" />
+                </div>
                 <span className="text-base font-semibold tracking-tight">Danilo Leal</span>
-              </div>
+              </motion.div>
               <p className="text-sm text-[color:var(--sx-faint)]">© {new Date().getFullYear()} {t.rights}</p>
             </div>
-            <div className="flex items-center gap-3">
-              <a href={GITHUB} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="rounded-lg p-2.5 text-[color:var(--sx-muted)] transition-colors hover:text-[color:var(--sx-fg)] sx-card"><Github className="h-4 w-4" /></a>
-              <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="rounded-lg p-2.5 text-[color:var(--sx-muted)] transition-colors hover:text-[color:var(--sx-fg)] sx-card"><Linkedin className="h-4 w-4" /></a>
+            <div className="flex items-center gap-4">
+              {SOCIAL.map((s) => (
+                <motion.a
+                  key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}
+                  whileHover={{ scale: 1.1, y: -2 }} whileTap={{ scale: 0.95 }}
+                  className="rounded-lg p-2.5 text-[color:var(--sx-muted)] transition-colors hover:text-[color:var(--sx-fg)] sx-chip"
+                >
+                  <s.icon className="h-4 w-4" />
+                </motion.a>
+              ))}
             </div>
           </div>
-          <div className="mt-10 text-center">
-            <a href="#top" className="text-xs text-[color:var(--sx-faint)] transition-colors hover:text-[color:var(--sx-accent)]">{t.top} ↑</a>
+          <div className="mt-12 text-center">
+            <a href="#top" className="text-xs text-[color:var(--sx-faint)] transition-colors hover:text-[color:var(--sx-muted)]">{t.top}</a>
           </div>
         </div>
       </footer>
