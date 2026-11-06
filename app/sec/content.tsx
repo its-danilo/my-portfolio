@@ -23,11 +23,14 @@ const FORM_ENDPOINT = 'https://api.web3forms.com/submit';
 const WEB3FORMS_ACCESS_KEY = '824fc08e-930f-4c4c-aba9-d9b804f817e4';
 
 // Where each card leads. An empty link shows the card as "coming soon".
-type LinkKey = 'exam-portal' | 'reg-platform' | 'labs' | 'osint';
+type LinkKey = 'exam-portal' | 'reg-platform' | 'labs' | 'thm' | 'osint';
 const LINKS: Record<LinkKey, string> = {
   'exam-portal': 'https://github.com/its-danilo/disclosures/tree/main/recuperacao-de-conta-com-dados-nao-secretos',
   'reg-platform': 'https://github.com/its-danilo/disclosures/tree/main/senha-padrao-previsivel',
-  labs: 'https://github.com/its-danilo/portswigger-labs/tree/main/IDOR',
+  labs: 'https://github.com/its-danilo/portswigger-labs/tree/main',
+  // TryHackMe has no place for my own write-ups, only the rooms I finished.
+  // Once there is a write-ups repo, this can point there instead.
+  thm: 'https://tryhackme.com/p/itsdanilo',
   osint: '',
 };
 
@@ -38,6 +41,7 @@ const COVERS: Partial<Record<LinkKey, string>> = {
   'exam-portal': '/sec/exam-portal.webp',
   'reg-platform': '/sec/reg-platform.webp',
   labs: '/sec/portswigger-labs.svg',
+  thm: '/sec/tryhackme.svg',
 };
 
 // The page keeps its own teal tokens. While it is mounted, :has(.sec) also
@@ -135,11 +139,19 @@ const en = {
     },
     {
       tags: ['PortSwigger'],
-      link: 'labs', cta: 'Read the write-up',
-      title: 'Access-control labs',
+      link: 'labs', cta: 'See the track',
+      title: 'PortSwigger labs',
       summary:
-        'I finished the IDOR and access-control track on the Web Security Academy with Burp Suite. It is the technical base behind the cases above, and the write-ups live on my GitHub.',
-      meta: 'Track completed',
+        'My study track on PortSwigger’s Web Security Academy, solving the labs with Burp Suite. I already finished IDOR and access control, the technical base behind the cases above, and every lab becomes a write-up with screenshots and the fix.',
+      meta: 'Track in progress',
+    },
+    {
+      tags: ['TryHackMe'],
+      link: 'thm', cta: 'See my profile',
+      title: 'TryHackMe track',
+      summary:
+        'My study track on TryHackMe, with hands-on rooms on real virtual machines. The profile shows the rooms I have finished, and the write-ups go to my GitHub in the same format as the PortSwigger labs.',
+      meta: 'Track in progress',
     },
     {
       tags: ['OSINT', 'OpSec'],
@@ -234,11 +246,19 @@ const copy: Localized<typeof en> = {
       },
       {
         tags: ['PortSwigger'],
-        link: 'labs', cta: 'Ler o writeup',
-        title: 'Laboratórios de controle de acesso',
+        link: 'labs', cta: 'Ver a trilha',
+        title: 'Labs da PortSwigger',
         summary:
-          'Terminei a trilha de IDOR e controle de acesso da Web Security Academy usando o Burp Suite. É a base técnica por trás dos casos acima, e os writeups ficam no meu GitHub.',
-        meta: 'Trilha concluída',
+          'Minha trilha de estudo na Web Security Academy da PortSwigger, resolvendo os labs com o Burp Suite. Já concluí a parte de IDOR e controle de acesso, a base técnica dos casos acima, e cada lab vira um writeup com prints e a correção.',
+        meta: 'Trilha em andamento',
+      },
+      {
+        tags: ['TryHackMe'],
+        link: 'thm', cta: 'Ver meu perfil',
+        title: 'Trilha no TryHackMe',
+        summary:
+          'Minha trilha de estudo no TryHackMe, com salas práticas em máquinas virtuais de verdade. O perfil mostra as salas que já concluí, e os writeups vão para o meu GitHub no mesmo formato dos labs da PortSwigger.',
+        meta: 'Trilha em andamento',
       },
       {
         tags: ['OSINT', 'OpSec'],
