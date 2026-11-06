@@ -4,10 +4,11 @@ import { AnimatePresence, motion, useInView } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import {
   Github, Linkedin, Search, KeyRound, FlaskConical, ShieldCheck, Menu, X,
-  Mail, Phone, MapPin, GraduationCap, Send, CheckCircle2, Loader2, MessageSquare, ArrowUpRight,
+  Mail, MapPin, GraduationCap, Send, CheckCircle2, Loader2, MessageSquare, ArrowUpRight,
 } from 'lucide-react';
 import LanguageToggle from '@/components/language-toggle';
 import ThemeToggle from '@/components/theme-toggle';
+import WhatsappIcon from '@/components/icons/whatsapp';
 import { useCopy, useLanguage, type Localized } from '@/lib/i18n';
 
 const GITHUB = 'https://github.com/its-danilo';
@@ -284,6 +285,7 @@ const FACT_ICONS: Record<string, typeof MapPin> = { cert: ShieldCheck, grad: Gra
 const SOCIAL = [
   { icon: Github, href: GITHUB, label: 'GitHub' },
   { icon: Linkedin, href: LINKEDIN, label: 'LinkedIn' },
+  { icon: WhatsappIcon, href: WHATSAPP, label: 'WhatsApp' },
 ];
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -723,7 +725,7 @@ export default function SecContent() {
                 </div>
               </div>
               <div className="mt-4 flex items-center gap-3">
-                <div className="rounded-xl p-3 sx-box"><Phone className="h-5 w-5 text-[color:var(--sx-accent)]" /></div>
+                <div className="rounded-xl p-3 sx-box"><WhatsappIcon className="h-5 w-5 text-[color:var(--sx-accent)]" /></div>
                 <div>
                   <p className="mb-1 text-sm text-[color:var(--sx-faint)]">{t.phoneLabel}</p>
                   <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-[color:var(--sx-accent)]">

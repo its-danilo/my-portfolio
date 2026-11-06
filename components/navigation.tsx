@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Github, Linkedin, Menu, X } from 'lucide-react';
 import ThemeToggle from '@/components/theme-toggle';
 import LanguageToggle from '@/components/language-toggle';
+import WhatsappIcon from '@/components/icons/whatsapp';
+import { personalInfo } from '@/data/portfolio';
 import { useCopy } from '@/lib/i18n';
 
 const copy = {
@@ -31,6 +33,7 @@ const copy = {
 const socialLinks = [
   { icon: Github, href: 'https://github.com/its-danilo', label: 'GitHub' },
   { icon: Linkedin, href: 'https://www.linkedin.com/in/danilo-lnkd/', label: 'LinkedIn' },
+  { icon: WhatsappIcon, href: personalInfo.whatsapp, label: 'WhatsApp' },
 ];
 
 export default function Navigation() {

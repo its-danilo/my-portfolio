@@ -2,7 +2,8 @@
 
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { Mail, Phone, Send, MessageSquare, CheckCircle2, Loader2 } from 'lucide-react';
+import { Mail, Send, MessageSquare, CheckCircle2, Loader2 } from 'lucide-react';
+import WhatsappIcon from '@/components/icons/whatsapp';
 import { personalInfo } from '@/data/portfolio';
 import { useCopy, useLanguage } from '@/lib/i18n';
 
@@ -173,7 +174,7 @@ export default function ContactSection() {
 
             <div className="flex items-center gap-3 text-foreground/70 mt-4">
               <div className="p-3 bg-line/[0.05] rounded-xl border border-line/[0.08]">
-                <Phone className="w-5 h-5 text-terra" />
+                <WhatsappIcon className="w-5 h-5 text-terra" />
               </div>
               <div>
                 <p className="text-sm text-foreground/50 mb-1">{t.callMe}</p>

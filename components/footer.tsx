@@ -2,11 +2,14 @@
 
 import { motion } from 'framer-motion';
 import { Github, Linkedin } from 'lucide-react';
+import WhatsappIcon from '@/components/icons/whatsapp';
+import { personalInfo } from '@/data/portfolio';
 import { useCopy } from '@/lib/i18n';
 
 const socialLinks = [
   { icon: Github, href: 'https://github.com/its-danilo', label: 'GitHub' },
   { icon: Linkedin, href: 'https://www.linkedin.com/in/danilo-lnkd/', label: 'LinkedIn' },
+  { icon: WhatsappIcon, href: personalInfo.whatsapp, label: 'WhatsApp' },
 ];
 
 const copy = {
