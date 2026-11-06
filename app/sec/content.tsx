@@ -140,7 +140,7 @@ const en = {
       link: 'labs', cta: 'See the track',
       title: 'PortSwigger labs',
       summary:
-        'My track through PortSwigger’s Web Security Academy, lab by lab with Burp Suite. I started with access control and IDOR, one of the most common flaws in web apps.',
+        'My track through PortSwigger’s Web Security Academy, with write-ups grouped by vulnerability type. Each one shows the steps, the root cause and how to fix it.',
       meta: 'Track in progress',
     },
     {
@@ -245,7 +245,7 @@ const copy: Localized<typeof en> = {
         link: 'labs', cta: 'Ver a trilha',
         title: 'Labs da PortSwigger',
         summary:
-          'Minha trilha na Web Security Academy da PortSwigger, lab por lab com o Burp Suite. Comecei por controle de acesso e IDOR, uma das falhas mais comuns em sistemas web.',
+          'Minha trilha na Web Security Academy da PortSwigger, com writeups separados por tipo de vulnerabilidade. Cada um mostra o passo a passo, a causa da falha e como corrigir.',
         meta: 'Trilha em andamento',
       },
       {
