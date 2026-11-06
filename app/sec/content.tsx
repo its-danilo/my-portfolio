@@ -25,8 +25,8 @@ const WEB3FORMS_ACCESS_KEY = '824fc08e-930f-4c4c-aba9-d9b804f817e4';
 // Where each card leads. An empty link shows the card as "coming soon".
 type LinkKey = 'exam-portal' | 'reg-platform' | 'labs' | 'thm' | 'osint';
 const LINKS: Record<LinkKey, string> = {
-  'exam-portal': 'https://github.com/its-danilo/disclosures/tree/main/recuperacao-de-conta-com-dados-nao-secretos',
-  'reg-platform': 'https://github.com/its-danilo/disclosures/tree/main/senha-padrao-previsivel',
+  'exam-portal': 'https://github.com/its-danilo/casos-reais/tree/main/recuperacao-de-conta-com-dados-nao-secretos',
+  'reg-platform': 'https://github.com/its-danilo/casos-reais/tree/main/senha-padrao-previsivel',
   labs: 'https://github.com/its-danilo/portswigger-labs/tree/main',
   // TryHackMe has no place for my own write-ups, only the rooms I finished.
   // Once there is a write-ups repo, this can point there instead.
@@ -34,7 +34,7 @@ const LINKS: Record<LinkKey, string> = {
   osint: '',
 };
 
-// Card cover images, in public/sec. The two disclosures use screenshots from
+// Card cover images, in public/sec. The two real cases use screenshots from
 // their write-ups (already blurred there). A card without a cover gets a
 // drawn placeholder instead.
 const COVERS: Partial<Record<LinkKey, string>> = {
@@ -120,7 +120,7 @@ const en = {
   githubAll: 'View all projects on GitHub',
   casos: [
     {
-      tags: ['Responsible disclosure'],
+      tags: ['Real case'],
       link: 'exam-portal', cta: 'Read the write-up',
       title: 'Public-exam portal',
       summary:
@@ -128,7 +128,7 @@ const en = {
       meta: '2026 · reported to the owner',
     },
     {
-      tags: ['Responsible disclosure'],
+      tags: ['Real case'],
       link: 'reg-platform', cta: 'Read the write-up',
       title: 'Web registration platform',
       summary:
@@ -175,7 +175,7 @@ const en = {
     { label: 'Reconnaissance', desc: 'Open sources and public surface' },
     { label: 'Access control', desc: 'IDOR and authentication' },
     { label: 'Proof of concept', desc: 'The least it takes to confirm' },
-    { label: 'Disclosure', desc: 'A report with the fix' },
+    { label: 'Report', desc: 'Sent to the owner, with the fix' },
   ] as Tile[],
 
   contactBadge: 'Let’s talk',
@@ -225,7 +225,7 @@ const copy: Localized<typeof en> = {
     githubAll: 'Ver todos os projetos no GitHub',
     casos: [
       {
-        tags: ['Divulgação responsável'],
+        tags: ['Caso real'],
         link: 'exam-portal', cta: 'Ler o writeup',
         title: 'Portal de concurso público',
         summary:
@@ -233,7 +233,7 @@ const copy: Localized<typeof en> = {
         meta: '2026 · reportado ao responsável',
       },
       {
-        tags: ['Divulgação responsável'],
+        tags: ['Caso real'],
         link: 'reg-platform', cta: 'Ler o writeup',
         title: 'Plataforma de cadastro web',
         summary:
@@ -280,7 +280,7 @@ const copy: Localized<typeof en> = {
       { label: 'Reconhecimento', desc: 'Fontes abertas e superfície pública' },
       { label: 'Controle de acesso', desc: 'IDOR e autenticação' },
       { label: 'Prova de conceito', desc: 'O mínimo para confirmar' },
-      { label: 'Divulgação', desc: 'Um report com a correção' },
+      { label: 'Relato', desc: 'Aviso ao responsável, com a correção' },
     ],
 
     contactBadge: 'Vamos conversar',
