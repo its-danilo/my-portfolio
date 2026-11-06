@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useInView } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import {
   Github, Linkedin, Search, KeyRound, FlaskConical, ShieldCheck, Menu, X,
-  Mail, MapPin, GraduationCap, Send, CheckCircle2, Loader2, MessageSquare, ArrowUpRight,
+  Mail, MapPin, GraduationCap, Send, CheckCircle2, Loader2, MessageSquare, ArrowUpRight, Sparkles, ScanFace,
 } from 'lucide-react';
 import LanguageToggle from '@/components/language-toggle';
 import ThemeToggle from '@/components/theme-toggle';
@@ -29,6 +29,15 @@ const LINKS: Record<LinkKey, string> = {
   'reg-platform': 'https://github.com/its-danilo/disclosures/tree/main/senha-padrao-previsivel',
   labs: 'https://github.com/its-danilo/portswigger-labs/tree/main/IDOR',
   osint: '',
+};
+
+// Card cover images, in public/sec. The two disclosures use screenshots from
+// their write-ups (already blurred there). A card without a cover gets a
+// drawn placeholder instead.
+const COVERS: Partial<Record<LinkKey, string>> = {
+  'exam-portal': '/sec/exam-portal.webp',
+  'reg-platform': '/sec/reg-platform.webp',
+  labs: '/sec/portswigger-labs.svg',
 };
 
 // The page keeps its own teal tokens. While it is mounted, :has(.sec) also
@@ -77,6 +86,9 @@ const css = `
 .sec .sx-btn:hover{box-shadow:0 10px 25px -5px color-mix(in srgb,var(--sx-accent) 35%,transparent);}
 .sec .sx-btn-ghost{border:1px solid var(--sx-line);background:color-mix(in srgb,var(--sx-accent) 4%,transparent);color:var(--sx-fg);transition:border-color .3s ease,background-color .3s ease;}
 .sec .sx-btn-ghost:hover{border-color:color-mix(in srgb,var(--sx-accent) 35%,transparent);background:color-mix(in srgb,var(--sx-accent) 7%,transparent);}
+.sec .sx-ink{background:var(--sx-fg);color:var(--sx-bg);transition:opacity .3s ease;}
+.sec .sx-ink:hover{opacity:.9;}
+.sec .sx-cover-empty{background:radial-gradient(ellipse 70% 60% at 30% 20%,color-mix(in srgb,var(--sx-accent) 30%,transparent),transparent),radial-gradient(ellipse 60% 60% at 90% 100%,color-mix(in srgb,var(--sx-accent2) 22%,transparent),transparent),var(--sx-panel2);}
 .sec .sx-input{width:100%;border-radius:.75rem;padding:.75rem 1rem;background:color-mix(in srgb,var(--sx-accent) 3%,transparent);border:1px solid var(--sx-line);color:var(--sx-fg);transition:border-color .3s ease,background-color .3s ease;}
 .sec .sx-input::placeholder{color:var(--sx-faint);}
 .sec .sx-input:focus{outline:none;border-color:color-mix(in srgb,var(--sx-accent) 50%,transparent);background:color-mix(in srgb,var(--sx-accent) 5%,transparent);}
@@ -88,6 +100,8 @@ type Status = 'idle' | 'sending' | 'sent' | 'error';
 
 const en = {
   navContact: 'Contact',
+  navCta: 'Get in Touch',
+  heroBadge: 'Open to internships and new projects',
   heroTop: 'Offensive security and',
   heroAccent: 'digital investigation',
   heroIntro:
@@ -185,12 +199,14 @@ const copy: Localized<typeof en> = {
   en,
   pt: {
     navContact: 'Contato',
+    navCta: 'Fale comigo',
+    heroBadge: 'Aberto a estágio e novos projetos',
     heroTop: 'Segurança ofensiva e',
     heroAccent: 'investigação digital',
     heroIntro:
       'Procuro falhas de controle de acesso, sigo rastros em fontes abertas e reporto tudo de forma responsável. Meu foco é perícia e forense digital.',
     heroWork: 'Ver writeups',
-    heroContact: 'Falar comigo',
+    heroContact: 'Fale comigo',
 
     researchEyebrow: 'Writeups',
     researchTitle: 'Writeups e demonstrações',
@@ -317,29 +333,51 @@ function SectionHead({ eyebrow, title, intro }: { eyebrow: string; title: string
   );
 }
 
+// Same shape as the main site's project cards: a 16:10 cover that zooms on
+// hover, the tags floating over it, and the text below.
 function CaseCard({ c, soon }: { c: Caso; soon: string }) {
   const href = LINKS[c.link];
+  const cover = COVERS[c.link];
   const body = (
-    <div className="relative z-10 flex h-full flex-col p-7">
-      <div className="mb-5 flex flex-wrap gap-2">
-        {c.tags.map((tag) => (
-          <span key={tag} className="rounded-full px-3 py-1 text-xs font-medium text-[color:var(--sx-accent)] sx-pill">{tag}</span>
-        ))}
+    <div className="relative z-10 flex h-full flex-col">
+      <div className="relative aspect-[16/10] overflow-hidden border-b border-[color:var(--sx-line)]">
+        {cover ? (
+          <>
+            <img
+              src={cover}
+              alt={c.title}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+          </>
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center sx-cover-empty sx-dots">
+            <ScanFace className="h-20 w-20 text-[color:var(--sx-accent)] opacity-70" strokeWidth={1.25} />
+          </div>
+        )}
+        <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+          {c.tags.map((tag) => (
+            <span key={tag} className="rounded-full border border-white/10 bg-black/40 px-3 py-1.5 text-xs font-medium text-white/90 backdrop-blur-md">{tag}</span>
+          ))}
+        </div>
       </div>
-      <h3 className="mb-2 text-xl font-semibold transition-colors duration-300 group-hover:text-[color:var(--sx-accent)]">{c.title}</h3>
-      <p className="text-sm leading-relaxed text-[color:var(--sx-muted)]">{c.summary}</p>
-      {c.fix && <p className="mt-4 rounded-xl px-4 py-3 text-sm sx-box">{c.fix}</p>}
-      <div className="mt-auto pt-6">
-        <div className="flex items-center justify-between gap-4 border-t border-[color:var(--sx-line)] pt-4">
-          <span className="text-xs text-[color:var(--sx-faint)]">{c.meta}</span>
-          {href ? (
-            <span className="inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-[color:var(--sx-accent)]">
-              {c.cta}
-              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </span>
-          ) : (
-            <span className="shrink-0 text-sm text-[color:var(--sx-faint)]">{soon}</span>
-          )}
+      <div className="flex flex-1 flex-col p-6">
+        <h3 className="mb-2 text-xl font-semibold transition-colors duration-300 group-hover:text-[color:var(--sx-accent)]">{c.title}</h3>
+        <p className="text-sm leading-relaxed text-[color:var(--sx-muted)]">{c.summary}</p>
+        {c.fix && <p className="mt-4 rounded-xl px-4 py-3 text-sm sx-box">{c.fix}</p>}
+        <div className="mt-auto pt-6">
+          <div className="flex items-center justify-between gap-4 border-t border-[color:var(--sx-line)] pt-4">
+            <span className="text-xs text-[color:var(--sx-faint)]">{c.meta}</span>
+            {href ? (
+              <span className="inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-[color:var(--sx-accent)]">
+                {c.cta}
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </span>
+            ) : (
+              <span className="shrink-0 text-sm text-[color:var(--sx-faint)]">{soon}</span>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -505,6 +543,13 @@ export default function SecContent() {
                   </motion.a>
                 ))}
               </div>
+              <motion.a
+                href="#contato"
+                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                className="rounded-lg px-5 py-2.5 text-sm font-medium sx-ink"
+              >
+                {t.navCta}
+              </motion.a>
               <div className="flex items-center gap-4">
                 <LanguageToggle />
                 <ThemeToggle />
@@ -589,6 +634,13 @@ export default function SecContent() {
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 text-center lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }}
+            className="mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2 sx-pill"
+          >
+            <Sparkles className="h-4 w-4 text-[color:var(--sx-accent)]" />
+            <span className="text-sm font-medium text-[color:var(--sx-muted)]">{t.heroBadge}</span>
+          </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 1, ease: EASE }}
             className="mb-6 text-5xl font-bold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl"
