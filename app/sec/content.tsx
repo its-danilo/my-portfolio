@@ -98,7 +98,7 @@ const css = `
 .sec .sx-input:focus{outline:none;border-color:color-mix(in srgb,var(--sx-accent) 50%,transparent);background:color-mix(in srgb,var(--sx-accent) 5%,transparent);}
 `;
 
-type Caso = { tags: string[]; link: LinkKey; cta: string; title: string; summary: string; fix?: string; meta: string };
+type Caso = { tags: string[]; link: LinkKey; cta: string; title: string; summary: string; meta: string };
 type Tile = { label: string; desc: string };
 type Status = 'idle' | 'sending' | 'sent' | 'error';
 
@@ -115,7 +115,7 @@ const en = {
 
   researchEyebrow: 'Write-ups',
   researchTitle: 'Write-ups and demos',
-  researchIntro: 'Each card opens the full material, with sensitive data blurred out.',
+  researchIntro: 'Real cases, labs and studies, always with sensitive data blurred out.',
   soon: 'Coming soon',
   githubAll: 'View all projects on GitHub',
   casos: [
@@ -124,8 +124,7 @@ const en = {
       link: 'exam-portal', cta: 'Read the write-up',
       title: 'Public-exam portal',
       summary:
-        'An enrollment portal let anyone tell which accounts existed, reset a password from public data, and on top of that stored passwords in plain text. Together these opened the door to the personal data of every applicant.',
-      fix: 'Fix: generic login responses, recovery over a private channel, hashed passwords, and two-step sign-in.',
+        'With data anyone can find online, you could reset any applicant’s password and even see the current one in plain text. Three small flaws that, together, exposed the personal data of everyone enrolled.',
       meta: '2026 · reported to the owner',
     },
     {
@@ -133,8 +132,7 @@ const en = {
       link: 'reg-platform', cta: 'Read the write-up',
       title: 'Web registration platform',
       summary:
-        'Each user’s default password was a piece of public information, sent by email. Since the login also used a public identifier, you could reach any account that never changed its first password.',
-      fix: 'Fix: a forced change on first login, a random initial password, and no passwords sent by email.',
+        'Every user’s default password was public information, and the login used a number shown on their own profile. Any account that never changed its first password was open to anyone.',
       meta: '2024 · reported to the owner',
     },
     {
@@ -142,7 +140,7 @@ const en = {
       link: 'labs', cta: 'See the track',
       title: 'PortSwigger labs',
       summary:
-        'My study track on PortSwigger’s Web Security Academy, solving the labs with Burp Suite. I already finished IDOR and access control, the technical base behind the cases above, and every lab becomes a write-up with screenshots and the fix.',
+        'My track through PortSwigger’s Web Security Academy, lab by lab with Burp Suite. I started with access control and IDOR, one of the most common flaws in web apps.',
       meta: 'Track in progress',
     },
     {
@@ -150,7 +148,7 @@ const en = {
       link: 'thm', cta: 'See my profile',
       title: 'TryHackMe track',
       summary:
-        'My study track on TryHackMe, with hands-on rooms on real virtual machines. The profile shows the rooms I have finished, and the write-ups go to my GitHub in the same format as the PortSwigger labs.',
+        'My TryHackMe track, with hands-on rooms on real virtual machines. The profile keeps every room I finish.',
       meta: 'Track in progress',
     },
     {
@@ -158,7 +156,7 @@ const en = {
       link: 'osint', cta: 'Watch the video',
       title: 'Personal-exposure mapping',
       summary:
-        'I tested on myself how much you can rebuild from a first name and a photo, using open-source search and reverse face matching. It is meant to show the risk and guide people on cutting their own exposure.',
+        'How much can you find out about someone from a first name and a photo? I tested it on myself with open sources and reverse face search.',
       meta: 'Personal study',
     },
   ] as Caso[],
@@ -222,7 +220,7 @@ const copy: Localized<typeof en> = {
 
     researchEyebrow: 'Writeups',
     researchTitle: 'Writeups e demonstrações',
-    researchIntro: 'Cada card abre o material completo, com os dados sensíveis censurados.',
+    researchIntro: 'Casos reais, labs e estudos, sempre com os dados sensíveis censurados.',
     soon: 'Em breve',
     githubAll: 'Ver todos os projetos no GitHub',
     casos: [
@@ -231,8 +229,7 @@ const copy: Localized<typeof en> = {
         link: 'exam-portal', cta: 'Ler o writeup',
         title: 'Portal de concurso público',
         summary:
-          'Um portal de inscrições deixava qualquer pessoa saber quais contas existiam, redefinir a senha a partir de dados públicos e ainda guardava as senhas em texto puro. Juntas, essas falhas abriam caminho para os dados pessoais de todos os candidatos.',
-        fix: 'Correção: respostas de login genéricas, recuperação por canal privado, senhas com hash e login em duas etapas.',
+          'Com dados que qualquer um acha na internet, dava para redefinir a senha de qualquer candidato e ainda ver a senha atual em texto puro. Três falhas pequenas que, juntas, expunham os dados pessoais de todos os inscritos.',
         meta: '2026 · reportado ao responsável',
       },
       {
@@ -240,8 +237,7 @@ const copy: Localized<typeof en> = {
         link: 'reg-platform', cta: 'Ler o writeup',
         title: 'Plataforma de cadastro web',
         summary:
-          'A senha padrão de cada usuário era uma informação pública, enviada por e-mail. Como o login também usava um identificador público, dava para entrar em qualquer conta que nunca trocou a primeira senha.',
-        fix: 'Correção: troca obrigatória no primeiro acesso, senha inicial aleatória e fim do envio por e-mail.',
+          'A senha padrão de cada usuário era uma informação pública, e o login usava um número que aparecia no próprio perfil. Toda conta que nunca trocou a primeira senha estava aberta para qualquer pessoa.',
         meta: '2024 · reportado ao responsável',
       },
       {
@@ -249,7 +245,7 @@ const copy: Localized<typeof en> = {
         link: 'labs', cta: 'Ver a trilha',
         title: 'Labs da PortSwigger',
         summary:
-          'Minha trilha de estudo na Web Security Academy da PortSwigger, resolvendo os labs com o Burp Suite. Já concluí a parte de IDOR e controle de acesso, a base técnica dos casos acima, e cada lab vira um writeup com prints e a correção.',
+          'Minha trilha na Web Security Academy da PortSwigger, lab por lab com o Burp Suite. Comecei por controle de acesso e IDOR, uma das falhas mais comuns em sistemas web.',
         meta: 'Trilha em andamento',
       },
       {
@@ -257,7 +253,7 @@ const copy: Localized<typeof en> = {
         link: 'thm', cta: 'Ver meu perfil',
         title: 'Trilha no TryHackMe',
         summary:
-          'Minha trilha de estudo no TryHackMe, com salas práticas em máquinas virtuais de verdade. O perfil mostra as salas que já concluí, e os writeups vão para o meu GitHub no mesmo formato dos labs da PortSwigger.',
+          'Minha trilha no TryHackMe, com salas práticas em máquinas virtuais de verdade. O perfil guarda cada sala que eu concluo.',
         meta: 'Trilha em andamento',
       },
       {
@@ -265,7 +261,7 @@ const copy: Localized<typeof en> = {
         link: 'osint', cta: 'Assistir ao vídeo',
         title: 'Mapeamento de exposição pessoal',
         summary:
-          'Testei em mim mesmo quanta coisa dá para reconstruir a partir de um primeiro nome e uma foto, com busca em fontes abertas e reconhecimento facial reverso. Serve para mostrar o risco e orientar como reduzir a própria exposição.',
+          'Quanto dá para descobrir sobre alguém a partir de um primeiro nome e uma foto? Testei em mim mesmo, com fontes abertas e reconhecimento facial reverso.',
         meta: 'Estudo próprio',
       },
     ],
@@ -384,9 +380,7 @@ function CaseCard({ c, soon }: { c: Caso; soon: string }) {
       </div>
       <div className="flex flex-1 flex-col p-6">
         <h3 className="mb-2 text-xl font-semibold transition-colors duration-300 group-hover:text-[color:var(--sx-accent)]">{c.title}</h3>
-        <p className="text-sm leading-relaxed text-[color:var(--sx-muted)]">{c.summary}</p>
-        {c.fix && <p className="mt-4 rounded-xl px-4 py-3 text-sm sx-box">{c.fix}</p>}
-        <div className="mt-auto pt-6">
+        <p className="text-sm leading-relaxed text-[color:var(--sx-muted)]">{c.summary}</p>        <div className="mt-auto pt-6">
           <div className="flex items-center justify-between gap-4 border-t border-[color:var(--sx-line)] pt-4">
             <span className="text-xs text-[color:var(--sx-faint)]">{c.meta}</span>
             {href ? (
