@@ -152,7 +152,7 @@ const en = {
       meta: 'Track in progress',
     },
     {
-      tags: ['OSINT', 'OpSec'],
+      tags: ['Digital exposure', 'OpSec'],
       link: 'osint', cta: 'Watch the video',
       title: 'Personal-exposure mapping',
       summary:
