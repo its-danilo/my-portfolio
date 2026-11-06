@@ -25,6 +25,7 @@ export interface PersonalInfo {
   description: Localized;
   email: string;
   phone: string;
+  whatsapp: string;
   location: Localized;
   availability: Localized;
   skills: Localized<string[]>;
@@ -41,6 +42,7 @@ export const personalInfo: PersonalInfo = {
   },
   email: "ads.danilosbleal@gmail.com",
   phone: "+55 (84) 99681-4463",
+  whatsapp: "https://wa.me/5584996814463",
   location: { en: "Natal, RN, Brazil", pt: "Natal, RN, Brasil" },
   availability: { en: "Open to freelance work", pt: "Aberto a trabalhos freelance" },
   skills: {

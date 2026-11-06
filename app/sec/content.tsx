@@ -14,6 +14,7 @@ const GITHUB = 'https://github.com/its-danilo';
 const LINKEDIN = 'https://www.linkedin.com/in/danilo-lnkd/';
 const EMAIL = 'ads.danilosbleal@gmail.com';
 const PHONE = '(84) 99681-4463';
+const WHATSAPP = 'https://wa.me/5584996814463';
 
 // Same message flow as the main site: Web3Forms emails the message to the
 // address the key was created with, so no backend is needed. The key is public.
@@ -157,7 +158,7 @@ const en = {
   contactAccent: 'new opportunities',
   contactIntro: 'I am available to talk about work in security and digital forensics, be it an internship, a project or a collaboration. Send a message here or reach me directly.',
   emailLabel: 'Email me at',
-  phoneLabel: 'Call or message me at',
+  phoneLabel: 'Message me on WhatsApp',
   name: 'Name',
   namePlaceholder: 'Your name',
   email: 'Email',
@@ -254,7 +255,7 @@ const copy: Localized<typeof en> = {
     contactAccent: 'novas oportunidades',
     contactIntro: 'Estou à disposição para conversar sobre segurança e perícia digital, seja um estágio, um projeto ou uma colaboração. Mande uma mensagem aqui ou fale comigo direto.',
     emailLabel: 'Mande um e-mail para',
-    phoneLabel: 'Ligue ou chame em',
+    phoneLabel: 'Chame no WhatsApp',
     name: 'Nome',
     namePlaceholder: 'Seu nome',
     email: 'E-mail',
@@ -725,7 +726,7 @@ export default function SecContent() {
                 <div className="rounded-xl p-3 sx-box"><Phone className="h-5 w-5 text-[color:var(--sx-accent)]" /></div>
                 <div>
                   <p className="mb-1 text-sm text-[color:var(--sx-faint)]">{t.phoneLabel}</p>
-                  <a href={`tel:+55${PHONE.replace(/\D/g, '')}`} className="transition-colors hover:text-[color:var(--sx-accent)]">
+                  <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-[color:var(--sx-accent)]">
                     {/* Brazilians know the number is Brazilian; the flag is for everyone else. */}
                     {lang === 'en' && <span aria-hidden="true">🇧🇷 </span>}
                     {PHONE}

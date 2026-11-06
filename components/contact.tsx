@@ -21,7 +21,7 @@ const copy = {
     titleAccent: 'in mind?',
     intro: "I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.",
     emailMe: 'Email me at',
-    callMe: 'Call or message me at',
+    callMe: 'Message me on WhatsApp',
     sentTitle: 'Message sent',
     sentText: "Thanks for reaching out. I'll get back to you by email soon.",
     sendAnother: 'Send another message',
@@ -44,7 +44,7 @@ const copy = {
     titleAccent: 'em mente?',
     intro: 'Estou sempre aberto a conversar sobre novos projetos, ideias criativas ou oportunidades de fazer parte da sua visão.',
     emailMe: 'Mande um e-mail para',
-    callMe: 'Ligue ou chame em',
+    callMe: 'Chame no WhatsApp',
     sentTitle: 'Mensagem enviada',
     sentText: 'Obrigado pelo contato. Respondo por e-mail em breve.',
     sendAnother: 'Enviar outra mensagem',
@@ -178,7 +178,9 @@ export default function ContactSection() {
               <div>
                 <p className="text-sm text-foreground/50 mb-1">{t.callMe}</p>
                 <a
-                  href={`tel:${personalInfo.phone.replace(/[^\d+]/g, '')}`}
+                  href={personalInfo.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-foreground hover:text-terra transition-colors"
                 >
                   {/* Brazilians know the number is Brazilian; the flag is for everyone else. */}
