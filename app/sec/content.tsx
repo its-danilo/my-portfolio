@@ -156,7 +156,7 @@ const en = {
       link: 'osint', cta: 'Watch the video',
       title: 'Personal-exposure mapping',
       summary:
-        'How much can you find out about someone from a first name and a photo? I tested it on myself with open sources and reverse face search.',
+        'How much can you find out about someone without leaving your chair? I tested it on myself, the way an attacker with no limits would, using only what I found online.',
       meta: 'Personal study',
     },
   ] as Caso[],
@@ -257,11 +257,11 @@ const copy: Localized<typeof en> = {
         meta: 'Trilha em andamento',
       },
       {
-        tags: ['OSINT', 'OpSec'],
+        tags: ['Exposição digital', 'OpSec'],
         link: 'osint', cta: 'Assistir ao vídeo',
         title: 'Mapeamento de exposição pessoal',
         summary:
-          'Quanto dá para descobrir sobre alguém a partir de um primeiro nome e uma foto? Testei em mim mesmo, com fontes abertas e reconhecimento facial reverso.',
+          'Quanto dá para descobrir sobre alguém sem sair da cadeira? Testei em mim mesmo, como um atacante sem limites faria, só com o que encontrei na internet.',
         meta: 'Estudo próprio',
       },
     ],
