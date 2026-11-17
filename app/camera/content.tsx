@@ -10,6 +10,9 @@ const en = {
   category: 'Smart home / Computer vision',
   intro:
     "A cheap Wi-Fi pan-and-tilt camera, mounted on the ceiling of a shared bedroom, turned into a private smart room. Everything the official app does still works, but through my own service, and on top of it I built more than a dozen features the app doesn't have, all running at home with no cloud.",
+  originTitle: 'How it started',
+  origin:
+    "My mom bought this camera to put outside the house, and when it was time to install it she found out it wasn't allowed. It sat in a drawer for a while, until I picked it up to see what a cheap camera could really do. Everything on this page grew out of that.",
   flow: ['Camera', 'TV box service', 'go2rtc', 'Web page + desktop app', 'PC for the heavy work', 'Phone alerts'],
   note: 'Every image of the room on this page is pixelated on purpose: it is a real bedroom where people sleep. The code lives in private repositories, and addresses, names and credentials are left out.',
   facts: [
@@ -69,6 +72,9 @@ const copy: Localized<typeof en> = {
     category: 'Casa inteligente / Visão computacional',
     intro:
       'Uma câmera Wi-Fi barata, com giro e inclinação, presa no teto de um quarto compartilhado e transformada num quarto inteligente e privado. Tudo o que o app oficial faz continua funcionando, mas pelo meu próprio serviço, e por cima dele criei mais de uma dúzia de funções que o app não tem, todas rodando em casa, sem nuvem.',
+    originTitle: 'Como começou',
+    origin:
+      'Minha mãe comprou essa câmera para colocar do lado de fora de casa e, na hora de instalar, descobriu que não era permitido. Ela ficou guardada por um tempo, até eu pegar para explorar o que uma câmera barata conseguia fazer de verdade. Tudo nesta página nasceu daí.',
     flow: ['Câmera', 'Serviço na TV box', 'go2rtc', 'Página web + app de desktop', 'PC para o trabalho pesado', 'Alertas no celular'],
     note: 'Toda imagem do quarto nesta página está pixelada de propósito: é um quarto de verdade, onde pessoas dormem. O código fica em repositórios privados, e endereços, nomes e credenciais ficaram de fora.',
     facts: [
@@ -190,6 +196,11 @@ export default function CameraContent() {
 
           <p className="mt-6 max-w-3xl text-sm text-foreground/50">{t.note}</p>
         </header>
+
+        <section className="mb-16 max-w-3xl">
+          <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">{t.originTitle}</h2>
+          <p className="text-lg text-foreground/70 leading-relaxed">{t.origin}</p>
+        </section>
 
         <section className="mb-20 grid grid-cols-1 sm:grid-cols-3 gap-4">
           {t.facts.map((fact) => (
