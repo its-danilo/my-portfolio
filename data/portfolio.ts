@@ -150,6 +150,19 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    id: "9",
+    title: "calOS Camera",
+    description: {
+      en: "A cheap Wi-Fi pan-and-tilt camera turned into a private smart room, with no cloud. A Python service on my TV box holds the camera's only session; on top of it I built presence detection, a 360° sphere of the room, spoken reminders, an offline voice assistant, rain alerts and daily reports, with the heavy work done on my PC.",
+      pt: "Uma câmera Wi-Fi barata, com giro e inclinação, transformada num quarto inteligente e privado, sem nuvem. Um serviço em Python na minha TV box guarda a única sessão da câmera; por cima dele criei detecção de presença, uma esfera 360° do quarto, lembretes falados, um assistente de voz offline, alerta de chuva e relatórios diários, com o trabalho pesado feito no PC.",
+    },
+    category: { en: "Smart home / Computer vision", pt: "Casa inteligente / Visão computacional" },
+    image: "/camera.png",
+    technologies: ["Python", "go2rtc", "OpenCV", "WebGL", "Whisper"],
+    link: "/camera",
+    featured: true,
+  },
+  {
     id: "5",
     title: "Agenda",
     description: {
