@@ -163,7 +163,7 @@ export default function CameraContent() {
 
         <header className="mt-10 mb-16">
           <span className="text-sm font-medium text-terra mb-4 block">{t.category}</span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">calOS Camera</h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">{lang === 'pt' ? 'Câmera do quarto' : 'Room Camera'}</h1>
           <p className="max-w-3xl text-lg text-foreground/60 leading-relaxed">{t.intro}</p>
 
           <div className="mt-8 flex flex-wrap items-center gap-2 text-sm text-foreground/60">
