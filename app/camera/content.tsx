@@ -20,6 +20,7 @@ const en = {
     { value: '15+', label: 'features the official app does not have' },
     { value: '160 MB', label: 'memory cap for the service on a 1 GB TV box' },
   ],
+  videoCaption: 'The guided tour of the desktop app, all 16 steps (the app is in Portuguese; data is made up and the video is pixelated).',
   screensTitle: 'The web page',
   appTitle: 'The desktop app',
   appText:
@@ -89,6 +90,7 @@ const copy: Localized<typeof en> = {
       { value: '15+', label: 'funções que o app oficial não tem' },
       { value: '160 MB', label: 'de limite de memória para o serviço numa TV box de 1 GB' },
     ],
+    videoCaption: 'O tour guiado do app de desktop, os 16 passos (dados inventados e vídeo pixelado).',
     screensTitle: 'A página web',
     appTitle: 'O app de desktop',
     appText:
@@ -211,6 +213,25 @@ export default function CameraContent() {
           <span className="text-sm font-medium text-terra mb-4 block">{t.category}</span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">{lang === 'pt' ? 'Câmera do quarto' : 'Room Camera'}</h1>
           <p className="max-w-3xl text-lg text-foreground/60 leading-relaxed">{t.intro}</p>
+
+          <figure className="mt-10">
+            <div className="premium-card border border-line/[0.1] shadow-2xl shadow-scrim/20 overflow-hidden">
+              <video
+                src="/camera/tutorial.mp4"
+                poster="/camera/tutorial-poster.webp"
+                width={1380}
+                height={800}
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls
+                preload="metadata"
+                className="w-full h-auto block"
+              />
+            </div>
+            <figcaption className="mt-3 text-sm text-foreground/50">{t.videoCaption}</figcaption>
+          </figure>
 
           <div className="mt-8 flex flex-wrap items-center gap-2 text-sm text-foreground/60">
             {t.flow.map((step, i) => (

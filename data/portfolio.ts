@@ -157,7 +157,7 @@ export const projects: Project[] = [
       pt: "Uma câmera Wi-Fi barata, com giro e inclinação, transformada num quarto inteligente e privado, sem nuvem. Um serviço em Python na minha TV box guarda a única sessão da câmera; por cima dele criei detecção de presença, uma esfera 360° do quarto, lembretes falados, um assistente de voz offline, alerta de chuva e relatórios diários, com o trabalho pesado feito no PC.",
     },
     category: { en: "Smart home / Computer vision", pt: "Casa inteligente / Visão computacional" },
-    image: "/camera.png",
+    image: "/camera-capa.webp",
     technologies: ["Python", "go2rtc", "OpenCV", "WebGL", "Whisper"],
     link: "/camera",
     featured: true,
