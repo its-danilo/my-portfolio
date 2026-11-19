@@ -4,7 +4,7 @@ import CaseNav from '@/components/case-nav';
 import Footer from '@/components/footer';
 import { useLanguage, type Localized } from '@/lib/i18n';
 
-const stack = ['Python', 'go2rtc', 'ONVIF', 'Tailscale', 'WebGL', 'OpenCV', 'Piper TTS', 'Vosk', 'faster-whisper', 'YAMNet', 'GTK 4', 'ffmpeg', 'systemd'];
+const stack = ['Python', 'go2rtc', 'ONVIF', 'Tailscale', 'WebGL', 'OpenCV', 'Piper TTS', 'Vosk', 'faster-whisper', 'YAMNet', 'GTK 4', 'Kotlin', 'Jetpack Compose', 'ffmpeg', 'systemd'];
 
 const en = {
   category: 'Smart home / Computer vision',
@@ -20,7 +20,10 @@ const en = {
     { value: '15+', label: 'features the official app does not have' },
     { value: '160 MB', label: 'memory cap for the service on a 1 GB TV box' },
   ],
-  screensTitle: 'What it looks like',
+  screensTitle: 'The web page',
+  appTitle: 'The desktop app',
+  appText:
+    'A native GTK 4 app replaced the web page on the PC. It has a guided tour for first-time users, and it shows the same reports, reminders, recordings and settings. All data in these screenshots is made up and the video is a pixelated stand-in.',
   extrasTitle: 'What the official app can’t do, and how I built it',
   parts: [
     {
@@ -37,7 +40,7 @@ const en = {
     },
     {
       title: 'Spoken reminders',
-      text: 'Reminders for water, meals and bedtime are spoken through the camera speaker, with an optional heads-up minutes before. The voice is Piper, an offline text-to-speech model running on the PC, filtered for the 8 kHz speaker. The alarm clock tones are synthesized with ffmpeg, from a bell arpeggio to birdsong, rising slowly in volume.',
+      text: 'Reminders for water, meals and bedtime are spoken through the camera speaker, with an optional heads-up minutes before. The voice is Piper, an offline text-to-speech model running on the PC, filtered for the 8 kHz speaker. The bedtime reminder speaks very quietly, so it never wakes anyone else in the room.',
     },
     {
       title: 'An offline voice assistant',
@@ -48,8 +51,12 @@ const en = {
       text: 'YAMNet, a small audio classifier, runs on the camera audio and sends a phone alert when it starts raining. A watchdog counts audio packets and warns when the firmware freezes the microphone, a bug only a camera reboot fixes.',
     },
     {
-      title: 'Daily reports',
-      text: 'The service logs movement, light and comings and goings. A daily job turns that into reports: sleep window, movement per hour at night, nights with the light on, time away from home. A timelapse records the day, a photo of the empty room is picked each afternoon, and OpenCV scores the busiest minutes into a 30-second summary.',
+      title: 'Reports that push for better sleep',
+      text: 'The service logs movement, light and comings and goings, and a daily job turns that into reports. The morning summary is built around one goal, being in bed by a set time: it shows whether last night made it, the current streak and record, and 7- and 30-night averages. Waking up for ten minutes or more is subtracted from the sleep time, and a night recording is scored with OpenCV and YAMNet for movement and sounds. A timelapse and a 30-second summary of the busiest minutes record the day.',
+    },
+    {
+      title: 'An Android app',
+      text: 'A Kotlin and Jetpack Compose app for when I am out: live view, talk, privacy, reminders, reports and a morning card with the sleep goal. Recordings stay on the PC and stream to the phone over Tailscale with range requests, so a long video can be skipped through without downloading it.',
     },
     {
       title: 'Lights that mean something',
@@ -82,7 +89,10 @@ const copy: Localized<typeof en> = {
       { value: '15+', label: 'funções que o app oficial não tem' },
       { value: '160 MB', label: 'de limite de memória para o serviço numa TV box de 1 GB' },
     ],
-    screensTitle: 'Como ficou',
+    screensTitle: 'A página web',
+    appTitle: 'O app de desktop',
+    appText:
+      'Um app nativo em GTK 4 substituiu a página web no PC. Ele tem um tour guiado para quem abre pela primeira vez e mostra os mesmos relatórios, lembretes, gravações e ajustes. Todos os dados destes prints são inventados e o vídeo é uma imagem pixelada no lugar da câmera.',
     extrasTitle: 'O que o app oficial não faz, e como eu fiz',
     parts: [
       {
@@ -99,7 +109,7 @@ const copy: Localized<typeof en> = {
       },
       {
         title: 'Lembretes falados',
-        text: 'Lembretes de água, refeições e hora de dormir são falados pelo alto-falante da câmera, com um aviso opcional minutos antes. A voz é o Piper, um modelo de voz offline rodando no PC, filtrado para o alto-falante de 8 kHz. Os toques do despertador são sintetizados com o ffmpeg, de um arpejo de sino a um canto de passarinho, subindo o volume aos poucos.',
+        text: 'Lembretes de água, refeições e hora de dormir são falados pelo alto-falante da câmera, com um aviso opcional minutos antes. A voz é o Piper, um modelo de voz offline rodando no PC, filtrado para o alto-falante de 8 kHz. O lembrete de dormir fala bem baixinho, para nunca acordar quem já está dormindo no quarto.',
       },
       {
         title: 'Um assistente de voz offline',
@@ -110,8 +120,12 @@ const copy: Localized<typeof en> = {
         text: 'O YAMNet, um classificador de áudio pequeno, roda sobre o som da câmera e manda um alerta no celular quando começa a chover. Um vigia conta os pacotes de áudio e avisa quando o firmware trava o microfone, um bug que só reiniciar a câmera resolve.',
       },
       {
-        title: 'Relatórios diários',
-        text: 'O serviço registra movimento, luz e idas e vindas. Uma tarefa diária transforma isso em relatórios: janela de sono, movimento por hora à noite, noites com a luz acesa, tempo fora de casa. Um timelapse registra o dia, uma foto do quarto vazio é escolhida toda tarde e o OpenCV pontua os minutos mais agitados num resumo de 30 segundos.',
+        title: 'Relatórios que puxam por um sono melhor',
+        text: 'O serviço registra movimento, luz e idas e vindas, e uma tarefa diária transforma isso em relatórios. O resumo da manhã gira em torno de uma meta, estar deitado até um horário: mostra se a última noite cumpriu, a sequência atual e o recorde, e as médias de 7 e 30 noites. Levantar por dez minutos ou mais sai do tempo de sono, e uma gravação da noite é analisada com OpenCV e YAMNet para movimentos e sons. Um timelapse e um resumo de 30 segundos com os minutos mais agitados registram o dia.',
+      },
+      {
+        title: 'Um app Android',
+        text: 'Um app em Kotlin e Jetpack Compose para quando estou fora: ao vivo, falar, privacidade, lembretes, relatórios e um card de bom dia com a meta de sono. As gravações ficam no PC e vão para o celular pelo Tailscale com requisições por faixa, então dá para pular um vídeo longo sem baixar tudo.',
       },
       {
         title: 'Luzes que querem dizer algo',
@@ -154,6 +168,32 @@ const screens: { image: string; title: Localized; text: Localized }[] = [
       pt: 'Diários, por dia da semana, pontuais ou a cada N minutos, cada um com seu aviso antecipado e volume. As próximas 48 horas aparecem no topo.',
     },
   },
+];
+
+const appWide: { image: string; title: Localized; text: Localized; w: number; h: number }[] = [
+  {
+    image: '/camera/app-vivo.webp', w: 1280, h: 1038,
+    title: { en: 'Live view', pt: 'Ao vivo' },
+    text: {
+      en: 'Video with sound through ffmpeg, the controls under it, saved viewpoints, and on the right who is home and how the camera is doing.',
+      pt: 'Vídeo com som pelo ffmpeg, os controles embaixo, os pontos de visão salvos e, à direita, quem está em casa e como a câmera está.',
+    },
+  },
+  {
+    image: '/camera/app-tutorial.webp', w: 1280, h: 970,
+    title: { en: 'Guided tour', pt: 'Tour guiado' },
+    text: {
+      en: 'Sixteen steps that dim the window and point at one control at a time, starting with how the project began.',
+      pt: 'Dezesseis passos que escurecem a janela e apontam um controle por vez, começando pela história do projeto.',
+    },
+  },
+];
+
+const appPanels: { image: string; title: Localized }[] = [
+  { image: '/camera/app-relatorios.webp', title: { en: 'Morning summary and sleep goal', pt: 'Bom dia e meta de sono' } },
+  { image: '/camera/app-lembretes.webp', title: { en: 'Spoken reminders', pt: 'Lembretes falados' } },
+  { image: '/camera/app-gravacoes.webp', title: { en: 'Recordings', pt: 'Gravações' } },
+  { image: '/camera/app-ajustes.webp', title: { en: 'Camera settings', pt: 'Ajustes da câmera' } },
 ];
 
 export default function CameraContent() {
@@ -229,6 +269,30 @@ export default function CameraContent() {
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-1">{screen.title[lang]}</h3>
               <p className="text-sm text-foreground/60 leading-relaxed">{screen.text[lang]}</p>
+            </section>
+          ))}
+        </div>
+
+        <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">{t.appTitle}</h2>
+        <p className="max-w-3xl text-foreground/60 leading-relaxed mb-8">{t.appText}</p>
+        <div className="mb-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {appWide.map((screen) => (
+            <section key={screen.image}>
+              <div className="premium-card border border-line/[0.1] shadow-xl shadow-scrim/10 mb-4">
+                <img src={screen.image} alt={screen.title[lang]} width={screen.w} height={screen.h} loading="lazy" className="w-full h-auto block" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-1">{screen.title[lang]}</h3>
+              <p className="text-sm text-foreground/60 leading-relaxed">{screen.text[lang]}</p>
+            </section>
+          ))}
+        </div>
+        <div className="mb-20 grid grid-cols-2 md:grid-cols-4 gap-4">
+          {appPanels.map((screen) => (
+            <section key={screen.image}>
+              <div className="premium-card border border-line/[0.1] shadow-xl shadow-scrim/10 mb-3">
+                <img src={screen.image} alt={screen.title[lang]} width={420} height={960} loading="lazy" className="w-full h-auto block" />
+              </div>
+              <h3 className="text-sm font-semibold text-foreground">{screen.title[lang]}</h3>
             </section>
           ))}
         </div>
