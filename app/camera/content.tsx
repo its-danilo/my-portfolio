@@ -33,7 +33,7 @@ const en = {
     },
     {
       title: 'It knows when I am home',
-      text: 'Presence comes from three signals: my phone on the home Wi-Fi, a geofence reported by OwnTracks over Tailscale, and whether my PC is in use. Away, it turns on person detection and recording; home, it turns them off. Privacy mode tilts the lens away and later returns it to the exact spot it was looking at.',
+      text: 'Presence comes from three signals: my phone on the home Wi-Fi, a geofence reported by OwnTracks over Tailscale, and whether my PC is in use. Away, it turns on person detection and recording; home, it turns them off. A rolling buffer in RAM keeps the last seconds of video, so each recording starts at least ten seconds before the movement that triggered it. Privacy mode tilts the lens away and later returns it to the exact spot it was looking at.',
     },
     {
       title: 'The room as a sphere',
@@ -45,7 +45,7 @@ const en = {
     },
     {
       title: 'An offline voice assistant',
-      text: 'The camera microphone streams to the PC, where Vosk listens for the wake word and short commands, and faster-whisper handles full sentences. Asking for a reminder creates it right away, answers out loud and sends a phone notification with an Undo button. Nothing is sent to a cloud speech service.',
+      text: 'The camera microphone streams to the PC, where Vosk listens for the wake word and short commands, and faster-whisper handles full sentences. Asking for a reminder creates it right away, answers out loud and sends a phone notification with an Undo button. As soon as it understands a request, a notification shows what it heard, so I never stand there wondering whether it caught me. Nothing is sent to a cloud speech service.',
     },
     {
       title: 'Listening for the house',
@@ -57,7 +57,7 @@ const en = {
     },
     {
       title: 'An Android app',
-      text: 'A Kotlin and Jetpack Compose app for when I am out: live view, talk, privacy, reminders, reports and a morning card with the sleep goal. Recordings stay on the PC and stream to the phone over Tailscale with range requests, so a long video can be skipped through without downloading it.',
+      text: 'A Kotlin and Jetpack Compose app for when I am out: live view, talk, privacy, reminders, reports and a morning card with the sleep goal. A hold-to-talk button, also a home-screen shortcut, sends audio from the phone microphone to the voice assistant, much clearer than the 8 kHz camera mic, and the phone reads the answer aloud. Recordings stay on the PC and stream to the phone over Tailscale with range requests, so a long video can be skipped through without downloading it.',
     },
     {
       title: 'Lights that mean something',
@@ -103,7 +103,7 @@ const copy: Localized<typeof en> = {
       },
       {
         title: 'Ela sabe quando estou em casa',
-        text: 'A presença vem de três sinais: o celular no Wi-Fi de casa, uma cerca geográfica informada pelo OwnTracks via Tailscale e se o PC está em uso. Fora de casa, ela liga a detecção de pessoas e a gravação; em casa, desliga. O modo privacidade vira a lente para longe e depois a devolve exatamente para onde ela estava olhando.',
+        text: 'A presença vem de três sinais: o celular no Wi-Fi de casa, uma cerca geográfica informada pelo OwnTracks via Tailscale e se o PC está em uso. Fora de casa, ela liga a detecção de pessoas e a gravação; em casa, desliga. Um buffer na RAM guarda os últimos segundos de vídeo, então cada gravação começa pelo menos dez segundos antes do movimento que a disparou. O modo privacidade vira a lente para longe e depois a devolve exatamente para onde ela estava olhando.',
       },
       {
         title: 'O quarto numa esfera',
@@ -115,7 +115,7 @@ const copy: Localized<typeof en> = {
       },
       {
         title: 'Um assistente de voz offline',
-        text: 'O microfone da câmera vai para o PC, onde o Vosk escuta a palavra de ativação e os comandos curtos, e o faster-whisper cuida das frases inteiras. Pedir um lembrete cria ele na hora, responde em voz alta e manda uma notificação no celular com um botão Desfazer. Nada vai para um serviço de voz na nuvem.',
+        text: 'O microfone da câmera vai para o PC, onde o Vosk escuta a palavra de ativação e os comandos curtos, e o faster-whisper cuida das frases inteiras. Pedir um lembrete cria ele na hora, responde em voz alta e manda uma notificação no celular com um botão Desfazer. Assim que entende um pedido, uma notificação mostra o que ele ouviu, então nunca fico parado sem saber se ele me escutou. Nada vai para um serviço de voz na nuvem.',
       },
       {
         title: 'Ouvindo a casa',
@@ -127,7 +127,7 @@ const copy: Localized<typeof en> = {
       },
       {
         title: 'Um app Android',
-        text: 'Um app em Kotlin e Jetpack Compose para quando estou fora: ao vivo, falar, privacidade, lembretes, relatórios e um card de bom dia com a meta de sono. As gravações ficam no PC e vão para o celular pelo Tailscale com requisições por faixa, então dá para pular um vídeo longo sem baixar tudo.',
+        text: 'Um app em Kotlin e Jetpack Compose para quando estou fora: ao vivo, falar, privacidade, lembretes, relatórios e um card de bom dia com a meta de sono. Um botão de segurar e falar, também como atalho na tela inicial, manda o microfone do celular para o assistente de voz, bem mais claro que o microfone de 8 kHz da câmera, e o celular lê a resposta em voz alta. As gravações ficam no PC e vão para o celular pelo Tailscale com requisições por faixa, então dá para pular um vídeo longo sem baixar tudo.',
       },
       {
         title: 'Luzes que querem dizer algo',
