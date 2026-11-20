@@ -2,9 +2,15 @@
 
 import CaseNav from '@/components/case-nav';
 import Footer from '@/components/footer';
+import RelatedProjects, { type RelatedProject } from '@/components/related-projects';
 import { useLanguage, type Localized } from '@/lib/i18n';
 
 const stack = ['Armbian (Debian 13)', 'AdGuard Home', 'Tailscale', 'Docker Compose', 'Vaultwarden', 'Gatus', 'Homer', 'ntfy', 'systemd', 'Bash', 'Python'];
+
+const related: RelatedProject[] = [
+  { title: { en: 'Room Camera', pt: 'Câmera do quarto' }, text: { en: 'the camera service that runs on this box', pt: 'o serviço da câmera que roda nesta caixa' }, href: '/camera' },
+  { title: { en: 'My Desktop', pt: 'Meu Desktop' }, text: { en: 'the PC this box wakes over Wi-Fi', pt: 'o PC que esta caixa acorda pelo Wi-Fi' }, href: '/desktop' },
+];
 
 // Measured on the box with everything running (787 MB usable).
 const memory: { name: Localized; mb: number; note?: Localized }[] = [
@@ -198,6 +204,8 @@ export default function TvboxLabContent() {
             </section>
           ))}
         </div>
+
+        <RelatedProjects items={related} />
       </div>
 
       <Footer />

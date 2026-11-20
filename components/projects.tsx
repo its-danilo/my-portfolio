@@ -36,6 +36,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
   const isInView = useInView(cardRef, { once: true, margin: "-100px" });
   const { lang } = useLanguage();
   const t = copy[lang];
+  const title = typeof project.title === 'string' ? project.title : project.title[lang];
   // Pages of this site open in place; other sites in a new tab.
   const linkProps = project.link?.startsWith('http')
     ? { target: '_blank', rel: 'noopener noreferrer' }
@@ -57,7 +58,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
             <a
               href={project.link}
               {...linkProps}
-              aria-label={t.viewNamed(project.title)}
+              aria-label={t.viewNamed(title)}
               className="absolute inset-0 z-[1]"
             />
           )}
@@ -68,7 +69,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
           >
             <img
               src={project.image}
-              alt={project.title}
+              alt={title}
               className="w-full h-full object-cover"
             />
           </motion.div>
@@ -119,10 +120,10 @@ function ProjectCard({ project, index }: ProjectCardProps) {
           <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-terra transition-colors duration-300">
             {project.link ? (
               <a href={project.link} {...linkProps}>
-                {project.title}
+                {title}
               </a>
             ) : (
-              project.title
+              title
             )}
           </h3>
 

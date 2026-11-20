@@ -2,7 +2,8 @@ import type { Localized } from '@/lib/language';
 
 export interface Project {
   id: string;
-  title: string;
+  // A plain string when the name is the same in both languages.
+  title: string | Localized;
   description: Localized;
   category: Localized;
   image: string;
@@ -120,6 +121,19 @@ export const projects: Project[] = [
     technologies: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Playwright"],
     link: "/continuum",
     github: "https://github.com/John28389/Continuum",
+    featured: true,
+  },
+  {
+    id: "10",
+    title: { en: "My Desktop", pt: "Meu Desktop" },
+    description: {
+      en: "The Arch Linux and Hyprland desktop I use every day, grown from CalOS into about a hundred commands of my own. One theme switch recolors 20 apps and devices, including apps with no theme support and my keyboard's LEDs; a wallpaper crosses the laptop and the TV above it; my phone drives the PC; and the upstream bugs I ran into were patched or reported.",
+      pt: "O desktop Arch Linux com Hyprland que eu uso todo dia, que partiu do CalOS e virou cerca de cem comandos meus. Uma troca de tema recolore 20 apps e aparelhos, inclusive apps sem suporte a tema e os LEDs do meu teclado; um papel de parede atravessa o notebook e a TV acima dele; o celular controla o PC; e os bugs que encontrei em outros projetos foram corrigidos ou relatados.",
+    },
+    category: { en: "Linux / Desktop", pt: "Linux / Desktop" },
+    image: "/desktop-capa.webp",
+    technologies: ["Hyprland", "Bash", "Python", "Lua", "systemd"],
+    link: "/desktop",
     featured: true,
   },
   {

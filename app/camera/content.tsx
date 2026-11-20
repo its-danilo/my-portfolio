@@ -2,9 +2,15 @@
 
 import CaseNav from '@/components/case-nav';
 import Footer from '@/components/footer';
+import RelatedProjects, { type RelatedProject } from '@/components/related-projects';
 import { useLanguage, type Localized } from '@/lib/i18n';
 
 const stack = ['Python', 'go2rtc', 'ONVIF', 'Tailscale', 'WebGL', 'OpenCV', 'Piper TTS', 'Vosk', 'faster-whisper', 'YAMNet', 'GTK 4', 'Kotlin', 'Jetpack Compose', 'ffmpeg', 'systemd'];
+
+const related: RelatedProject[] = [
+  { title: 'TVBox Lab', text: { en: 'the home server the camera service runs on', pt: 'o servidor de casa onde o serviço da câmera roda' }, href: '/tvbox-lab' },
+  { title: { en: 'My Desktop', pt: 'Meu Desktop' }, text: { en: 'the PC that does the heavy work and takes over if the box goes down', pt: 'o PC que faz o trabalho pesado e assume se a caixa cair' }, href: '/desktop' },
+];
 
 const en = {
   category: 'Smart home / Computer vision',
@@ -327,6 +333,8 @@ export default function CameraContent() {
             </section>
           ))}
         </div>
+
+        <RelatedProjects items={related} />
       </div>
 
       <Footer />
