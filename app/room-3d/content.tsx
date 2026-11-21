@@ -19,7 +19,7 @@ const en = {
   intro:
     "A playable digital twin of my bedroom. I measured every wall and piece of furniture with a tape measure, a Python script turns those numbers into a 3D model, and a game built in Godot lets me walk through it in first person. The room in the game mirrors the real one: the TV and laptop show what is on my real screens, the keyboard has its real colors, daylight follows the clock, and pointing at an object shows live data or lets me control it.",
   videoCaption:
-    'The game driving itself through a scripted tour, recorded frame by frame by Godot. The game is in Portuguese; all data is made up and the screens show a wallpaper.',
+    'The game driving itself through a scripted tour, recorded frame by frame by Godot, ending in the floor-plan mode. The game is in Portuguese; all data is made up and the screens show a wallpaper.',
   flow: ['Tape measure', 'ficha.json', 'Blender (Python)', 'glTF', 'Godot game + web viewer', 'Local bridge', 'PC · keyboard · camera · TV'],
   note: 'There are no photos of the room on this page: everything you see is generated from measurements. The code lives in a private repository.',
   originTitle: 'Why a game',
@@ -28,7 +28,7 @@ const en = {
   facts: [
     { value: '4 days', label: 'from the first tape-measure number to a playable game with live data (60 commits)' },
     { value: '~80 FPS', label: 'full screen at 1080p with real-time global illumination, on a laptop RTX 3050' },
-    { value: '197', label: 'automated checks run before any change reaches me, with the game driving itself' },
+    { value: '212', label: 'automated checks run before any change reaches me, with the game driving itself' },
   ],
   screensTitle: 'Inside the game',
   visionTitle: 'This is 1% of what it could be',
@@ -61,7 +61,7 @@ const en = {
     },
     {
       title: 'Things that open',
-      text: 'The door, the wardrobe doors and the drawers open; the desk slides 27 cm with the laptop riding along; the blind comes down and turns its slats; and the bottom bed pulls out from under the bunk. Collision follows the same measurements, so I can climb onto the pulled-out bed but not walk through furniture.',
+      text: 'The door, the wardrobe doors and the drawers open; the desk slides 27 cm with the laptop riding along; the blind comes down and turns its slats; and the bottom bed pulls out from under the bunk. Collision follows the same measurements, so I can climb onto the pulled-out bed but not walk through furniture. The controls follow game conventions: click does the physical action, E opens the object’s menu with its data and every action, and anything that changes a real device lives only in that menu, so a stray click never touches the real TV.',
     },
     {
       title: 'A version for the browser',
@@ -74,10 +74,11 @@ const en = {
   ],
   labTitle: 'An architecture lab',
   labText:
-    "The same pipeline can rearrange the room. I described furniture options and layouts on top of the real measurements; the lab draws 2D floor plans with free floor area, storage and walkways (green = where you can walk), and builds each layout in 3D so I can walk through it in the game before buying anything. The minimalist layout I chose frees more floor than today, 5.08 m² instead of 4.74.",
+    "The same pipeline can rearrange the room. I described furniture options and layouts on top of the real measurements; the lab draws 2D floor plans with free floor area, storage and walkways (green = where you can walk), and builds each layout in 3D so I can walk through it in the game before buying anything. The minimalist layout I chose frees more floor than today, 5.08 m² instead of 4.74. Inside the game, a floor-plan mode lets me rearrange the room myself: drag and rotate the real furniture or add pieces from the catalog, with the same metrics updating on every drop, then save it as a new layout that is built in 3D in about five seconds, ready to walk through. The real room’s measurements never change, and one button goes back to the original.",
   labImages: [
     { image: '/room-3d/lab-plantas.webp', w: 2000, h: 1266, caption: 'Today vs. three proposals, with the checks for each one (labels in Portuguese).' },
     { image: '/room-3d/lab-c2.webp', w: 1280, h: 800, caption: 'The chosen layout, walkable in the game.' },
+    { image: '/room-3d/planta.webp', w: 1600, h: 900, caption: 'The floor-plan mode: a dresser from the catalog dropped in the middle, and the checks flag that the trundle bed now hits it.' },
   ],
 };
 
@@ -89,7 +90,7 @@ const copy: Localized<typeof en> = {
     intro:
       'Um gêmeo digital jogável do meu quarto. Medi cada parede e cada móvel com uma trena, um script em Python transforma esses números num modelo 3D e um jogo feito em Godot me deixa andar por ele em primeira pessoa. O quarto do jogo espelha o real: a TV e o notebook mostram o que está nas minhas telas de verdade, o teclado tem as cores reais, a luz do dia segue o relógio e mirar num objeto mostra dados ao vivo ou deixa controlá-lo.',
     videoCaption:
-      'O jogo se dirigindo sozinho num tour roteirizado, gravado quadro a quadro pelo próprio Godot. Todos os dados são inventados e as telas mostram um papel de parede.',
+      'O jogo se dirigindo sozinho num tour roteirizado, gravado quadro a quadro pelo próprio Godot, terminando no modo planta. Todos os dados são inventados e as telas mostram um papel de parede.',
     flow: ['Trena', 'ficha.json', 'Blender (Python)', 'glTF', 'Jogo Godot + visualizador web', 'Ponte local', 'PC · teclado · câmera · TV'],
     note: 'Não há fotos do quarto nesta página: tudo o que aparece é gerado a partir das medidas. O código fica num repositório privado.',
     originTitle: 'Por que um jogo',
@@ -98,7 +99,7 @@ const copy: Localized<typeof en> = {
     facts: [
       { value: '4 dias', label: 'do primeiro número da trena a um jogo jogável com dados ao vivo (60 commits)' },
       { value: '~80 FPS', label: 'em tela cheia, 1080p, com iluminação global em tempo real numa RTX 3050 de notebook' },
-      { value: '197', label: 'verificações automáticas antes de qualquer mudança chegar a mim, com o jogo se dirigindo sozinho' },
+      { value: '212', label: 'verificações automáticas antes de qualquer mudança chegar a mim, com o jogo se dirigindo sozinho' },
     ],
     screensTitle: 'Dentro do jogo',
     visionTitle: 'Isto é 1% do que poderia ser',
@@ -131,7 +132,7 @@ const copy: Localized<typeof en> = {
       },
       {
         title: 'Coisas que abrem',
-        text: 'A porta, as portas do guarda-roupa e as gavetas abrem; a escrivaninha corre 27 cm levando o notebook junto; a persiana desce e gira as lâminas; e a cama de baixo sai de debaixo da triliche. A colisão segue as mesmas medidas, então dá para subir na cama puxada, mas não atravessar os móveis.',
+        text: 'A porta, as portas do guarda-roupa e as gavetas abrem; a escrivaninha corre 27 cm levando o notebook junto; a persiana desce e gira as lâminas; e a cama de baixo sai de debaixo da triliche. A colisão segue as mesmas medidas, então dá para subir na cama puxada, mas não atravessar os móveis. Os controles seguem o padrão dos jogos: o clique faz a ação física, o E abre o menu do objeto com os dados e todas as ações, e o que mexe num aparelho real fica só nesse menu, para um clique perdido nunca mexer na TV de verdade.',
       },
       {
         title: 'Uma versão para o navegador',
@@ -144,10 +145,11 @@ const copy: Localized<typeof en> = {
     ],
     labTitle: 'Um laboratório de arquitetura',
     labText:
-      'O mesmo processo consegue reorganizar o quarto. Descrevi opções de móveis e layouts por cima das medidas reais; o laboratório desenha plantas 2D com área livre, armazenamento e passagens (verde = onde dá para andar) e monta cada layout em 3D, para eu andar por ele no jogo antes de comprar qualquer coisa. O layout minimalista que escolhi libera mais chão que o de hoje: 5,08 m² em vez de 4,74.',
+      'O mesmo processo consegue reorganizar o quarto. Descrevi opções de móveis e layouts por cima das medidas reais; o laboratório desenha plantas 2D com área livre, armazenamento e passagens (verde = onde dá para andar) e monta cada layout em 3D, para eu andar por ele no jogo antes de comprar qualquer coisa. O layout minimalista que escolhi libera mais chão que o de hoje: 5,08 m² em vez de 4,74. Dentro do jogo, um modo planta me deixa rearrumar o quarto eu mesmo: arrastar e girar os móveis reais ou pôr peças do catálogo, com as mesmas métricas atualizando a cada soltura, e salvar como um layout novo, montado em 3D em uns cinco segundos, pronto para andar por ele. As medidas do quarto real nunca mudam, e um botão volta ao original.',
     labImages: [
       { image: '/room-3d/lab-plantas.webp', w: 2000, h: 1266, caption: 'Hoje × três propostas, com as verificações de cada uma.' },
       { image: '/room-3d/lab-c2.webp', w: 1280, h: 800, caption: 'O layout escolhido, para andar dentro do jogo.' },
+      { image: '/room-3d/planta.webp', w: 1600, h: 900, caption: 'O modo planta: uma cômoda do catálogo no meio do quarto, e as verificações avisam que a cama auxiliar agora bate nela.' },
     ],
   },
 };
@@ -327,7 +329,7 @@ export default function Room3DContent() {
         <p className="max-w-3xl text-foreground/60 leading-relaxed mb-8">{t.labText}</p>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
           {t.labImages.map((item, i) => (
-            <figure key={item.image} className={i === 0 ? 'md:col-span-3' : 'md:col-span-2'}>
+            <figure key={item.image} className={i === 0 ? 'md:col-span-3' : i === 1 ? 'md:col-span-2' : 'md:col-span-5'}>
               <div className="premium-card border border-line/[0.1] shadow-xl shadow-scrim/10 mb-3 overflow-hidden">
                 <img src={item.image} alt={item.caption} width={item.w} height={item.h} loading="lazy" className="w-full h-auto block" />
               </div>
