@@ -34,6 +34,17 @@ const en = {
     { value: '~280 MB', label: 'still free with every service running' },
     { value: '0', label: 'ports open on the router' },
   ],
+  pico: {
+    eyebrow: 'Pico W Watchdog',
+    title: 'A watchdog outside the box',
+    text: [
+      'When the box itself froze, nothing could tell me: the alerts ran on the box. So a Raspberry Pi Pico W board (a BitDogLab, from my embedded-systems course) now watches it from the living room, with its own DNS so it does not depend on the box.',
+      'If the box stops answering for a few minutes, the board beeps once and sends a phone alert with a button that wakes my PC over Wi-Fi, the same way the box does. It also reads the house alert feed: its 5×5 LED matrix shows the source of the latest unread alert in that source’s color, and its small screen pages through status, alerts and network.',
+      'New versions go over Wi-Fi: the board downloads them from the PC, checks the hash, and goes back to the previous version on its own if the new one fails to reach the alert feed in two starts. At night it stays dark and silent.',
+    ],
+    caption: 'Six of the alert icons on the LED matrix: box down, waking the PC, service down, back to normal, camera and PC.',
+    stack: ['MicroPython', 'Raspberry Pi Pico W', 'SSD1306 OLED', 'WS2812 LEDs', 'ntfy', 'Wake-on-WLAN'],
+  },
   memoryTitle: 'The memory budget',
   memoryIntro: 'With 787 MB usable, every service has to earn its place. Measured with everything running:',
   stillFree: 'Still free',
@@ -78,6 +89,17 @@ const copy: Localized<typeof en> = {
       { value: '~280 MB', label: 'ainda livres com todos os serviços rodando' },
       { value: '0', label: 'portas abertas no roteador' },
     ],
+    pico: {
+      eyebrow: 'Vigia Pico W',
+      title: 'Um vigia fora da caixa',
+      text: [
+        'Quando a própria caixa travou, nada conseguiu me avisar: os alertas rodavam nela. Então uma placa Raspberry Pi Pico W (uma BitDogLab, do meu curso de sistemas embarcados) agora vigia a caixa da sala, com DNS próprio para não depender dela.',
+        'Se a caixa para de responder por alguns minutos, a placa bipa uma vez e manda um alerta no celular com um botão que acorda meu PC pelo Wi-Fi, do mesmo jeito que a caixa faz. Ela também lê os alertas da casa: a matriz de LEDs 5×5 mostra a origem do último alerta não lido na cor dessa origem, e a telinha passa por status, alertas e rede.',
+        'As versões novas chegam pelo Wi-Fi: a placa baixa do PC, confere o hash e volta sozinha para a versão anterior se a nova não conseguir ler os alertas em duas partidas. À noite ela fica apagada e em silêncio.',
+      ],
+      caption: 'Seis dos ícones de alerta na matriz de LEDs: caixa fora, acordando o PC, serviço caiu, voltou ao normal, câmera e PC.',
+      stack: ['MicroPython', 'Raspberry Pi Pico W', 'OLED SSD1306', 'LEDs WS2812', 'ntfy', 'Wake-on-WLAN'],
+    },
     memoryTitle: 'O orçamento de memória',
     memoryIntro: 'Com 787 MB utilizáveis, cada serviço precisa merecer o seu lugar. Medido com tudo rodando:',
     stillFree: 'Ainda livre',
@@ -204,6 +226,41 @@ export default function TvboxLabContent() {
             </section>
           ))}
         </div>
+
+        <section id="pico" className="mt-24 scroll-mt-16">
+          <span className="text-sm font-medium text-terra mb-3 block">{t.pico.eyebrow}</span>
+          <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-8">{t.pico.title}</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+            <div className="flex flex-col gap-4">
+              {t.pico.text.map((para) => (
+                <p key={para.slice(0, 24)} className="text-foreground/60 leading-relaxed">{para}</p>
+              ))}
+              <div className="mt-2 flex flex-wrap gap-2">
+                {t.pico.stack.map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-2.5 py-1 text-xs font-medium text-foreground/60 bg-line/[0.06] rounded-md border border-line/[0.1]"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <figure>
+              <div className="premium-card border border-line/[0.1] shadow-2xl shadow-scrim/20 overflow-hidden">
+                <img
+                  src="/pico-capa.webp"
+                  alt={t.pico.caption}
+                  width={960}
+                  height={600}
+                  loading="lazy"
+                  className="relative z-10 w-full h-auto block"
+                />
+              </div>
+              <figcaption className="mt-3 text-sm text-foreground/50">{t.pico.caption}</figcaption>
+            </figure>
+          </div>
+        </section>
 
         <RelatedProjects items={related} />
       </div>

@@ -3,22 +3,26 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { ExternalLink, Github, ArrowUpRight } from 'lucide-react';
-import { projects, type Project } from '@/data/portfolio';
+import { projects, projectGroups, type Project, type ProjectGroup } from '@/data/portfolio';
 import { useLanguage } from '@/lib/i18n';
 
 const copy = {
   en: {
     eyebrow: 'Selected Work',
-    title: 'Featured Projects',
-    intro: 'A curated selection of projects that showcase my expertise in building modern, scalable, and beautiful digital products.',
+    title: 'Projects',
+    intro: 'Products, tools and home projects I built end to end. Start with the highlights, or pick an area.',
+    featured: 'Highlights',
+    tabs: 'Project areas',
     view: 'View Project',
     viewNamed: (title: string) => `View ${title}`,
     github: 'View all projects on GitHub',
   },
   pt: {
     eyebrow: 'Trabalhos selecionados',
-    title: 'Projetos em destaque',
-    intro: 'Uma seleção de projetos que mostram minha experiência criando produtos digitais modernos, escaláveis e bonitos.',
+    title: 'Projetos',
+    intro: 'Produtos, ferramentas e projetos de casa que construí de ponta a ponta. Comece pelos destaques ou escolha uma área.',
+    featured: 'Destaques',
+    tabs: 'Áreas dos projetos',
     view: 'Ver projeto',
     viewNamed: (title: string) => `Ver ${title}`,
     github: 'Ver todos os projetos no GitHub',
@@ -47,7 +51,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
       ref={cardRef}
       initial={{ opacity: 0, y: 60 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
-      transition={{ duration: 0.8, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.6, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="group relative"
@@ -165,8 +169,13 @@ export default function ProjectsSection() {
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const t = copy[useLanguage().lang];
 
-  const featuredProjects = projects.filter(p => p.featured);
-  const otherProjects = projects.filter(p => !p.featured);
+  const [tab, setTab] = useState<'featured' | ProjectGroup>('featured');
+  const { lang } = useLanguage();
+  const tabs = [
+    { id: 'featured' as const, label: t.featured, count: projects.filter(p => p.featured).length },
+    ...projectGroups.map(g => ({ id: g.id, label: g.label[lang], count: projects.filter(p => p.group === g.id).length })),
+  ];
+  const shown = projects.filter(p => (tab === 'featured' ? p.featured : p.group === tab));
 
   return (
     <section id="work" className="relative py-32 overflow-hidden">
@@ -179,7 +188,7 @@ export default function ProjectsSection() {
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
           transition={{ duration: 0.8 }}
-          className="mb-20"
+          className="mb-12"
         >
           <motion.span
             initial={{ opacity: 0, x: -20 }}
@@ -197,15 +206,42 @@ export default function ProjectsSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {featuredProjects.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
-          ))}
+        {/* Tabs: they scroll sideways on a phone instead of wrapping into a wall of buttons. */}
+        <div className="-mx-6 px-6 lg:mx-0 lg:px-0 mb-10 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div role="tablist" aria-label={t.tabs} className="flex w-max gap-2">
+            {tabs.map(item => {
+              const active = item.id === tab;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="tab"
+                  id={`tab-${item.id}`}
+                  aria-selected={active}
+                  aria-controls="work-panel"
+                  onClick={() => setTab(item.id)}
+                  className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                    active
+                      ? 'bg-terra text-white border-terra'
+                      : 'text-foreground/60 border-line/[0.12] bg-line/[0.04] hover:text-foreground hover:border-line/[0.25]'
+                  }`}
+                >
+                  {item.label}
+                  <span className={`text-xs tabular-nums ${active ? 'text-white/80' : 'text-foreground/40'}`}>{item.count}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {otherProjects.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index + featuredProjects.length} />
+        <div
+          id="work-panel"
+          role="tabpanel"
+          aria-labelledby={`tab-${tab}`}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+        >
+          {shown.map((project, index) => (
+            <ProjectCard key={`${tab}-${project.id}`} project={project} index={index} />
           ))}
         </div>
 

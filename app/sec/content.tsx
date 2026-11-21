@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useInView } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import {
   Github, Linkedin, Search, KeyRound, FlaskConical, ShieldCheck, Menu, X,
-  Mail, MapPin, GraduationCap, Send, CheckCircle2, Loader2, MessageSquare, ArrowUpRight, Sparkles, ScanFace,
+  Mail, MapPin, GraduationCap, Send, CheckCircle2, Loader2, MessageSquare, ArrowUpRight, Sparkles, ScanFace, Smartphone,
 } from 'lucide-react';
 import LanguageToggle from '@/components/language-toggle';
 import ThemeToggle from '@/components/theme-toggle';
@@ -23,7 +23,7 @@ const FORM_ENDPOINT = 'https://api.web3forms.com/submit';
 const WEB3FORMS_ACCESS_KEY = '824fc08e-930f-4c4c-aba9-d9b804f817e4';
 
 // Where each card leads. An empty link shows the card as "coming soon".
-type LinkKey = 'exam-portal' | 'reg-platform' | 'labs' | 'thm' | 'osint';
+type LinkKey = 'exam-portal' | 'reg-platform' | 'labs' | 'thm' | 'govonroot' | 'osint';
 const LINKS: Record<LinkKey, string> = {
   'exam-portal': 'https://github.com/its-danilo/casos-reais/tree/main/recuperacao-de-conta-com-dados-nao-secretos',
   'reg-platform': 'https://github.com/its-danilo/casos-reais/tree/main/senha-padrao-previsivel',
@@ -31,6 +31,7 @@ const LINKS: Record<LinkKey, string> = {
   // TryHackMe has no place for my own write-ups, only the rooms I finished.
   // Once there is a write-ups repo, this can point there instead.
   thm: 'https://tryhackme.com/p/itsdanilo',
+  govonroot: 'https://github.com/its-danilo/GovOnRoot',
   osint: '',
 };
 
@@ -152,6 +153,14 @@ const en = {
       meta: 'Track in progress',
     },
     {
+      tags: ['Android', 'Reverse engineering'],
+      link: 'govonroot', cta: 'Read the guide',
+      title: 'gov.br on a rooted Android',
+      summary:
+        'Brazil’s government app refuses to open on a rooted phone, with a misleading “developer mode” message. I opened the app up, found the two root-detection libraries behind it and wrote a step-by-step guide that hides root from it without removing it, tested on a real device.',
+      meta: '2026 · guide',
+    },
+    {
       tags: ['Digital exposure', 'OpSec'],
       link: 'osint', cta: 'Watch the video',
       title: 'Personal-exposure mapping',
@@ -255,6 +264,14 @@ const copy: Localized<typeof en> = {
         summary:
           'Minha trilha no TryHackMe, com salas práticas em máquinas virtuais de verdade. O perfil guarda cada sala que eu concluo.',
         meta: 'Trilha em andamento',
+      },
+      {
+        tags: ['Android', 'Engenharia reversa'],
+        link: 'govonroot', cta: 'Ler o guia',
+        title: 'gov.br num Android com root',
+        summary:
+          'O app gov.br se recusa a abrir num celular com root, com uma mensagem enganosa de “modo desenvolvedor”. Abri o app por dentro, achei as duas bibliotecas de detecção de root por trás disso e escrevi um guia passo a passo que esconde o root do app sem removê-lo, testado num aparelho real.',
+        meta: '2026 · guia',
       },
       {
         tags: ['Exposição digital', 'OpSec'],
@@ -369,7 +386,9 @@ function CaseCard({ c, soon }: { c: Caso; soon: string }) {
           </>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center sx-cover-empty sx-dots">
-            <ScanFace className="h-20 w-20 text-[color:var(--sx-accent)] opacity-70" strokeWidth={1.25} />
+            {c.link === 'govonroot'
+              ? <Smartphone className="h-20 w-20 text-[color:var(--sx-accent)] opacity-70" strokeWidth={1.25} />
+              : <ScanFace className="h-20 w-20 text-[color:var(--sx-accent)] opacity-70" strokeWidth={1.25} />}
           </div>
         )}
         <div className="absolute left-4 top-4 flex flex-wrap gap-2">

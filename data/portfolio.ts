@@ -10,8 +10,21 @@ export interface Project {
   technologies: string[];
   link?: string;
   github?: string;
+  // Which tab of the home page lists it.
+  group: ProjectGroup;
+  // Also shown in the default "Featured" tab.
   featured?: boolean;
 }
+
+export type ProjectGroup = 'home' | 'desktop' | 'web' | 'automation';
+
+// Tabs of the projects section, in order (the "Featured" tab comes first).
+export const projectGroups: { id: ProjectGroup; label: Localized }[] = [
+  { id: 'home', label: { en: 'Smart home & hardware', pt: 'Casa inteligente & hardware' } },
+  { id: 'desktop', label: { en: 'Linux & desktop', pt: 'Linux & desktop' } },
+  { id: 'web', label: { en: 'Web & apps', pt: 'Web & apps' } },
+  { id: 'automation', label: { en: 'Automation', pt: 'Automação' } },
+];
 
 export interface SocialLink {
   name: string;
@@ -94,6 +107,21 @@ export const projects: Project[] = [
     image: "/rodribot.png",
     technologies: ["Python", "Playwright", "tkinter", "PyInstaller"],
     link: "/rodribot",
+    group: "automation",
+    featured: true,
+  },
+  {
+    id: "9",
+    title: "Room Camera",
+    description: {
+      en: "A cheap Wi-Fi pan-and-tilt camera turned into a private smart room, with no cloud. A Python service on my TV box holds the camera's only session; on top of it I built presence detection, a 360° sphere of the room, spoken reminders, an offline voice assistant, rain alerts and daily reports, with the heavy work done on my PC.",
+      pt: "Uma câmera Wi-Fi barata, com giro e inclinação, transformada num quarto inteligente e privado, sem nuvem. Um serviço em Python na minha TV box guarda a única sessão da câmera; por cima dele criei detecção de presença, uma esfera 360° do quarto, lembretes falados, um assistente de voz offline, alerta de chuva e relatórios diários, com o trabalho pesado feito no PC.",
+    },
+    category: { en: "Smart home / Computer vision", pt: "Casa inteligente / Visão computacional" },
+    image: "/camera-capa.webp",
+    technologies: ["Python", "go2rtc", "OpenCV", "WebGL", "Whisper"],
+    link: "/camera",
+    group: "home",
     featured: true,
   },
   {
@@ -107,33 +135,7 @@ export const projects: Project[] = [
     image: "/room-3d-capa.webp",
     technologies: ["Godot 4", "GDScript", "Blender", "Python", "three.js"],
     link: "/room-3d",
-    featured: true,
-  },
-  {
-    id: "7",
-    title: "Kinetree",
-    description: {
-      en: "A calisthenics app that turns training into an RPG: an onboarding interview places your level and builds a weekly training plan, a skill tree maps the progressions, and an RPG profile shows your attributes and an anatomical muscle-load heatmap. Work in progress.",
-      pt: "Um app de calistenia que transforma o treino em RPG: uma entrevista inicial define seu nível e monta um plano de treino semanal, uma árvore de habilidades mapeia as progressões e um perfil de RPG mostra seus atributos e um mapa de calor anatômico da carga muscular. Em desenvolvimento.",
-    },
-    category: { en: "Mobile / Flutter · WIP", pt: "Mobile / Flutter · Em andamento" },
-    image: "/kinetree.png",
-    technologies: ["Flutter", "Dart", "Riverpod", "Supabase"],
-    link: "https://kinetree.vercel.app",
-    featured: true,
-  },
-  {
-    id: "6",
-    title: "Continuum",
-    description: {
-      en: "A personal execution system built from months of notes on my own working patterns: one active mission at a time, curiosities parked instead of lost, and progress measured by evidence rather than hours. Its rules are enforced by the database itself (Postgres triggers and Row-Level Security), backed by a SQL invariant test suite.",
-      pt: "Um sistema pessoal de execução criado a partir de meses de anotações sobre meus próprios padrões de trabalho: uma missão ativa por vez, curiosidades guardadas em vez de perdidas e progresso medido por evidências, não por horas. As regras são garantidas pelo próprio banco de dados (triggers do Postgres e Row-Level Security), com uma suíte de testes SQL de invariantes.",
-    },
-    category: { en: "Productivity / Full-Stack", pt: "Produtividade / Full-Stack" },
-    image: "/continuum.png",
-    technologies: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Playwright"],
-    link: "/continuum",
-    github: "https://github.com/John28389/Continuum",
+    group: "home",
     featured: true,
   },
   {
@@ -147,6 +149,21 @@ export const projects: Project[] = [
     image: "/desktop-capa.webp",
     technologies: ["Hyprland", "Bash", "Python", "Lua", "systemd"],
     link: "/desktop",
+    group: "desktop",
+    featured: true,
+  },
+  {
+    id: "12",
+    title: "Vitrine Potiguar",
+    description: {
+      en: "Ready-made websites for real-estate brokers in Natal, Brazil. A broker signs up, has their CRECI license checked, picks an address and gets a showcase site with listings, photo galleries, search and contact straight to WhatsApp. Multi-tenant, with each broker's data isolated by Postgres Row-Level Security and every flow covered by end-to-end tests. Live; billing and a custom domain come next.",
+      pt: "Sites prontos para corretores de imóveis de Natal. O corretor se cadastra, tem o CRECI verificado, escolhe o endereço e ganha uma vitrine com imóveis, galeria de fotos, busca e contato direto pelo WhatsApp. Multi-tenant, com os dados de cada corretor isolados pelo Row-Level Security do Postgres e todos os fluxos cobertos por testes de ponta a ponta. No ar; a cobrança e o domínio próprio vêm a seguir.",
+    },
+    category: { en: "SaaS / Full-Stack · WIP", pt: "SaaS / Full-Stack · Em andamento" },
+    image: "/vitrine-potiguar-capa.webp",
+    technologies: ["Next.js", "TypeScript", "Supabase", "Cloudflare Workers", "Playwright"],
+    link: "https://vitrine-potiguar.vitrine-potiguar.workers.dev",
+    group: "web",
     featured: true,
   },
   {
@@ -161,6 +178,7 @@ export const projects: Project[] = [
     technologies: ["Python", "GTK 4", "libadwaita", "USB HID"],
     link: "https://github.com/its-danilo/openaurum",
     github: "https://github.com/its-danilo/openaurum",
+    group: "desktop",
     featured: true,
   },
   {
@@ -174,20 +192,60 @@ export const projects: Project[] = [
     image: "/tvbox-lab.png",
     technologies: ["Linux", "Docker", "Tailscale", "Bash", "Python"],
     link: "/tvbox-lab",
-    featured: true,
+    group: "home",
   },
   {
-    id: "9",
-    title: "Room Camera",
+    id: "14",
+    title: { en: "Pico W Watchdog", pt: "Vigia Pico W" },
     description: {
-      en: "A cheap Wi-Fi pan-and-tilt camera turned into a private smart room, with no cloud. A Python service on my TV box holds the camera's only session; on top of it I built presence detection, a 360° sphere of the room, spoken reminders, an offline voice assistant, rain alerts and daily reports, with the heavy work done on my PC.",
-      pt: "Uma câmera Wi-Fi barata, com giro e inclinação, transformada num quarto inteligente e privado, sem nuvem. Um serviço em Python na minha TV box guarda a única sessão da câmera; por cima dele criei detecção de presença, uma esfera 360° do quarto, lembretes falados, um assistente de voz offline, alerta de chuva e relatórios diários, com o trabalho pesado feito no PC.",
+      en: "A Raspberry Pi Pico W board in the living room that watches my home server from outside it. When the TV box goes down it beeps once and sends a phone alert with a button that wakes my PC over Wi-Fi, and its 5×5 LED matrix shows the source of the latest alert in that source's color. Updates arrive over Wi-Fi, with automatic rollback if the new version can't reach the alert feed.",
+      pt: "Uma placa Raspberry Pi Pico W na sala que vigia meu servidor caseiro de fora dele. Quando a TV box cai, ela bipa uma vez e manda um alerta no celular com um botão que acorda meu PC pelo Wi-Fi, e a matriz de LEDs 5×5 mostra a origem do último alerta na cor dessa origem. As atualizações chegam pelo Wi-Fi, com volta automática se a versão nova não conseguir ler os alertas.",
     },
-    category: { en: "Smart home / Computer vision", pt: "Casa inteligente / Visão computacional" },
-    image: "/camera-capa.webp",
-    technologies: ["Python", "go2rtc", "OpenCV", "WebGL", "Whisper"],
-    link: "/camera",
-    featured: true,
+    category: { en: "Embedded / IoT", pt: "Embarcados / IoT" },
+    image: "/pico-capa.webp",
+    technologies: ["MicroPython", "Raspberry Pi Pico W", "ntfy", "Wake-on-WLAN"],
+    link: "/tvbox-lab#pico",
+    group: "home",
+  },
+  {
+    id: "13",
+    title: "InputForge",
+    description: {
+      en: "An autoclicker, macro recorder and per-game key remapper for Linux on Hyprland. A background engine reads the keyboard and mouse straight from the kernel and types through virtual devices, so it works inside fullscreen games. Its macros can watch the screen: \"use each skill as soon as its slot is ready\", with no cooldown timers to guess.",
+      pt: "Autoclicker, gravador de macros e remapeamento de teclas por jogo para Linux com Hyprland. Um motor em segundo plano lê o teclado e o mouse direto do kernel e digita por aparelhos virtuais, então funciona dentro de jogos em tela cheia. As macros podem olhar a tela: \"use cada skill assim que o slot dela ficar pronto\", sem adivinhar tempo de recarga.",
+    },
+    category: { en: "Linux / Desktop app", pt: "Linux / App de desktop" },
+    image: "/inputforge-capa.webp",
+    technologies: ["Python", "GTK 4", "libadwaita", "evdev / uinput"],
+    link: "/inputforge",
+    group: "desktop",
+  },
+  {
+    id: "7",
+    title: "Kinetree",
+    description: {
+      en: "A calisthenics app that turns training into an RPG: an onboarding interview places your level and builds a weekly training plan, a skill tree maps the progressions, and an RPG profile shows your attributes and an anatomical muscle-load heatmap. Work in progress.",
+      pt: "Um app de calistenia que transforma o treino em RPG: uma entrevista inicial define seu nível e monta um plano de treino semanal, uma árvore de habilidades mapeia as progressões e um perfil de RPG mostra seus atributos e um mapa de calor anatômico da carga muscular. Em desenvolvimento.",
+    },
+    category: { en: "Mobile / Flutter · WIP", pt: "Mobile / Flutter · Em andamento" },
+    image: "/kinetree.png",
+    technologies: ["Flutter", "Dart", "Riverpod", "Supabase"],
+    link: "https://kinetree.vercel.app",
+    group: "web",
+  },
+  {
+    id: "6",
+    title: "Continuum",
+    description: {
+      en: "A personal execution system built from months of notes on my own working patterns: one active mission at a time, curiosities parked instead of lost, and progress measured by evidence rather than hours. Its rules are enforced by the database itself (Postgres triggers and Row-Level Security), backed by a SQL invariant test suite.",
+      pt: "Um sistema pessoal de execução criado a partir de meses de anotações sobre meus próprios padrões de trabalho: uma missão ativa por vez, curiosidades guardadas em vez de perdidas e progresso medido por evidências, não por horas. As regras são garantidas pelo próprio banco de dados (triggers do Postgres e Row-Level Security), com uma suíte de testes SQL de invariantes.",
+    },
+    category: { en: "Productivity / Full-Stack", pt: "Produtividade / Full-Stack" },
+    image: "/continuum.png",
+    technologies: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Playwright"],
+    link: "/continuum",
+    github: "https://github.com/John28389/Continuum",
+    group: "web",
   },
   {
     id: "5",
@@ -201,7 +259,7 @@ export const projects: Project[] = [
     technologies: ["React", "TypeScript", "Supabase", "Zustand", "PWA"],
     link: "https://agenda-danilo.vercel.app/?demo",
     github: "https://github.com/its-danilo/agenda",
-    featured: true,
+    group: "web",
   },
   {
     id: "1",
@@ -215,7 +273,7 @@ export const projects: Project[] = [
     technologies: ["Next.js", "TypeScript", "Supabase", "Stripe", "Tailwind"],
     link: "https://linkfolio-name-6af4.vercel.app",
     github: "https://github.com/its-danilo/linkfolio",
-    featured: true,
+    group: "web",
   },
   {
     id: "2",
@@ -229,6 +287,6 @@ export const projects: Project[] = [
     technologies: ["Python", "Playwright", "Next.js", "Supabase", "GitHub Actions"],
     link: "https://pricewatch-me.vercel.app",
     github: "https://github.com/its-danilo/pricewatch",
-    featured: true,
+    group: "automation",
   },
 ];
