@@ -218,6 +218,7 @@ export const projects: Project[] = [
     image: "/inputforge-capa.webp",
     technologies: ["Python", "GTK 4", "libadwaita", "evdev / uinput"],
     link: "/inputforge",
+    github: "https://github.com/its-danilo/inputforge",
     group: "desktop",
   },
   {

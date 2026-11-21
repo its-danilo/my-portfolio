@@ -5,6 +5,8 @@ import Footer from '@/components/footer';
 import RelatedProjects, { type RelatedProject } from '@/components/related-projects';
 import { useLanguage, type Localized } from '@/lib/i18n';
 
+const GITHUB = 'https://github.com/its-danilo/inputforge';
+
 const stack = ['Python', 'GTK 4', 'libadwaita', 'gtk4-layer-shell', 'evdev', 'uinput', 'Hyprland IPC', 'grim', 'systemd'];
 
 const related: RelatedProject[] = [
@@ -23,7 +25,7 @@ const en = {
   intro:
     'An autoclicker, macro recorder and per-game key remapper for Linux on Hyprland. I built it for the games I play on Linux, where blind timer macros kept failing. Its macros can look at the screen, so they react to the game instead of guessing.',
   flow: ['Keyboard & mouse', 'Kernel (evdev)', 'Engine', 'Profile of the focused game', 'Virtual devices (uinput)', 'Game'],
-  note: 'The repository is private for now. The screenshots are the real app, themed by my desktop.',
+  note: 'Open source (GPL-3.0). The screenshots are the real app, themed by my desktop.',
   facts: [
     { value: '4', label: 'shortcut kinds: autoclicker, macro, remap and command' },
     { value: '15/s', label: 'screen captures, only while a macro is watching' },
@@ -69,7 +71,7 @@ const copy: Localized<typeof en> = {
     intro:
       'Autoclicker, gravador de macros e remapeamento de teclas por jogo para Linux com Hyprland. Criei para os jogos que eu jogo no Linux, onde as macros cegas, por tempo, viviam falhando. As macros dele olham a tela, então reagem ao jogo em vez de adivinhar.',
     flow: ['Teclado e mouse', 'Kernel (evdev)', 'Motor', 'Perfil do jogo em foco', 'Aparelhos virtuais (uinput)', 'Jogo'],
-    note: 'O repositório é privado por enquanto. Os prints são do app de verdade, com o tema do meu desktop.',
+    note: 'Código aberto (GPL-3.0). Os prints são do app de verdade, com o tema do meu desktop.',
     facts: [
       { value: '4', label: 'tipos de atalho: autoclicker, macro, remapeamento e comando' },
       { value: '15/s', label: 'capturas de tela, só enquanto uma macro está olhando' },
@@ -147,7 +149,12 @@ export default function InputForgeContent() {
             ))}
           </div>
 
-          <p className="mt-6 max-w-3xl text-sm text-foreground/50">{t.note}</p>
+          <p className="mt-6 max-w-3xl text-sm text-foreground/50">
+            {t.note}{' '}
+            <a href={GITHUB} target="_blank" rel="noopener noreferrer" className="text-terra hover:text-terra-2 transition-colors">
+              github.com/its-danilo/inputforge ↗
+            </a>
+          </p>
         </header>
 
         <section className="mb-20 grid grid-cols-1 sm:grid-cols-3 gap-4">
