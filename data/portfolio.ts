@@ -97,6 +97,19 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    id: "11",
+    title: { en: "3D Room", pt: "Quarto 3D" },
+    description: {
+      en: "A playable digital twin of my bedroom, built from tape-measure numbers. A Godot game with real-time light mirrors the real room: the TV and laptop show my real screens, daylight follows the clock, and every object shows live data from my devices or controls them, through a local bridge with a closed list of approved actions. A first step toward a game-like control center for the whole house.",
+      pt: "Um gêmeo digital jogável do meu quarto, feito a partir das medidas da trena. Um jogo em Godot com luz em tempo real espelha o quarto real: a TV e o notebook mostram as minhas telas de verdade, a luz do dia segue o relógio e cada objeto mostra dados ao vivo dos meus aparelhos ou os controla, por uma ponte local com uma lista fechada de ações aprovadas. Um primeiro passo para um centro de controle da casa inteira em forma de jogo.",
+    },
+    category: { en: "Game / Digital twin", pt: "Jogo / Gêmeo digital" },
+    image: "/room-3d-capa.webp",
+    technologies: ["Godot 4", "GDScript", "Blender", "Python", "three.js"],
+    link: "/room-3d",
+    featured: true,
+  },
+  {
     id: "7",
     title: "Kinetree",
     description: {
