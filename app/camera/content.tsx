@@ -59,7 +59,7 @@ const en = {
     },
     {
       title: 'Reports that push for better sleep',
-      text: 'The service logs movement, light and comings and goings, and a daily job turns that into reports. The morning summary is built around one goal, being in bed by a set time: it shows whether last night made it, the current streak and record, and 7- and 30-night averages. Waking up for ten minutes or more is subtracted from the sleep time, and a night recording is scored with OpenCV and YAMNet for movement and sounds. A timelapse and a 30-second summary of the busiest minutes record the day.',
+      text: 'The service logs movement, light and comings and goings, and a daily job turns that into reports. The morning summary is built around one goal, being in bed by a set time: it shows whether last night made it, the current streak and record, and 7- and 30-night averages. Waking up for ten minutes or more is subtracted from the sleep time, and a night recording is scored with OpenCV and YAMNet for movement and sounds. A timelapse, one photo a minute, records the day.',
     },
     {
       title: 'An Android app',
@@ -75,7 +75,7 @@ const en = {
     },
     {
       title: 'A desktop app and a backup plan',
-      text: 'A native GTK 4 app on the PC plays video with sound without WebRTC, by pulling an MP4 stream with FLAC audio through ffmpeg. If the TV box goes down, the PC takes over as a fallback service and keeps the camera watched.',
+      text: 'A native GTK 4 app on the PC plays video with sound without WebRTC, by pulling an MP4 stream with FLAC audio through ffmpeg. If the TV box goes down, the PC takes over as a fallback service: live video, the night recording and the timelapse photos keep going, and control goes back to the box only once it has the camera again.',
     },
   ],
 };
@@ -129,7 +129,7 @@ const copy: Localized<typeof en> = {
       },
       {
         title: 'Relatórios que puxam por um sono melhor',
-        text: 'O serviço registra movimento, luz e idas e vindas, e uma tarefa diária transforma isso em relatórios. O resumo da manhã gira em torno de uma meta, estar deitado até um horário: mostra se a última noite cumpriu, a sequência atual e o recorde, e as médias de 7 e 30 noites. Levantar por dez minutos ou mais sai do tempo de sono, e uma gravação da noite é analisada com OpenCV e YAMNet para movimentos e sons. Um timelapse e um resumo de 30 segundos com os minutos mais agitados registram o dia.',
+        text: 'O serviço registra movimento, luz e idas e vindas, e uma tarefa diária transforma isso em relatórios. O resumo da manhã gira em torno de uma meta, estar deitado até um horário: mostra se a última noite cumpriu, a sequência atual e o recorde, e as médias de 7 e 30 noites. Levantar por dez minutos ou mais sai do tempo de sono, e uma gravação da noite é analisada com OpenCV e YAMNet para movimentos e sons. Um timelapse, com uma foto por minuto, registra o dia.',
       },
       {
         title: 'Um app Android',
@@ -145,7 +145,7 @@ const copy: Localized<typeof en> = {
       },
       {
         title: 'Um app de desktop e um plano B',
-        text: 'Um app nativo em GTK 4 no PC mostra vídeo com som sem WebRTC, puxando um stream MP4 com áudio FLAC pelo ffmpeg. Se a TV box cair, o PC assume como serviço reserva e a câmera continua vigiada.',
+        text: 'Um app nativo em GTK 4 no PC mostra vídeo com som sem WebRTC, puxando um stream MP4 com áudio FLAC pelo ffmpeg. Se a TV box cair, o PC assume como serviço reserva: o vídeo ao vivo, a gravação da noite e as fotos do timelapse continuam, e o controle só volta para a caixa quando ela já está com a câmera.',
       },
     ],
   },
